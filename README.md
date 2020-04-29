@@ -9,9 +9,7 @@
 
 The Laravel Wizard scaffolder you wanted but never got, until now!
 
-**How does it work?**
-
-Larawiz reads one YAML file to create multiple related files in your project for your database, without touching more than one Artisan command.
+Larawiz reads one YAML file to create multiple files for your database, without touching more than one Artisan command: models, migrations, factories, pivot tables, etc.
 
 ## Requirements:
 
@@ -45,7 +43,23 @@ You can find it in your application default storage path under the `storage/lara
 
 ## Generating your app
 
-[The whole documentation is online](https://darkghosthunter.gitbook.io/larawiz/).
+[The whole documentation is online](https://darkghosthunter.gitbook.io/larawiz/), but you should get the gist with this:
+
+```yaml
+models:
+  Author:
+    name: string
+    email: string
+    password: string
+    publications: hasMany
+
+  Publication:
+    title: string
+    body: longText
+    author: belongsTo
+```
+
+You shouldn't need to read the documentation, but if you're unsure or you want something more, go ahead, it explains everything.
 
 ## How this works
 
