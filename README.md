@@ -2,8 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/darkghosthunter/larawiz.svg?style=flat-square)](https://packagist.org/packages/larawiz/larawiz) [![License](https://poser.pugx.org/darkghosthunter/larawiz/license)](https://packagist.org/packages/darkghosthunter/larawiz)
 ![](https://img.shields.io/packagist/php-v/larawiz/larawiz.svg)
- ![](https://github.com/Larawiz/larawiz/workflows/PHP%20Composer/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/Larawiz/larawiz/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/larawiz?branch=master)
 
 # Larawiz  
 
