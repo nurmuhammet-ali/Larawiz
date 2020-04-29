@@ -1,0 +1,58 @@
+{
+    "name": "larawiz/larawiz",
+    "description": "Generate your app with simple YAML files.",
+    "keywords": [
+        "darkghosthunter",
+        "laravel",
+        "wizard",
+        "scaffold"
+    ],
+    "homepage": "https://github.com/larawiz/larawiz",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Italo Israel Baeza Cabrera",
+            "email": "darkghosthunter@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.2.15",
+        "illuminate/support": "^7.0",
+        "symfony/yaml": "^5.0",
+        "symfony/finder": "^5.0",
+        "nette/php-generator": "^3.3",
+        "goaop/parser-reflection": "^2.1.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^5.0",
+        "orchestra/canvas": "^5.0",
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Larawiz\\Larawiz\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Larawiz\\Larawiz\\LarawizServiceProvider"
+            ]
+        }
+    }
+}

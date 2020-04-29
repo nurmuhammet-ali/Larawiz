@@ -1,0 +1,55 @@
+# Welcome!
+# ----
+#
+# This is an example scaffold for a simple blog project. Here are some five
+# quick tips to start scaffolding right away with your own scaffold schema
+# for your project, if you (probably) wish to start doing your own thing:
+#
+# 1. Columns are declared by their name, the type, and optional arguments.
+# 2. [id] are prepended to models. You can swap it for [uuid] as primary.
+# 3. [timestamps] are appended to models except for manual pivot models.
+# 4. Using [password|rememberToken] changes the model to an User model.
+# 5. Pivot tables are automatically guessed, and created conveniently.
+#
+# You can visit the docs at https://darkghosthunter.gitbook.io/larawiz/
+# for more info, but you mostly you won't ever need to. Happy coding!
+
+models:
+  User:
+    name: string
+    email: string
+    email_verified_at: timestamp nullable
+    password: string
+    is_admin: boolean default:false
+    rememberToken: ~
+    comments: hasMany
+    posts: hasMany
+
+  Post:
+    uuid: ~
+    title: string
+    body: longText
+    published_at: timestamp nullable  # It's published? If not, its a draft.
+    author: belongsTo:User
+    comments: hasMany
+    tags: belongsToMany
+    softDeletes: ~
+
+  Comment:
+    body: string
+    is_visible: boolean default:true  # This is to hide spam comments.
+    author: belongsTo:User nullable  # Allow anonymous comments.
+    post: belongsTo
+
+  Tag:
+    name: string
+    posts: belongsToMany  # No need to declare the pivot table.
+
+migrations:
+  failed_jobs:
+    id: ~
+    connection: text
+    queue: text
+    payload: longText
+    exception: longText
+    failed_at: timestamp useCurrent

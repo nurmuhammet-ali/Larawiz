@@ -1,0 +1,151 @@
+<?php
+
+namespace Tests\Commands;
+
+use LogicException;
+use Tests\RegistersPackage;
+use Larawiz\Larawiz\Scaffold;
+use Illuminate\Support\Carbon;
+use Symfony\Component\Yaml\Yaml;
+use Orchestra\Testbench\TestCase;
+use Illuminate\Support\Facades\File;
+use Tests\CleansProjectFromScaffoldData;
+use Larawiz\Larawiz\Scaffolding\Pipes\ParseDatabaseData;
+use const DIRECTORY_SEPARATOR as DS;
+
+class ScaffoldTest extends TestCase
+{
+    use RegistersPackage;
+    use CleansProjectFromScaffoldData;
+
+    /** @noinspection DisconnectedForeachInstructionInspection */
+    public function test_receives_filenames()
+    {
+        $files = [
+            'larawiz' . DS . 'database.yml',
+            'larawiz' . DS . 'database.yaml',
+            'larawiz' . DS . 'db.yml',
+            'larawiz' . DS . 'db.yaml',
+            'larawiz' . DS . 'model.yml',
+            'larawiz' . DS . 'model.yaml',
+            'larawiz' . DS . 'models.yml',
+            'larawiz' . DS . 'models.yaml',
+        ];
+
+        foreach ($files as $file) {
+            File::makeDirectory($this->app->basePath('larawiz'));
+            File::put($this->app->basePath($file), Yaml::dump([
+                'models' => [
+                    'Foo' => [
+                        'bar' => 'string',
+                    ],
+                ],
+            ]));
+            $this->artisan('larawiz:scaffold')->run();
+            $this->assertFileExists($this->app->path('Foo.php'));
+            $this->cleanProject();
+        }
+    }
+
+    public function test_receives_custom_database_filename()
+    {
+        File::makeDirectory($this->app->basePath('larawiz'));
+
+        File::put($this->app->basePath('custom.yml'), Yaml::dump([
+            'models' => [
+                'Foo' => [
+                    'bar' => 'string',
+                ],
+            ],
+        ]));
+
+        $this->artisan('larawiz:scaffold --db=custom.yml')->run();
+        $this->assertFileExists($this->app->path('Foo.php'));
+    }
+
+    public function test_error_no_custom_database_filename_found()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The scaffold file for [database] was not found');
+        $this->artisan('larawiz:scaffold --db=custom.yml');
+    }
+
+    public function test_error_if_no_database_files_are_found()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The scaffold file for [database] was not found');
+
+        $this->artisan('larawiz:scaffold');
+    }
+
+    public function test_backups_app_migrations_seeds_and_factories_folders()
+    {
+        File::put($this->app->path('Foo.php'), 'test');
+
+        File::makeDirectory($this->app->databasePath('migrations'), null, null, true);
+        File::makeDirectory($this->app->databasePath('factories'), null, null, true);
+        File::makeDirectory($this->app->databasePath('seeds'), null, null, true);
+
+        File::put($this->app->databasePath('migrations' . DS . 'Bar.php'), 'test');
+        File::put($this->app->databasePath('factories' . DS . 'Quz.php'), 'test');
+        File::put($this->app->databasePath('seeds' . DS . 'Qux.php'), 'test');
+
+        $scaffold = Scaffold::make();
+        $scaffold->rawDatabase->set('models', [
+            'Foo' => [
+                'bar' => 'string',
+            ],
+        ]);
+
+        $this->mock(ParseDatabaseData::class)
+            ->shouldReceive('handle')
+            ->once()
+            ->andReturn($scaffold);
+
+        Carbon::setTestNow($time = Carbon::parse('2020-04-01 19:00:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $path = 'larawiz' . DS . 'backups' . DS . $time->format('Y-m-d_His');
+
+        $this->assertDirectoryExists(storage_path($path));
+
+        $this->assertFileExists(storage_path($path . DS . 'app' . DS . 'Foo.php'));
+        $this->assertFileExists(storage_path($path . DS . 'migrations' . DS . 'Bar.php'));
+        $this->assertFileExists(storage_path($path . DS . 'factories' . DS . 'Quz.php'));
+        $this->assertFileExists(storage_path($path . DS . 'seeds' . DS . 'Qux.php'));
+    }
+
+    public function test_accepts_no_backups_flag_and_doesnt_backups()
+    {
+        $this->artisan('larawiz:sample')->run();
+
+        File::makeDirectory($this->app->databasePath('migrations'), null, null, true);
+        File::makeDirectory($this->app->databasePath('factories'), null, null, true);
+        File::makeDirectory($this->app->databasePath('seeds'), null, null, true);
+
+        File::put($this->app->path('Foo.php'), 'test');
+        File::put($this->app->databasePath('migrations' . DS . 'Bar.php'), 'test');
+        File::put($this->app->databasePath('factories' . DS . 'Quz.php'), 'test');
+        File::put($this->app->databasePath('seeds' . DS . 'Qux.php'), 'test');
+
+        $this->artisan('larawiz:scaffold --no-backup');
+
+        Carbon::setTestNow($time = Carbon::parse('2020-04-01 19:00:00'));
+
+        $path = 'larawiz' . DS . 'backups' . DS . $time->format('Y-m-d_His');
+
+        $this->assertDirectoryNotExists(storage_path($path));
+        $this->assertFileExists($this->app->path('Foo.php'));
+        $this->assertFileExists($this->app->databasePath('migrations' . DS . 'Bar.php'));
+        $this->assertFileExists($this->app->databasePath('factories' . DS . 'Quz.php'));
+        $this->assertFileExists($this->app->databasePath('seeds' . DS . 'Qux.php'));
+    }
+
+    protected function tearDown() : void
+    {
+        $this->cleanProject();
+
+        parent::tearDown();
+    }
+}
