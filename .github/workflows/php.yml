@@ -15,10 +15,8 @@ jobs:
         laravel: [7.*]
         dependency-version: [prefer-stable, prefer-lowest]
         include:
-          - laravel: 7.*
+          - laravel: ^7.2
             testbench: 5.*
-            nette/php-generator: ^3.2
-            nette/utils: ^3.1
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
