@@ -111,9 +111,9 @@ class ScaffoldTest extends TestCase
         $this->assertDirectoryExists(storage_path($path));
 
         $this->assertFileExists(storage_path($path . DS . 'app' . DS . 'Foo.php'));
-        $this->assertFileExists(storage_path($path . DS . 'migrations' . DS . 'Bar.php'));
-        $this->assertFileExists(storage_path($path . DS . 'factories' . DS . 'Quz.php'));
-        $this->assertFileExists(storage_path($path . DS . 'seeds' . DS . 'Qux.php'));
+        $this->assertFileExists(storage_path($path . DS . 'database' . DS . 'migrations' . DS . 'Bar.php'));
+        $this->assertFileExists(storage_path($path . DS . 'database' . DS . 'factories' . DS . 'Quz.php'));
+        $this->assertFileExists(storage_path($path . DS . 'database' . DS . 'seeds' . DS . 'Qux.php'));
     }
 
     public function test_accepts_no_backups_flag_and_doesnt_backups()

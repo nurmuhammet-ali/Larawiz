@@ -35,9 +35,9 @@ class BelongsToManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('RoleUser.php'));
-        $this->assertFileNotExists($this->app->path('UserRole.php'));
-        $this->assertFileNotExists(
+        $this->assertFileNotExistsInFilesystem($this->app->path('RoleUser.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('UserRole.php'));
+        $this->assertFileNotExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_user_role_table.php'));
 
         $userModel = $this->filesystem->get($this->app->path('User.php'));
@@ -141,8 +141,8 @@ class BelongsToManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('RoleUser.php'));
-        $this->assertFileNotExists(
+        $this->assertFileNotExistsInFilesystem($this->app->path('RoleUser.php'));
+        $this->assertFileNotExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_role_user_table.php'));
 
         $userModel = $this->filesystem->get($this->app->path('User.php'));
@@ -272,10 +272,10 @@ class BelongsToManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_role_user_table.php'));
-        $this->assertFileExists($this->app->path('Permission.php'));
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem($this->app->path('Permission.php'));
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_permissions_table.php'));
     }
 

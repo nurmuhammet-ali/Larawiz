@@ -36,9 +36,11 @@ class TraitsTest extends TestCase
             ],
         ]);
 
+        $this->shouldMockTraitFile(false);
+
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists($this->app->path('Foo.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Foo.php'));
         $this->assertStringContainsString('trait Foo',
             $this->filesystem->get($this->app->path('Foo.php')));
         $this->assertStringContainsString('initializeFoo',
@@ -46,7 +48,7 @@ class TraitsTest extends TestCase
         $this->assertStringContainsString('bootFoo',
             $this->filesystem->get($this->app->path('Foo.php')));
 
-        $this->assertFileExists($this->app->path('Bar' . DS . 'Quz.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Bar' . DS . 'Quz.php'));
         $this->assertStringContainsString('trait Quz',
             $this->filesystem->get($this->app->path('Bar' . DS . 'Quz.php')));
         $this->assertStringContainsString('initializeQuz',
@@ -95,7 +97,7 @@ class TraitsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Foo.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Foo.php'));
     }
 
     public function test_external_trait_is_only_appended()
@@ -115,12 +117,12 @@ class TraitsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists(
+        $this->assertFileNotExistsInFilesystem(
             $this->app->path('Illuminate' . DS . 'Foundation' . DS . 'Validation' . DS . 'ValidatesRequests.php')
         );
 
-        $this->assertFileExists($this->app->path('Foo.php'));
-        $this->assertFileExists($this->app->path('Bar' . DS . 'Quz.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Foo.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Bar' . DS . 'Quz.php'));
     }
 
     public function test_error_when_external_trait_is_not_trait_but_class()

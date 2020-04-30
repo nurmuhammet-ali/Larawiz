@@ -171,11 +171,4 @@ class ModelCast extends TestCase
 
         $this->assertStringContainsString("public \$dates = ['foo', 'bar', 'quz', 'qux', 'quuz', 'grault'];", $model);
     }
-
-    protected function tearDown() : void
-    {
-        $this->cleanProject();
-
-        parent::tearDown();
-    }
 }

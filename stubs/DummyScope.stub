@@ -2,6 +2,7 @@
 
 namespace {DummyNamespace};
 
+use {DummyModelNamespace};
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Builder;
 

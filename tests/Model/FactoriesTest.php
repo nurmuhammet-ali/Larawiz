@@ -29,8 +29,8 @@ class FactoriesTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists($this->app->databasePath('factories' . DS . 'UserFactory.php'));
-        $this->assertFileExists($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
 
         $userFactory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
         $adminFactory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
@@ -312,7 +312,7 @@ class FactoriesTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->databasePath('factories' . DS . 'UserFactory.php'));
     }
 
     public function test_creates_factory_states()

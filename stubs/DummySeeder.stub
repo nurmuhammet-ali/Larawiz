@@ -1,0 +1,74 @@
+<?php
+
+use LogicException;
+use {DummyModelNamespace};
+use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factory;
+
+class {DummySeeder} extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @param  \Illuminate\Database\Eloquent\Factory  $factory
+     * @param  \{DummyModelNamespace}  {$dummyModel}
+     * @return void
+     */
+    public function run(Factory $factory, {DummyModel} ${dummyModel})
+    {
+        if ($this->modelHasFactory($factory)) {
+            $this->createRecords($factory, $this->amount(${dummyModel}));
+
+            return $this->createStates();
+        }
+
+        throw new LogicException('The [{DummyModel}] has no factory defined to use for seeding.');
+    }
+
+    /**
+     * Creates additional record by using states.
+     *
+     * @param  \Illuminate\Database\Eloquent\Factory  $factory
+     * @return void
+     */
+    public function createStates($factory)
+    {
+        // If your {DummyModel} model has states defined, you can add them here too.
+        //
+        // $factory->of({DummyModel}::class)->times(10)->state('state')->create();
+    }
+
+    /**
+     * Returns a useful amount of records to create.
+     *
+     * @param \{DummyModelNamespace} $dummyModel
+     * @return int
+     */
+    protected function amount(${dummyModel})
+    {
+        return (int) (${dummyModel}->getPerPage() * 2.5);
+    }
+
+    /**
+     * Check if the model has a factory defined.
+     *
+     * @param  \Illuminate\Database\Eloquent\Factory  $factory
+     * @return bool
+     */
+    protected function modelHasFactory($factory)
+    {
+        return isset($factory[{DummyModel}::class]);
+    }
+
+    /**
+     * Create the model records using the factory definition..
+     *
+     * @param  \Illuminate\Database\Eloquent\Factory  $factory
+     * @param  int  $amount
+     */
+    protected function createRecords($factory, int $amount)
+    {
+        $factory->of({DummyModel}::class)->times($amount)->create();
+    }
+}

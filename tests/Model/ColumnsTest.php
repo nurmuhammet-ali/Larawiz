@@ -29,10 +29,10 @@ class ColumnsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists($this->app->path('User.php'));
-        $this->assertFileExists($this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
-        $this->assertFileExists($this->app->databasePath('factories' . DS . 'UserFactory.php'));
-        $this->assertFileExists($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('User.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
     }
 
     public function test_custom_model_creates_id()

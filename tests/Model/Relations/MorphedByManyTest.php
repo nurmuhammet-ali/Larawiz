@@ -110,9 +110,9 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Taggable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_taggables_table.php'));
 
         $tagModel = $this->filesystem->get($this->app->path('Tag.php'));
@@ -249,9 +249,9 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Taggable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php'));
 
         $tagModel = $this->filesystem->get($this->app->path('Tag.php'));
@@ -300,12 +300,12 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Taggable.php'));
-        $this->assertFileExists($this->app->path('Vegetable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Vegetable.php'));
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php'));
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_taggables_table.php'));
     }
 

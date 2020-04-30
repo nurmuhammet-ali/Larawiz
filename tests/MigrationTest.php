@@ -27,7 +27,7 @@ class MigrationTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $file = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_foos_table.php')
         );
 
@@ -53,7 +53,7 @@ class MigrationTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $file = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_foos_table.php')
         );
 
@@ -121,7 +121,7 @@ class MigrationTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $file = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_post_tag_table.php')
         );
 

@@ -71,13 +71,13 @@ class ModelTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists($this->app->path('Foo.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Foo.php'));
         $this->assertStringContainsString(
             'namespace App;',
             $this->filesystem->get($this->app->path('Foo.php'))
         );
 
-        $this->assertFileExists($this->app->path('Qux' . DS . 'Quz.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Qux' . DS . 'Quz.php'));
         $this->assertStringContainsString(
             'namespace App\Qux;',
             $this->filesystem->get($this->app->path('Qux' . DS . 'Quz.php'))
@@ -100,13 +100,13 @@ class ModelTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists($this->app->path('Foo' . DS . 'Foo.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Foo' . DS . 'Foo.php'));
         $this->assertStringContainsString(
             'namespace App\Foo;',
             $this->filesystem->get($this->app->path('Foo' . DS . 'Foo.php'))
         );
 
-        $this->assertFileExists($this->app->path('Foo' . DS . 'Qux' . DS . 'Quz.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Foo' . DS . 'Qux' . DS . 'Quz.php'));
         $this->assertStringContainsString(
             'namespace App\Foo\Qux;',
             $this->filesystem->get($this->app->path('Foo' . DS . 'Qux' . DS . 'Quz.php'))

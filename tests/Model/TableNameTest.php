@@ -33,8 +33,8 @@ class TableNameTest extends TestCase
         $migration = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php');
         $model = $this->app->path('User.php');
 
-        $this->assertFileExists($migration);
-        $this->assertFileExists($model);
+        $this->assertFileExistsInFilesystem($migration);
+        $this->assertFileExistsInFilesystem($model);
 
         $this->assertStringContainsString('class CreateUsersTable extends Migration',
             $this->filesystem->get($migration));
@@ -62,7 +62,7 @@ class TableNameTest extends TestCase
         $migration = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php');
         $model = $this->app->path('User.php');
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $file = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
@@ -95,8 +95,8 @@ class TableNameTest extends TestCase
         $migration = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php');
         $model = $this->app->path('User.php');
 
-        $this->assertFileExists($migration);
-        $this->assertFileExists($model);
+        $this->assertFileExistsInFilesystem($migration);
+        $this->assertFileExistsInFilesystem($model);
 
         $this->assertStringContainsString('class CreateUsersTable extends Migration',
             $this->filesystem->get($migration));
@@ -127,8 +127,8 @@ class TableNameTest extends TestCase
         $migration = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_app_users_table.php');
         $model = $this->app->path('User.php');
 
-        $this->assertFileExists($migration);
-        $this->assertFileExists($model);
+        $this->assertFileExistsInFilesystem($migration);
+        $this->assertFileExistsInFilesystem($model);
 
         $this->assertStringContainsString('class CreateAppUsersTable extends Migration',
             $this->filesystem->get($migration));

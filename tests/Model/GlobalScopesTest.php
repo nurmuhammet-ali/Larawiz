@@ -47,13 +47,15 @@ class GlobalScopesTest extends TestCase
             ],
         ]);
 
+        $this->shouldMockScopeFile(false);
+
         $this->artisan('larawiz:scaffold');
 
         $fooObserver = $this->app->path('Scopes' . DS . 'User' . DS . 'FooScope.php');
         $quxObserver = $this->app->path('Scopes' . DS . 'User' . DS . 'QuxScope.php');
 
-        $this->assertFileExists($fooObserver);
-        $this->assertFileExists($quxObserver);
+        $this->assertFileExistsInFilesystem($fooObserver);
+        $this->assertFileExistsInFilesystem($quxObserver);
 
         $this->assertStringContainsString('use App\User;', $this->filesystem->get($fooObserver));
         $this->assertStringContainsString('namespace App\Scopes\User;', $this->filesystem->get($fooObserver));
