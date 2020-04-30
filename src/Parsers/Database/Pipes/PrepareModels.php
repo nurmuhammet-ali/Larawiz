@@ -131,6 +131,7 @@ class PrepareModels
             ->replace('\\', DIRECTORY_SEPARATOR)
             ->finish(DIRECTORY_SEPARATOR)
             ->append($name)
+            ->replace('\\', DIRECTORY_SEPARATOR)
             ->finish('.php')
             ->__toString();
 
