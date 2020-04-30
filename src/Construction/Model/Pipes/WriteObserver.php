@@ -3,8 +3,6 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Nette\PhpGenerator\PsrPrinter;
-use Nette\PhpGenerator\PhpNamespace;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Console\Kernel;
 use Larawiz\Larawiz\Lexing\Database\Model;
@@ -58,9 +56,7 @@ class WriteObserver
     {
         if ($construction->model->observer) {
 
-            if ($this->observerExists($construction->model)) {
-                $this->deleteObserver($construction->model);
-            }
+            $this->deleteObserver($construction->model);
 
             $this->console->call('make:observer', [
                 'name' => $construction->model->class . 'Observer',
@@ -69,19 +65,6 @@ class WriteObserver
         }
 
         return $next($construction);
-    }
-
-    /**
-     * Check if the observer exists.
-     *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
-     * @return bool
-     */
-    protected function observerExists(Model $model)
-    {
-        return $this->filesystem->exists(
-            $this->app->path('Observers' . DS . $model->class . 'Observer.php')
-        );
     }
 
     /**
