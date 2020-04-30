@@ -3,7 +3,6 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Nette\PhpGenerator\Property;
 use Nette\PhpGenerator\ClassType;
 use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
@@ -40,20 +39,16 @@ class SetPrimaryKey
      */
     protected function pivotManyEnablePrimary(Model $model, ClassType $class)
     {
-        if ($model->isPivot() && $model->primary->column && ! $model->primary->using) {
+        if ($model->primary->column && ! $model->primary->using) {
                 return $model->columns->pull($model->primary->column->name);
-        }
-
-        if (! $model->primary->using && $model->primary->column) {
-            return $model->columns->pull($model->primary->column->name);
-        }
-
-        if ($model->primary->column->isPrimary()) {
-            $this->setIncrementingProperty($class, true);
         }
 
         if ('id' !== $name = $model->primary->column->getName()) {
             $this->setPrimaryKeyProperty($class, $name);
+        }
+
+        if ($model->primary->column->isPrimary()) {
+            $this->setIncrementingProperty($class, true);
         }
 
         if ('int' !== $type = $model->primary->column->castType()) {
