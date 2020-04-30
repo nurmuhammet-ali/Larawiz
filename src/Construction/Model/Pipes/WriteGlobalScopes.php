@@ -54,9 +54,7 @@ class WriteGlobalScopes
 
             $path = $this->getPath($construction->model, $scope);
 
-            if ($this->filesystem->exists($path)) {
-                $this->filesystem->delete($path);
-            }
+            $this->filesystem->delete($path);
 
             $this->writeScope($construction->model, $scope, $path);
         }
