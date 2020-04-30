@@ -16,7 +16,7 @@ jobs:
         dependency-version: [prefer-stable, prefer-lowest]
         include:
           - laravel: 7.*
-            testbench: 5.*
+            testbench: ^5.1
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
