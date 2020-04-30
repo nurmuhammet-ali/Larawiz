@@ -82,8 +82,8 @@ class ScaffoldTest extends TestCase
 
     public function test_backups_app_migrations_seeds_and_factories_folders()
     {
-        $appDir = Str::of($this->app->path())->replaceLast(DS, '')->afterLast(DS)->__toString();
-        $databaseDir = Str::of($this->app->databasePath())->replaceLast(DS, '')->afterLast(DS)->__toString();
+        $appDir = Str::of(rtrim($this->app->path(), '\\'))->afterLast(DS)->__toString();
+        $databaseDir = Str::of(rtrim($this->app->databasePath(), '\\'))->afterLast(DS)->__toString();
 
         File::put($this->app->path('Foo.php'), 'test');
 
