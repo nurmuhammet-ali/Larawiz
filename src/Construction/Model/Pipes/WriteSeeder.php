@@ -78,6 +78,7 @@ class WriteSeeder
      */
     protected function writeSeeder(Model $model, string $path)
     {
+        $this->filesystem->ensureDirectoryExists($this->app->databasePath('seeds'));
         $this->filesystem->put($path, $this->getReplacedStubContents($model));
     }
 
