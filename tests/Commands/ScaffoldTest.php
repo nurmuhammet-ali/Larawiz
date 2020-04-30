@@ -4,6 +4,7 @@ namespace Tests\Commands;
 
 use LogicException;
 use Tests\RegistersPackage;
+use Larawiz\Larawiz\Larawiz;
 use Larawiz\Larawiz\Scaffold;
 use Illuminate\Support\Carbon;
 use Symfony\Component\Yaml\Yaml;
@@ -82,9 +83,9 @@ class ScaffoldTest extends TestCase
     {
         File::put($this->app->path('Foo.php'), 'test');
 
-        File::makeDirectory($this->app->databasePath('migrations'), null, null, true);
-        File::makeDirectory($this->app->databasePath('factories'), null, null, true);
-        File::makeDirectory($this->app->databasePath('seeds'), null, null, true);
+        File::ensureDirectoryExists($this->app->databasePath('migrations'), null, true);
+        File::ensureDirectoryExists($this->app->databasePath('factories'), null, true);
+        File::ensureDirectoryExists($this->app->databasePath('seeds'), null, true);
 
         File::put($this->app->databasePath('migrations' . DS . 'Bar.php'), 'test');
         File::put($this->app->databasePath('factories' . DS . 'Quz.php'), 'test');
@@ -106,7 +107,7 @@ class ScaffoldTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $path = 'larawiz' . DS . 'backups' . DS . $time->format('Y-m-d_His');
+        $path = Larawiz::BACKUPS_DIR . DS . $time->format('Y-m-d_His');
 
         $this->assertDirectoryExists(storage_path($path));
 

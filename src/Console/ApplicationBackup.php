@@ -80,7 +80,7 @@ class ApplicationBackup
     protected function copyProjectFiles(string $backupDir)
     {
         foreach ($this->getDirectoriesToBackup() as $dir) {
-            $this->filesystem->copyDirectory($dir, $this->injectBackupDirectory($backupDir, $dir));
+            $this->filesystem->copyDirectory($dir, $this->backupDirectory($backupDir, $dir));
         }
     }
 
@@ -106,7 +106,7 @@ class ApplicationBackup
      * @param  string  $path
      * @return string
      */
-    protected function injectBackupDirectory(string $backupDir, string $path)
+    protected function backupDirectory(string $backupDir, string $path)
     {
         return Str::of($path)
             ->trim(DIRECTORY_SEPARATOR)
