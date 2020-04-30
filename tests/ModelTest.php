@@ -71,6 +71,8 @@ class ModelTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
+        dump(array_keys($this->filesystem->files));
+
         $this->assertFileExistsInFilesystem($this->app->path('Foo.php'));
         $this->assertStringContainsString(
             'namespace App;',

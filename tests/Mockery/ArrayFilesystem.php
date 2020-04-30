@@ -8,7 +8,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class ArrayFilesystem extends Filesystem
 {
-    protected $files = [];
+    public $files = [];
 
     /**
      * Get all of the files from the given directory (recursive).

@@ -4,6 +4,7 @@ namespace Tests\Commands;
 
 use LogicException;
 use Tests\RegistersPackage;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Larawiz;
 use Larawiz\Larawiz\Scaffold;
 use Illuminate\Support\Carbon;
@@ -81,6 +82,9 @@ class ScaffoldTest extends TestCase
 
     public function test_backups_app_migrations_seeds_and_factories_folders()
     {
+        $appDir = Str::of($this->app->path())->replaceLast(DS, '')->afterLast(DS)->__toString();
+        $databaseDir = Str::of($this->app->databasePath())->replaceLast(DS, '')->afterLast(DS)->__toString();
+
         File::put($this->app->path('Foo.php'), 'test');
 
         File::ensureDirectoryExists($this->app->databasePath('migrations'), null, true);
@@ -111,10 +115,10 @@ class ScaffoldTest extends TestCase
 
         $this->assertDirectoryExists(storage_path($path));
 
-        $this->assertFileExists(storage_path($path . DS . 'app' . DS . 'Foo.php'));
-        $this->assertFileExists(storage_path($path . DS . 'database' . DS . 'migrations' . DS . 'Bar.php'));
-        $this->assertFileExists(storage_path($path . DS . 'database' . DS . 'factories' . DS . 'Quz.php'));
-        $this->assertFileExists(storage_path($path . DS . 'database' . DS . 'seeds' . DS . 'Qux.php'));
+        $this->assertFileExists(storage_path($path . DS . $appDir . DS . 'Foo.php'));
+        $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'migrations' . DS . 'Bar.php'));
+        $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'factories' . DS . 'Quz.php'));
+        $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'seeds' . DS . 'Qux.php'));
     }
 
     public function test_accepts_no_backups_flag_and_doesnt_backups()
@@ -137,6 +141,7 @@ class ScaffoldTest extends TestCase
         $path = 'larawiz' . DS . 'backups' . DS . $time->format('Y-m-d_His');
 
         $this->assertDirectoryNotExists(storage_path($path));
+
         $this->assertFileExists($this->app->path('Foo.php'));
         $this->assertFileExists($this->app->databasePath('migrations' . DS . 'Bar.php'));
         $this->assertFileExists($this->app->databasePath('factories' . DS . 'Quz.php'));
