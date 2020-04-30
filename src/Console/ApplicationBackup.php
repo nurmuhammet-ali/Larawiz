@@ -108,8 +108,7 @@ class ApplicationBackup
      */
     protected function backupDirectory(string $backupDir, string $path)
     {
-        return Str::of($path)
-            ->trim(DIRECTORY_SEPARATOR)
+        return Str::of(rtrim($path, DIRECTORY_SEPARATOR))
             ->replace($this->app->basePath(), $backupDir)
             ->__toString();
     }
