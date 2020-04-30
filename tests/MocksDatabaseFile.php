@@ -72,31 +72,19 @@ trait MocksDatabaseFile
 
     protected function assertFileExistsInFilesystem(string $path)
     {
-        try {
-            if ($this->filesystem instanceof ArrayFilesystem) {
-                return $this->assertTrue($this->filesystem->exists($path), "The [{$path}] file doesnt exists.");
-            }
+        if ($this->filesystem instanceof ArrayFilesystem) {
+            return $this->assertTrue($this->filesystem->exists($path), "The [{$path}] file doesnt exists.");
+        }
 
-            return $this->assertFileExists($path);
-        }
-        catch (\Throwable $exception) {
-            echo "Files in directory: " . implode("\n", $this->filesystem->allFiles($this->app->basePath()));
-            throw $exception;
-        }
+        return $this->assertFileExists($path);
     }
 
     protected function assertFileNotExistsInFilesystem(string $path)
     {
-        try {
-            if ($this->filesystem instanceof ArrayFilesystem) {
-                return $this->assertFalse($this->filesystem->exists($path), "The [{$path}] file exists.");
-            }
+        if ($this->filesystem instanceof ArrayFilesystem) {
+            return $this->assertFalse($this->filesystem->exists($path), "The [{$path}] file exists.");
+        }
 
-            return $this->assertFileExists($path);
-        }
-        catch (\Throwable $exception) {
-            echo "Files in directory: " . implode("\n", $this->filesystem->allFiles($this->app->basePath()));
-            throw $exception;
-        }
+        return $this->assertFileExists($path);
     }
 }
