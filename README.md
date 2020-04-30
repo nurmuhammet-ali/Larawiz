@@ -1,9 +1,9 @@
 ![Artem Maltsev - Unsplash #3n7DdlkMfEg](https://images.unsplash.com/photo-1551269901-5c5e14c25df7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1280&h=400&q=80)
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/darkghosthunter/larawiz.svg?style=flat-square)](https://packagist.org/packages/larawiz/larawiz) [![License](https://poser.pugx.org/darkghosthunter/larawiz/license)](https://packagist.org/packages/darkghosthunter/larawiz)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/larawiz/larawiz.svg?style=flat-square)](https://packagist.org/packages/larawiz/larawiz) [![License](https://poser.pugx.org/larawiz/larawiz/license)](https://packagist.org/packages/larawiz/larawiz)
 ![](https://img.shields.io/packagist/php-v/larawiz/larawiz.svg)
  ![](https://github.com/Larawiz/larawiz/workflows/PHP%20Composer/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/Larawiz/larawiz/badge.svg?branch=master)](https://coveralls.io/github/DarkGhostHunter/larawiz?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Larawiz/larawiz/badge.svg?branch=master)](https://coveralls.io/github/Larawiz/larawiz?branch=master)
 
 # Larawiz  
 
