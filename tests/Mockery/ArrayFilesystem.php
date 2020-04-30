@@ -2,12 +2,33 @@
 
 namespace Tests\Mockery;
 
+use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class ArrayFilesystem extends Filesystem
 {
     protected $files = [];
+
+    /**
+     * Get all of the files from the given directory (recursive).
+     *
+     * @param  string  $directory
+     * @param  bool  $hidden
+     * @return \Symfony\Component\Finder\SplFileInfo[]
+     */
+    public function allFiles($directory, $hidden = false)
+    {
+        $files = [];
+
+        foreach ($this->files as $file) {
+            if (Str::contains($file, $directory)) {
+                $files[] = $file;
+            }
+        }
+
+        return $files;
+    }
 
     /**
      * Determine if a file or directory exists.
