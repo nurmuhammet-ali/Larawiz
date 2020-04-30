@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 /**
  * @property string $path
  * @property string $namespace
- * @property string $relativeNamespace
+ * @property string $relativeNamespace // The final namespace without the application namespace
  * @property string $class
  */
 trait HasNamespaceAndPath

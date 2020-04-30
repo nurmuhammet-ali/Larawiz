@@ -81,7 +81,7 @@ trait MocksDatabaseFile
         }
         catch (\Throwable $exception) {
             echo "Files in directory: " . implode("\n", $this->filesystem->allFiles($this->app->basePath()));
-            return $exception;
+            throw $exception;
         }
     }
 
@@ -96,7 +96,7 @@ trait MocksDatabaseFile
         }
         catch (\Throwable $exception) {
             echo "Files in directory: " . implode("\n", $this->filesystem->allFiles($this->app->basePath()));
-            return $exception;
+            throw $exception;
         }
     }
 }
