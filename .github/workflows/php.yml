@@ -44,7 +44,7 @@ jobs:
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress --no-suggest
 
       - name: Run Tests
-        run: composer run-script test
+        run: sudo composer run-script test
 
       - name: Upload Coverage to Coveralls
         env:
