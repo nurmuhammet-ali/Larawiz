@@ -150,6 +150,28 @@ class MorphOneTest extends TestCase
         $this->artisan('larawiz:scaffold');
     }
 
+    public function test_error_when_issued_model_with_relation_key_does_not_exists()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The [bar] relation of [Teacher] must have a target model.');
+
+        $this->mockDatabaseFile([
+            'models' => [
+                'Student'   => [
+                    'foo' => 'morphOne:Classroom,assistable',
+                ],
+                'Teacher'   => [
+                    'bar' => 'morphOne:Class,doesnt_exists',
+                ],
+                'Classroom' => [
+                    'assistable' => 'morphTo',
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+    }
+
     public function test_error_when_parent_model_has_no_id_or_uuid_primary_key()
     {
         $this->expectException(LogicException::class);
