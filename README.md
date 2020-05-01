@@ -72,28 +72,6 @@ Larawiz goes around many loops that parses, prepares, associates and writes file
 
 This is powered by multiple pipelines, allowing this package to be easily maintained by adding features or fixing the existing ones.
 
-## Roadmap
-
-The intention of this package is to give developers an easy way to make the skeleton of their application with some pseudo-code instead of full fledged logic, which slows your development.
- 
-While these features are "soft-documented" in some parts, these still needs to be implemented.
-
-### Version 2.0:
-
-* [HTTP](wiki/HTTP.md): Controllers, middleware, routes, and internal logic (queries, events, jobs, notifications, validation requests, etc.)
-
-### Version 3.0:
-
-* [Authorization](wiki/AUTH.md): Gates, policies, Form Requests with validation and authorization inside the HTTP.
-
-### Version 4.0:
-
-* Views: Basic views for controllers, Bootstrap 4 based.
-
-### Version 5.0:
-
-* Testing: Making automatic tests for the HTTP layer (controllers and middleware).
-
 ## License
 
 This package is open-sourced software licensed under the [MIT license](LICENSE.md).
