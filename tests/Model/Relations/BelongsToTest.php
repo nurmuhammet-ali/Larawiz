@@ -288,6 +288,37 @@ class BelongsToTest extends TestCase
         );
     }
 
+    public function test_accepts_nullable()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'     => [
+                    'name' => 'string',
+                    'posts' => 'hasMany:Post'
+                ],
+                'Post' => [
+                    'title' => 'name',
+                    'user' => 'belongsTo:User,user_name nullable'
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get($this->app->path('Post.php'));
+        $migration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_posts_table.php')
+        );
+
+        $this->assertStringContainsString('@property-read null|\App\User $user', $model);
+        $this->assertStringContainsString("return \$this->belongsTo(User::class, 'user_name');", $model);
+        $this->assertStringContainsString(
+            "\$table->string('user_name')->nullable(); // Created for [user] relation.", $migration
+        );
+    }
+
     protected function tearDown() : void
     {
         $this->cleanProject();

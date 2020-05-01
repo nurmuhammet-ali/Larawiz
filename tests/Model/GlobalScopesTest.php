@@ -2,6 +2,7 @@
 
 namespace Tests\Model;
 
+use LogicException;
 use Tests\RegistersPackage;
 use Tests\MocksDatabaseFile;
 use Orchestra\Testbench\TestCase;
@@ -66,6 +67,27 @@ class GlobalScopesTest extends TestCase
         $this->assertStringContainsString(
             'public function apply(Builder $builder, User $user)', $this->filesystem->get($fooObserver)
         );
+    }
+
+    public function test_error_when_scopes_uses_namespace()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Scopes can only be set as class name, [Namespaced\FooScope] issued in [User].');
+
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'name' => 'string'
+                    ],
+                    'scopes' => [
+                        'Namespaced\Foo',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
     }
 
     protected function tearDown() : void

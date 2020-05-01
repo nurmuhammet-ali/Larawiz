@@ -84,6 +84,38 @@ class ColumnsTest extends TestCase
         $this->assertStringContainsString('$table->id(\'foo\');', $migration);
     }
 
+    public function test_chains_method_preceded_with_null()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'  => [
+                    'columns' => [
+                        'id' => '~ foo bar:qux,quz',
+                        'softDeletes' => '~ foo bar:qux,quz',
+                        'foo' => 'bar:~,quz,qux',
+                    ]
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get(
+            $this->app->path('User.php'));
+        $migration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
+
+        $this->assertStringNotContainsString('protected $primaryKey', $model);
+        $this->assertStringNotContainsString('protected $keyType', $model);
+        $this->assertStringNotContainsString('protected $incrementing', $model);
+
+        $this->assertStringContainsString("\$table->id()->foo()->bar('qux', 'quz');", $migration);
+        $this->assertStringContainsString("\$table->softDeletes()->foo()->bar('qux', 'quz');", $migration);
+        $this->assertStringContainsString("\$table->bar('foo', null, 'quz', 'qux');", $migration);
+    }
+
     public function test_creates_uuid()
     {
         $this->mockDatabaseFile([

@@ -38,7 +38,7 @@ class ParsePreliminaryMorphToData
      */
     protected function isMorphTo(?string $line)
     {
-        return $line && Str::of($line)->before(':')->is('morphTo');
+        return $line && Str::of($line)->before(' ')->before(':')->is('morphTo');
     }
 
     /**

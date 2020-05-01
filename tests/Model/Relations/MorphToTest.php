@@ -196,6 +196,37 @@ class MorphToTest extends TestCase
         $this->assertStringContainsString("\$table->morphs('foobar');", $migration);
     }
 
+    public function test_accepts_nullable()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'Student'   => [
+                    'classroom' => 'morphOne',
+                ],
+                'Teacher'   => [
+                    'classroom' => 'morphOne',
+                ],
+                'Classroom' => [
+                    'assistable' => 'morphTo:foobar nullable',
+                ],
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get($this->app->path('Classroom.php'));
+        $migration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
+        );
+
+        $this->assertStringContainsString('@property-read null|\App\Student|\App\Teacher $assistable', $model);
+        $this->assertStringContainsString("return \$this->morphTo('foobar')", $model);
+
+        $this->assertStringContainsString("\$table->nullableMorphs('foobar');", $migration);
+    }
+
     protected function tearDown() : void
     {
         $this->cleanProject();

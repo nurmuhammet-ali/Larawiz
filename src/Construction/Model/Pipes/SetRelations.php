@@ -151,7 +151,7 @@ class SetRelations
         }
 
         if ($relation->returnsCollection()) {
-            $start .= "\Illuminate\Database\Eloquent\Collection|{$relation->model->fullRootNamespace()}[]";
+            $start .= "\Illuminate\Database\Eloquent\Collection|{$relation->model->fullRootNamespaceArray()}";
         }
         else {
             $start .= $relation->model->fullRootNamespace();

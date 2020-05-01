@@ -117,6 +117,52 @@ class BelongsToManyTest extends TestCase
         $this->artisan('larawiz:scaffold');
     }
 
+    public function test_error_when_guessing_models_without_primary_key()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The [User] of [role] must have primary keys enabled.');
+
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'   => [
+                    'columns' => [
+                        'name' => 'string',
+                        'role' => 'belongsToMany'
+                    ]
+                ],
+                'Role' => [
+                    'type' => 'string',
+                    'users' => 'belongsToMany',
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+    }
+
+    public function test_error_when_issued_models_without_primary_key()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The [Role] of [foo] must have primary keys enabled.');
+
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'   => [
+                    'name' => 'string',
+                    'foo' => 'belongsToMany:Role'
+                ],
+                'Role' => [
+                    'columns' => [
+                        'type' => 'string',
+                        'bar' => 'belongsToMany:User',
+                    ]
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+    }
+
     public function test_allows_pivot_table_migration_override()
     {
         $this->mockDatabaseFile([
@@ -197,6 +243,32 @@ class BelongsToManyTest extends TestCase
 
         $this->assertStringNotContainsString('roles', $userMigration);
         $this->assertStringNotContainsString('users', $roleMigration);
+    }
+
+    public function test_error_when_using_pivot_doesnt_exists()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The [users] relation is using a non-existent [Vegetables] model.');
+
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'   => [
+                    'name' => 'string',
+                    'roles' => 'belongsToMany using:Permission'
+                ],
+                'Role' => [
+                    'type' => 'string',
+                    'users' => 'belongsToMany using:Vegetables',
+                ],
+                'Permission' => [
+                    'enforce' => 'bool',
+                    'user' => 'belongsTo',
+                    'role' => 'belongsTo',
+                ]
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
     }
 
     public function test_does_not_accepts_with_default()

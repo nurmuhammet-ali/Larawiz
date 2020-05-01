@@ -5,7 +5,6 @@ namespace Larawiz\Larawiz\Construction\Model\Pipes;
 use Closure;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\ClassType;
-use Nette\PhpGenerator\PhpNamespace;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notifiable;
 use Larawiz\Larawiz\Lexing\Database\Model;
@@ -30,7 +29,7 @@ class CreateModelInstance
         $construction->class->addExtend($construction->model->modelType);
 
         // If the model is an Authenticatable class instance, we will add the needed classes and traits.
-        if ($construction->model->modelType === User::class) {
+        if ($construction->model->isUser()) {
             $construction->namespace->addUse(User::class, 'Authenticatable');
             $construction->namespace->addUse(MustVerifyEmail::class);
             $construction->namespace->addUse(Notifiable::class);

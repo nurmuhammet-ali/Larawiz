@@ -327,6 +327,71 @@ class MorphToManyTest extends TestCase
         $this->assertStringNotContainsString('$table->id();', $vegetableMigration);
     }
 
+    public function test_pivot_accepts_morph_to_nullable()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'Photo'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Video'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Tag'           => [
+                    'name' => 'string',
+                ],
+                'Vegetable' => [
+                    'enforce'  => 'bool',
+                    'tag'      => 'belongsTo',
+                    'taggable' => 'morphTo nullable',
+                ],
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $vegetableModel = $this->filesystem->get($this->app->path('Vegetable.php'));
+        $vegetableMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')
+        );
+
+        $this->assertStringContainsString('@property-read null|\App\Photo|\App\Video $taggable', $vegetableModel);
+        $this->assertStringContainsString("\$table->nullableMorphs('taggable');", $vegetableMigration);
+    }
+
+    public function test_error_when_pivot_doesnt_uses_morphTo()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The pivot model [Vegetable] must have a [taggable] as [morphTo] relation.');
+
+        $this->mockDatabaseFile([
+            'models' => [
+                'Photo'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Video'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Tag'           => [
+                    'name' => 'string',
+                ],
+                'Vegetable' => [
+                    'enforce'  => 'bool',
+                    'tag'      => 'belongsTo',
+                    'taggable' => 'string',
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+    }
+
     public function test_creates_pivot_model_if_one_parent_doesnt_uses_using()
     {
         $this->mockDatabaseFile([

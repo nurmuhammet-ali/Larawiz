@@ -141,7 +141,7 @@ class ParseBelongsToManyAutomaticPivot
     protected function makePivotColumn(BelongsToMany $relation, Model $model)
     {
         if (! $model->primary->using) {
-            throw new LogicException("The [{$model}] of [{$relation->name}] must have primary keys enabled.");
+            throw new LogicException("The [{$model->key}] of [{$relation->name}] must have primary keys enabled.");
         }
 
         return Column::fromLine(

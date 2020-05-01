@@ -24,6 +24,7 @@ class DatabaseParserPipeline extends Pipeline
 
         Pipes\ParsePreliminaryBelongsToData::class,             // Parses "belongsTo" relations.
         Pipes\ParsePreliminaryMorphToData::class,               // Parses "morphTo" relations.
+
         Pipes\ParsePreliminaryHasOneOrManyData::class,          // Parses "hasOne" and "hasMany" relations.
         Pipes\ParsePreliminaryHasOneOrManyThroughData::class,   // Parses "hasOneThrough" and "hasManyThrough" relations.
         Pipes\ParsePreliminaryMorphOneOrManyData::class,        // Parses "morphOne" and "morphMany" relations.

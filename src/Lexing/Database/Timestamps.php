@@ -79,16 +79,6 @@ class Timestamps extends Fluent
     }
 
     /**
-     * Check if timestamps are default.
-     *
-     * @return bool
-     */
-    public function usingDefault()
-    {
-        return $this->usingDefaultCreatedAt() && $this->usingDefaultUpdatedAt();
-    }
-
-    /**
      * Check if the CREATED_AT is default.
      *
      * @return bool

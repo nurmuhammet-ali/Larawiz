@@ -40,7 +40,7 @@ class SetPrimaryKey
     protected function pivotManyEnablePrimary(Model $model, ClassType $class)
     {
         if ($model->primary->column && ! $model->primary->using) {
-                return $model->columns->pull($model->primary->column->name);
+            return $model->columns->pull($model->primary->column->name);
         }
 
         if ('id' !== $name = $model->primary->column->getName()) {
@@ -76,12 +76,12 @@ class SetPrimaryKey
      */
     protected function modelEnableCustomPrimary(Model $model, ClassType $class)
     {
-        if (! $model->primary->column->isPrimary()) {
-            $this->setIncrementingProperty($class, false);
-        }
-
         if ('id' !== $name = $model->primary->column->getName()) {
             $this->setPrimaryKeyProperty($class, $name);
+        }
+
+        if (! $model->primary->column->isPrimary()) {
+            $this->setIncrementingProperty($class, false);
         }
 
         if ('int' !== $type = $model->primary->column->castType()) {
