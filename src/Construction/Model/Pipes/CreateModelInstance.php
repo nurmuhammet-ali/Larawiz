@@ -62,7 +62,7 @@ class CreateModelInstance
             'firstOrNew(array $attributes = [], array $values = [])',
             'firstOrFail($columns = [\'*\'])',
             'firstOrCreate(array $attributes, array $values = [])',
-            'firstOr($columns = [\'*\'], Closure $callback = null)',
+            'firstOr($columns = [\'*\'], \Closure $callback = null)',
             'firstWhere($column, $operator = null, $value = null, $boolean = \'and\')',
             'updateOrCreate(array $attributes, array $values = [])',
             'findOrFail($id, $columns = [\'*\'])',
@@ -70,7 +70,7 @@ class CreateModelInstance
         ];
 
         foreach ($methods as $method) {
-            $class->addComment("@method static $method");
+            $class->addComment("@method {$model->fullRootNamespace()} {$method}");
         }
 
         $methods = [
@@ -79,7 +79,7 @@ class CreateModelInstance
         ];
 
         foreach ($methods as $method) {
-            $class->addComment("@method null|static $method");
+            $class->addComment("@method null|{$model->fullRootNamespace()} {$method}");
         }
 
         $class->addComment('');
