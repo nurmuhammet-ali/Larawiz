@@ -108,25 +108,35 @@ class FillableTest extends TestCase
 
     public function test_model_does_not_fill_auto_incrementing_columns()
     {
-        $this->mockDatabaseFile([
-            'models' => [
-                'User' => [
-                    'name' => 'string',
-                    'alpha' => 'increments',
-                    'beta' => 'integerIncrements',
-                    'charlie' => 'tinyIncrements',
-                    'delta' => 'smallIncrements',
-                    'foxtrot' => 'mediumIncrements',
-                    'echo' => 'bigIncrements',
+        $increments = [
+            'alpha' => 'increments',
+            'beta' => 'integerIncrements',
+            'charlie' => 'tinyIncrements',
+            'delta' => 'smallIncrements',
+            'foxtrot' => 'mediumIncrements',
+            'echo' => 'bigIncrements',
+        ];
+
+        foreach ($increments as $key => $increment) {
+
+            $this->mockDatabaseFile([
+                'models' => [
+                    'User' => [
+                        'columns' => [
+                            'name' => 'string',
+                            $key => $increment,
+                        ]
+                    ],
                 ],
-            ],
-        ]);
+            ]);
 
-        $this->artisan('larawiz:scaffold');
+            $this->artisan('larawiz:scaffold');
 
-        $model = $this->app->path('User.php');
+            $model = $this->app->path('User.php');
 
-        $this->assertStringContainsString("public \$fillable = ['name'];", $this->filesystem->get($model));
+            $this->assertStringContainsString("public \$fillable = ['name'];", $this->filesystem->get($model));
+        }
+
     }
 
     public function test_model_disables_fillable()

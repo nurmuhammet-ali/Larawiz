@@ -133,7 +133,7 @@ class ColumnTimestampsTest extends TestCase
     public function test_error_when_timestamp_column_doesnt_exists()
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The timestamp-able [doesnt_exists] column doesnt exists in the [User].');
+        $this->expectExceptionMessage("The [doesnt_exists] timestamp column doesn't exists in the [User] model.");
 
         $this->mockDatabaseFile([
             'models' => [
@@ -156,7 +156,7 @@ class ColumnTimestampsTest extends TestCase
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage(
-            'The timestamp-able [creation_date] column should be [timestamp|timestampTz] and [nullable].'
+            "The [creation_date] column of [User] must be [timestamp|timestampTz] and [nullable]."
         );
 
         $this->mockDatabaseFile([
@@ -180,7 +180,7 @@ class ColumnTimestampsTest extends TestCase
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage(
-            'The timestamp-able [creation_date] column should be [timestamp|timestampTz] and [nullable].'
+            "The [creation_date] column of [User] must be [timestamp|timestampTz] and [nullable]."
         );
 
         $this->mockDatabaseFile([

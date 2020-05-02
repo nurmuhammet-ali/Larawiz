@@ -17,8 +17,10 @@ class DatabaseParserPipeline extends Pipeline
         Pipes\ParseQuickModelData::class,                       // Complete the information from a Quick Model.
         Pipes\ParseModelTableName::class,                       // Gets the table name for each model.
         Pipes\ParseModelType::class,                            // Set the type of Model (User, pivot, etc)
-        Pipes\ParseModelColumns::class,                         // Parses the real columns of each model.
-        Pipes\ParseModelPrimaryKey::class,                      // Overwrites the primary key information.
+        Pipes\ParseModelColumns::class,
+        Pipes\ParseModelPrimaryKey::class,
+        Pipes\ParseModelSoftDeletesColumns::class,
+        Pipes\ParseModelTimestampsColumns::class,
         Pipes\ParseModelPerPage::class,                         // Set the model default pagination.
         Pipes\ParseReservationOfRelations::class,               // Reserves relations in the relations array.
 
@@ -42,7 +44,6 @@ class DatabaseParserPipeline extends Pipeline
         Pipes\ParseMigrationFromModel::class,                   // Creates a migration for each model.
         Pipes\ParseModelIndexesForMigration::class,             // Adds additional indexes declared for the model.
         Pipes\ParseModelFillable::class,                        // Set each model fillable properties.
-        Pipes\ParseModelTimestamps::class,                      // Parse the custom timestamps for the model.
         Pipes\ParseModelObserver::class,                        // Set model eloquent events.
         Pipes\ParseModelRouteBinding::class,                    // Set model column to use as route binding.
         Pipes\ParseModelFactory::class,                         // Set the factory states.

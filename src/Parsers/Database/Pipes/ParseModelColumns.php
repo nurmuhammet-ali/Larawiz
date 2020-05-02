@@ -3,8 +3,11 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
+use LogicException;
 use Illuminate\Support\Str;
 use Larawiz\Larawiz\Scaffold;
+use Larawiz\Larawiz\Lexing\Code\Method;
+use Larawiz\Larawiz\Lexing\Code\Argument;
 use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Lexing\Database\Column;
 use Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation;
@@ -21,8 +24,9 @@ class ParseModelColumns
     public function handle(Scaffold $scaffold, Closure $next)
     {
         foreach ($scaffold->database->models as $key => $model) {
+            foreach ($scaffold->rawDatabase->get("models.{$key}.columns") as $name => $line) {
 
-            foreach ($scaffold->getRawModel($key, 'columns') as $name => $line) {
+                $this->validateIndexing($name, $line);
 
                 // If the columns is a relation declaration, we will check if it needs columns.
                 // If it doesn't, we can safely jump over it since relations are later parsed,
@@ -33,27 +37,17 @@ class ParseModelColumns
                     }
                     continue;
                 }
-
-                // Since it's a normal column, we can proceed to instance the column data, np.
-                $column = $this->createColumn($name, $line);
-
-                // First, we will check if the column is a primary key. If a column has not been
-                // set as primary key beforehand, we will force it into the model as a primary.
-                // We can later change this is if the developer manually sets the primary key.
-                if ($this->columnIsPrimary($model, $column)) {
-                    $this->setPrimaryInModel($model, $column);
+                elseif ($this->columnIsPrimary($name)) {
+                    $column = $this->createPrimaryKey($name, $line);
                 }
-                // When it's not a primary, we can need to check if it's a timestamps declaration.
-                // If it is, then we proceed to tell the Model is using timestamps. Later we can
-                // change this config if the dev explicitly states no timestamps should be used.
-                elseif ($this->columnIsTimestamp($column)) {
-                    $this->setTimestamps($model);
+                elseif ($this->columnIsUuid($name)) {
+                    $column = $this->createUuidPrimaryKey($name, $line);
                 }
-                // Finally, we will check if the column is a Soft Deletes declaration. If it is,
-                // we can set the model has using Soft Deletes so later we can use this data to
-                // add the SoftDeletes trait and, if needed, point out the soft delete column.
-                elseif ($this->columnIsSoftDelete($column)) {
-                    $this->setSoftDelete($model, $column);
+                elseif ($this->columnIsShorthand($name)) {
+                    $column = $this->createShorthand($name, $line);
+                }
+                else {
+                    $column = $this->createColumn($name, $line);
                 }
 
                 $model->columns->put($name, $column);
@@ -64,6 +58,19 @@ class ParseModelColumns
     }
 
     /**
+     * Throw an exception if there is conflicting indexes types.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     */
+    protected function validateIndexing(string $name, ?string $line)
+    {
+        if ($line && Str::containsAll($line, ['index', 'unique'])) {
+            throw new LogicException("The [{$name}] column must contain either [index] or [unique], not both.");
+        }
+    }
+
+    /**
      * Checks if the Column line is a relation declaration.
      *
      * @param  null|string  $line
@@ -71,7 +78,7 @@ class ParseModelColumns
      */
     protected function columnIsRelation(?string $line)
     {
-        return Str::startsWith($line, array_keys(BaseRelation::RELATION_CLASSES));
+        return $line && Str::startsWith($line, array_keys(BaseRelation::RELATION_CLASSES));
     }
 
     /**
@@ -83,42 +90,6 @@ class ParseModelColumns
     protected function relationUsesColumn(string $line)
     {
         return in_array((string)Str::of($line)->before(':')->before(' '), BaseRelation::USES_COLUMN, true);
-    }
-
-    /**
-     * Checks if the Column should be treated as a primary key and the Model has not set any primary key yet.
-     *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
-     * @param  \Larawiz\Larawiz\Lexing\Database\Column  $column
-     * @return bool
-     */
-    protected function columnIsPrimary(Model $model, Column $column)
-    {
-        return $column->isPrimary() && $model->primary->column === null;
-    }
-
-    /**
-     * Sets the Primary Key information in the Model instance.
-     *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
-     * @param  \Larawiz\Larawiz\Lexing\Database\Column  $column
-     */
-    protected function setPrimaryInModel(Model $model, Column $column)
-    {
-        $model->primary->using = true;
-        $model->primary->column = $column;
-    }
-
-    /**
-     * Parses a migration column.
-     *
-     * @param  string  $name
-     * @param  string|array  $data
-     * @return \Larawiz\Larawiz\Lexing\Database\Column
-     */
-    protected function createColumn(string $name, $data)
-    {
-        return Column::fromLine($name, $data);
     }
 
     /**
@@ -134,47 +105,151 @@ class ParseModelColumns
     }
 
     /**
-     * Check if the Column is timestamps.
+     * Checks if the column is a primary column.
      *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Column  $column
+     * @param  string  $name
      * @return bool
      */
-    protected function columnIsTimestamp(Column $column)
+    protected function columnIsPrimary(string $name)
     {
-        return $column->isTimestamps();
+        return $name === 'id';
     }
 
     /**
-     * Set the Model has using timestamps.
+     * Creates a Primary Key column.
      *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
+     * @param  string  $name  "id: ~", "id: name", "id: ~ something", "id: name something".
+     * @param  null|string  $line
+     * @return \Larawiz\Larawiz\Lexing\Database\Column
      */
-    protected function setTimestamps(Model $model)
+    protected function createPrimaryKey(string $name, ?string $line)
     {
-        $model->timestamps->using = true;
+        $column = new Column();
+
+        $column->name = $this->firstArgumentOrName($name, $line);
+        $column->type = $name;
+        $column->methods = Method::parseManyMethods($name . ($line ? ':' . $line : ''));
+
+        return $column;
     }
 
     /**
-     * Check if the Column is a soft-deleted column
+     * Check if the column is a potentially UUID primary key.
      *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Column  $column
+     * @param  string  $name
      * @return bool
      */
-    protected function columnIsSoftDelete(Column $column)
+    protected function columnIsUuid(string $name)
     {
-        return $column->isSoftDeletes();
+        return $name === 'uuid';
     }
 
     /**
-     * Set the Soft Delete Column.
+     * Creates an UUID column.
      *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
-     * @param  \Larawiz\Larawiz\Lexing\Database\Column  $column
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return \Larawiz\Larawiz\Lexing\Database\Column
      */
-    protected function setSoftDelete(Model $model, Column $column)
+    protected function createUuidPrimaryKey(string $name, ?string $line)
     {
-        $model->softDelete->using = true;
-        $model->softDelete->column = $column->name;
+        $column = new Column;
+
+        $column->name = $this->firstArgumentOrName($name, $line);
+        $column->type = 'uuid';
+        $column->methods = Method::parseManyMethods(Column::normalizeShorthandLine($name, $line));
+
+        // If the primary key is an UUID, we will put the column name as first argument
+        // since the UUID method in the Blueprint needs the name of the column. If the
+        // declaration did not include the name, the name was already set as default.
+        if (! $column->methods->first()->arguments->contains('value', $column->name)) {
+            $column->methods->first()->arguments->prepend(new Argument([
+                'value' => $column->name,
+                'type'  => 'string',
+            ]));
+        }
+
+        return $column;
+    }
+
+    /**
+     * Check if the column is a shorthand of something.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    protected function columnIsShorthand(string $name)
+    {
+        return in_array($name, Column::SHORTHANDS, true);
+    }
+
+    /**
+     * Creates a shorthand column.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return \Larawiz\Larawiz\Lexing\Database\Column
+     */
+    protected function createShorthand(string $name, ?string $line)
+    {
+        $column = new Column;
+
+        $column->name = Column::getShorthandDefault($name, $line);
+        $column->type = $name;
+        $column->methods = Method::parseManyMethods(Column::normalizeShorthandLine($name, $line));
+
+        return $column;
+    }
+
+    /**
+     * Creates a normal column.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return \Larawiz\Larawiz\Lexing\Database\Column
+     */
+    protected function createColumn(string $name, ?string $line)
+    {
+        $column = new Column();
+
+        $column->name = $name;
+        $column->type = $this->firstArgumentOrName($name, $line);
+        $column->methods = $this->methodsFromLineOrName($name, $line);
+
+        return $column;
+    }
+
+    /**
+     * Returns a collection of methods normalized for the column declaration.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Code\Method[]
+     */
+    protected function methodsFromLineOrName(string $name, ?string $line)
+    {
+        return Method::parseManyMethods(Column::normalizeColumnLine($name, $line));
+    }
+
+    /**
+     * Returns the type of the column based on the line or name itself.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return string
+     */
+    protected function firstArgumentOrName(string $name, ?string $line)
+    {
+        if (! $line) {
+            return $name;
+        }
+
+        $newName = Str::of($line)->before(' ')->before(':')->__toString();
+
+        if (in_array(strtolower($newName), ['~', 'null'])) {
+            return $name;
+        }
+
+        return $newName;
     }
 }
-

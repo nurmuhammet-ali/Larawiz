@@ -41,32 +41,34 @@ class FactoriesTest extends TestCase
 
     public function test_doesnt_fill_id_or_autoincrement()
     {
-        $this->mockDatabaseFile([
-            'models' => [
-                'User' => [
-                    'foo'   => 'id',
-                    'bar'   => 'increments',
-                    'quz'   => 'integerIncrements',
-                    'qux'   => 'tinyIncrements',
-                    'quux'  => 'smallIncrements',
-                    'quuz'  => 'mediumIncrements',
-                    'corge' => 'bigIncrements',
+        $increments = [
+            'foo'   => 'id',
+            'bar'   => 'increments',
+            'quz'   => 'integerIncrements',
+            'qux'   => 'tinyIncrements',
+            'quux'  => 'smallIncrements',
+            'quuz'  => 'mediumIncrements',
+            'corge' => 'bigIncrements',
+        ];
+
+        foreach ($increments as $key => $increment) {
+            $this->mockDatabaseFile([
+                'models' => [
+                    'User' => [
+                        'columns' => [
+                            'name' => 'string',
+                            $key   => $increment,
+                        ]
+                    ],
                 ],
-            ],
-        ]);
+            ]);
 
-        $this->artisan('larawiz:scaffold');
+            $this->artisan('larawiz:scaffold');
 
-        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+            $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("'id' => ", $factory);
-        $this->assertStringNotContainsString("'foo' => ", $factory);
-        $this->assertStringNotContainsString("'bar' => ", $factory);
-        $this->assertStringNotContainsString("'quz' => ", $factory);
-        $this->assertStringNotContainsString("'qux' => ", $factory);
-        $this->assertStringNotContainsString("'quux' => ", $factory);
-        $this->assertStringNotContainsString("'quuz' => ", $factory);
-        $this->assertStringNotContainsString("'corge' => ", $factory);
+            $this->assertStringNotContainsString("$key => ", $factory);
+        }
     }
 
     public function test_doesnt_fill_timestamps()

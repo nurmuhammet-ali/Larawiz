@@ -142,7 +142,7 @@ class ColumnsTest extends TestCase
         $this->assertStringContainsString('protected $primaryKey = null;', $model);
         $this->assertStringContainsString('protected $incrementing = false;', $model);
         $this->assertStringNotContainsString('protected $keyType;', $model);
-        $this->assertStringContainsString('$table->uuid();', $migration);
+        $this->assertStringContainsString("\$table->uuid('uuid');", $migration);
         $this->assertStringContainsString("'uuid' => \$faker->uuid,", $factory);
     }
 

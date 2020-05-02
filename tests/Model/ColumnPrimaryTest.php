@@ -85,7 +85,9 @@ class ColumnPrimaryTest extends TestCase
 
         $this->assertStringContainsString('@property string $uuid', $model);
         $this->assertStringContainsString("protected \$primaryKey = 'uuid';", $model);
-        $this->assertStringContainsString('$table->uuid();', $migration);
+
+        $this->assertStringContainsString("\$table->uuid('uuid');", $migration);
+        $this->assertStringContainsString("\$table->primary('uuid');", $migration);
         $this->assertStringNotContainsString('$table->id();', $migration);
     }
 
@@ -113,6 +115,28 @@ class ColumnPrimaryTest extends TestCase
         $this->assertStringContainsString("protected \$primaryKey = 'quz';", $model);
         $this->assertStringContainsString("\$table->uuid('quz');", $migration);
         $this->assertStringNotContainsString('$table->id();', $migration);
+    }
+
+    public function test_error_when_quick_model_has_more_than_one_incrementing_key()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The [User] has more than one auto-incrementing column.');
+
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'foo'   => 'id',
+                    'bar'   => 'increments',
+                    'quz'   => 'integerIncrements',
+                    'qux'   => 'tinyIncrements',
+                    'quux'  => 'smallIncrements',
+                    'quuz'  => 'mediumIncrements',
+                    'corge' => 'bigIncrements',
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
     }
 
     public function test_model_does_not_includes_primary()
@@ -336,11 +360,8 @@ class ColumnPrimaryTest extends TestCase
         $this->assertStringNotContainsString('$table->id();', $migration);
     }
 
-    public function test_error_if_id_is_set_and_primary_is_set()
+    public function test_can_have_incrementing_key_and_set_different_primary()
     {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The [User] already uses the primary column [id].');
-
         $this->mockDatabaseFile([
             'models' => [
                 'User' => [
@@ -353,13 +374,27 @@ class ColumnPrimaryTest extends TestCase
             ],
         ]);
 
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
         $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get(
+            $this->app->path('User.php'));
+        $migration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
+
+        $this->assertStringContainsString('@property int $id', $model);
+        $this->assertStringContainsString('@property string $foo', $model);
+        $this->assertStringContainsString("protected \$primaryKey = 'foo';", $model);
+        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString("protected \$keyType = 'string';", $model);
+        $this->assertStringContainsString('$table->id();', $migration);
     }
 
     public function test_error_if_primary_column_set_does_not_exists()
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage("The [bar] column for primary key doesn't exists in [User] model.");
+        $this->expectExceptionMessage("The [bar] primary column in [User] doesn't exists.");
 
         $this->mockDatabaseFile([
             'models' => [

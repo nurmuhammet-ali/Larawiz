@@ -52,4 +52,17 @@ class Primary extends Fluent
     {
         return $this->column->name === 'id' && $this->column->type === 'id';
     }
+
+    /**
+     * Creates a Primary ID Column from the a line.
+     *
+     * @param  null|string  $line
+     * @return \Larawiz\Larawiz\Lexing\Database\Column
+     */
+    public static function createFromId(?string $line)
+    {
+        // If the line is null, we will just create the ID column as default. Otherwise,
+        // we can just issue whatever the line includes.
+        return Column::fromLine('id', $line);
+    }
 }

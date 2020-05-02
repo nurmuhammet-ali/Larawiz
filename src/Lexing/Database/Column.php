@@ -158,6 +158,7 @@ class Column extends Fluent
      */
     public const DEFAULT_NAMES = [
         'id' => 'id',
+        'uuid' => 'uuid',
         'rememberToken' => 'remember_token',
         'softDeletes' => SoftDelete::COLUMN,
     ];
@@ -177,6 +178,7 @@ class Column extends Fluent
         'timestampsTz',
         'rememberToken',
         'morphs',
+        'uuidMorphs',
         'softDeletes',
         'softDeletesTz',
     ];
@@ -200,6 +202,21 @@ class Column extends Fluent
     ];
 
     /**
+     * Columns that are short-hands.
+     *
+     * @var string
+     */
+    public const SHORTHANDS = [
+        'morphs',
+        'nullableMorphs',
+        'uuidMorphs',
+        'nullableUuidMorphs',
+        'softDeletes',
+        'softDeletesTz',
+        'rememberToken',
+    ];
+
+    /**
      * Create a new fluent instance.
      *
      * @param  array|object  $attributes
@@ -208,11 +225,41 @@ class Column extends Fluent
     public function __construct($attributes = [])
     {
         $this->attributes['methods'] = collect();
-        $this->attributes['isNullable'] = isset($attributes['name']) && in_array(
-            $attributes['name'], static::NULLABLE, true
-        );
-
         parent::__construct($attributes);
+    }
+
+    /**
+     * Returns the shorthand default name if the line doesn't have it.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return mixed|string
+     */
+    public static function getShorthandDefault(string $name, ?string $line)
+    {
+        if (! $line) {
+            return static::DEFAULT_NAMES[$name];
+        }
+
+        $calls = explode(' ', $line);
+
+        if (in_array(strtolower($calls[0]), ['~', 'null'])) {
+            return $name;
+        }
+
+        return $calls[0];
+    }
+
+    /**
+     * Returns if the column is nullable or not.
+     *
+     * @return bool
+     */
+    public function isNullable()
+    {
+        return in_array($this->name, static::NULLABLE, true)
+            || in_array($this->type, static::NULLABLE, true)
+            || $this->methods->contains('name', 'nullable');
     }
 
     /**
@@ -526,5 +573,67 @@ class Column extends Fluent
     public function realMethod()
     {
         return Arr::get(static::INCREMENTING_TO_INTEGER, $this->type, $this->type);
+    }
+
+    /**
+     * Normalize a line for a shorthand column.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return string
+     */
+    public static function normalizeShorthandLine(string $name, ?string $line)
+    {
+        if (! $line) {
+            return $name;
+        }
+
+        $calls = explode(' ', $line);
+
+        // If the first call is "~" or "null", then we will replace it for the name itself.
+        if (Str::contains($calls[0], ['~', 'null'])) {
+            $calls[0] = $name;
+        }
+        // If the first call has something, append the name and take that
+        elseif (Str::contains($calls[0], ':')) {
+            $calls[0] = Str::of($calls[0])->replace(':', $name . ':')->__toString();
+        } else {
+            $calls[0] = $name . ':' . $line;
+        }
+
+        return implode(' ', $calls);
+    }
+
+    /**
+     * Normalizes a column declaration line to the intended method call string.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return null|string
+     */
+    public static function normalizeColumnLine(string $name, ?string $line)
+    {
+        // If there is no line, we understand the column is a method with no parameters.
+        if (! $line) {
+            return $name;
+        }
+
+        $calls = explode(' ', $line);
+        // If the first call is "~" or "null", then we will replace it for the name itself.
+        if (in_array($calls[0], ['~', 'null'])) {
+            $calls[0] = $name;
+        }
+        // If the first call has something with arguments, we will inject the name as first argument.
+        elseif (Str::contains($calls[0], ':')) {
+            $replace = Str::contains($calls[0], ',') ? $name . ',' : $name;
+
+            $calls[0] = Str::of($calls[0])->replace(':', ':' . $replace)->__toString();
+        }
+        // If it doesn't, we will add it as first argument.
+        else {
+            $calls[0] .= ':' . $name;
+        }
+
+        return implode(' ', $calls);
     }
 }
