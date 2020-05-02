@@ -78,7 +78,7 @@ class WriteUuidTrait
     {
         $contents = $this->filesystem->get(Larawiz::getDummyPath('HasUuidPrimaryKey.stub'));
 
-        return str_replace('{DummyNamespace}', $this->app->getNamespace(), $contents);
+        return str_replace('{DummyNamespace}', trim($this->app->getNamespace(), '\\'), $contents);
     }
 
     /**
