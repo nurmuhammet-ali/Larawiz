@@ -1,6 +1,6 @@
 <?php
 
-namespace Larawiz\Larawiz\Parsers;
+namespace Larawiz\Larawiz\Lexing;
 
 use Illuminate\Support\Str;
 
