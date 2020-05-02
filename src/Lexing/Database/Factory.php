@@ -2,11 +2,6 @@
 
 namespace Larawiz\Larawiz\Lexing\Database;
 
-use Faker\Generator;
-use Faker\Guesser\Name;
-use Illuminate\Support\Str;
-use Illuminate\Support\Fluent;
-
 class Factory
 {
     /**
@@ -37,7 +32,7 @@ class Factory
     {
         // If it's a password, we return the password string.
         if ($name === 'password' && $type === 'string') {
-            return "'" . static::returnPassword() . "'";
+            return "'" . $this->returnPassword() . "'";
         }
 
         switch ($type) {
