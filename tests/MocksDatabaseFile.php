@@ -29,6 +29,7 @@ trait MocksDatabaseFile
         $this->shouldMockSeederFile();
         $this->shouldMockScopeFile();
         $this->shouldMockTraitFile();
+        $this->shouldMockUuidTraitFile();
 
         $this->mock(ApplicationBackup::class)->shouldReceive('backup')->andReturnTrue();
 
@@ -66,6 +67,13 @@ trait MocksDatabaseFile
     protected function shouldMockTraitFile($should = true)
     {
         $path = Larawiz::getDummyPath('DummyTrait.stub');
+
+        $this->filesystem->put($path, $should ? '' : file_get_contents($path));
+    }
+
+    protected function shouldMockUuidTraitFile($should = true)
+    {
+        $path = Larawiz::getDummyPath('HasUuidPrimaryKey.stub');
 
         $this->filesystem->put($path, $should ? '' : file_get_contents($path));
     }

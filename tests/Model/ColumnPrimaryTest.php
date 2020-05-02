@@ -414,6 +414,29 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
     }
 
+    public function test_adds_uuid_trait_to_model_using_uuid_has_primary_key()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'Thing\User' => [
+                    'uuid' => null,
+                    'foo'  => 'bar',
+                ],
+            ],
+        ]);
+
+        $this->shouldMockUuidTraitFile(false);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get($this->app->path('Thing\User.php'));
+
+        $this->assertStringContainsString("use App\HasUuidPrimaryKey;", $model);
+        $this->assertStringContainsString("    use HasUuidPrimaryKey;", $model);
+    }
+
     protected function tearDown() : void
     {
         $this->cleanProject();

@@ -26,7 +26,6 @@ class SetPrimaryKey
             $this->modelEnableCustomPrimary($construction->model, $construction->class);
         }
 
-
         return $next($construction);
     }
 
