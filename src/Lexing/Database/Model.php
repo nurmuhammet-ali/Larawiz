@@ -4,7 +4,7 @@ namespace Larawiz\Larawiz\Lexing\Database;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Fluent;
-use Larawiz\Larawiz\Parsers\HasNamespaceAndPath;
+use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 

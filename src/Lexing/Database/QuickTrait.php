@@ -2,9 +2,8 @@
 
 namespace Larawiz\Larawiz\Lexing\Database;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Fluent;
-use Larawiz\Larawiz\Parsers\HasNamespaceAndPath;
+use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
 
 /**
  * @property boolean $internal
