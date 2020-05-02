@@ -2,6 +2,7 @@
 
 namespace Tests\Model;
 
+use Faker\Generator;
 use Tests\RegistersPackage;
 use Tests\MocksDatabaseFile;
 use Orchestra\Testbench\TestCase;
@@ -58,7 +59,7 @@ class FactoriesTest extends TestCase
                         'columns' => [
                             'name' => 'string',
                             $key   => $increment,
-                        ]
+                        ],
                     ],
                 ],
             ]);
@@ -377,6 +378,44 @@ class FactoriesTest extends TestCase
             "\$factory->state(User::class, 'deleted', function (Faker \$faker) {",
             $factory
         );
+    }
+
+    public function test_uses_factory_provider_formatter_from_column_name()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'foo_bar'      => 'string',
+                        'quz_qux_quuz' => 'string',
+                    ],
+                ],
+            ],
+        ]);
+
+        $mock = $this->mock(Generator::class);
+
+        $mock->shouldReceive('getProviders')
+            ->andReturn([
+                new class {
+                    public function fooBar()
+                    {
+
+                    }
+
+                    public function quzQuxQuuz($time = null)
+                    {
+
+                    }
+                },
+            ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringContainsString("'foo_bar' => \$faker->fooBar,", $factory);
+        $this->assertStringContainsString("'quz_qux_quuz' => \$faker->quzQuxQuuz(),", $factory);
     }
 
     protected function tearDown() : void

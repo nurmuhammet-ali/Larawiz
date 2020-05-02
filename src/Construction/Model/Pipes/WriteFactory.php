@@ -3,7 +3,6 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Illuminate\Support\Str;
 use Larawiz\Larawiz\Helpers;
 use Illuminate\Support\Collection;
 use Illuminate\Filesystem\Filesystem;
@@ -51,7 +50,7 @@ class WriteFactory
     }
 
     /**
-     * Registers the factory instance as a singleton.
+     * Registers the factory instance as a singleton at runtime.
      *
      * @param  \Larawiz\Larawiz\Lexing\Database\Factory  $factory
      * @return \Larawiz\Larawiz\Lexing\Database\Factory
@@ -187,7 +186,7 @@ class WriteFactory
             && ! $column->isTimestamp()
             && ! $column->isSoftDeletes()
             && ! $column->isForRelation()
-            && ! $column->isNullable;
+            && ! $column->isNullable();
     }
 
     /**

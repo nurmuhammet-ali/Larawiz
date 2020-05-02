@@ -2,6 +2,10 @@
 
 namespace Larawiz\Larawiz\Lexing\Database;
 
+use Faker\Generator;
+use ReflectionMethod;
+use Illuminate\Support\Str;
+
 class Factory
 {
     /**
@@ -21,18 +25,46 @@ class Factory
     protected $secretPassword;
 
     /**
+     * A cached list of formatters.
+     *
+     * @var
+     */
+    protected $formatters;
+
+    /**
+     * Faker Generator.
+     *
+     * @var \Faker\Generator
+     */
+    protected $faker;
+
+    /**
+     * Factory constructor.
+     *
+     * @param  \Faker\Generator  $faker
+     */
+    public function __construct(Generator $faker)
+    {
+        $this->faker = $faker;
+    }
+
+    /**
      * Guesses which type or method it should call from Faker for the factory attributes.
      *
      * @param  string  $name
      * @param  string  $type
      * @return string
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException|\ReflectionException
      */
     public function guess(string $name, string $type)
     {
         // If it's a password, we return the password string.
         if ($name === 'password' && $type === 'string') {
             return "'" . $this->returnPassword() . "'";
+        }
+
+        if ($formatter = $this->getFakerFormatter(Str::camel($name))) {
+            return $formatter;
         }
 
         switch ($type) {
@@ -87,5 +119,30 @@ class Factory
     {
         // To avoid creating the password every time, we will just
         return $this->secretPassword = $this->secretPassword ?? app('hash')->make('secret');
+    }
+
+    /**
+     * Return the faker formatter string if it exists.
+     *
+     * @param  string  $formatter
+     * @return string|void
+     * @throws \ReflectionException
+     */
+    protected function getFakerFormatter(string $formatter)
+    {
+        // First we are gonna check if the formatter was already checked as valid.
+        // If it is not, we are gonna cycle through each Faker providers to check
+        // if the formatter exists and return the string the Factory should use.
+        if (isset($this->formatters[$formatter])) {
+            return $this->formatters[$formatter];
+        }
+
+        foreach ($this->faker->getProviders() as $provider) {
+            if (method_exists($provider, $formatter)) {
+                $parameters = (new ReflectionMethod($provider, $formatter))->getNumberOfParameters();
+
+                return $this->formatters[$formatter] = '$faker->' . $formatter . ($parameters ? '()' : '');
+            }
+        }
     }
 }
