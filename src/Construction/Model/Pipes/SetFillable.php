@@ -18,6 +18,7 @@ class SetFillable
     {
         if ($construction->model->fillable->isNotEmpty()) {
             $construction->class->addProperty('fillable', $construction->model->fillable->all())
+                ->setProtected()
                 ->addComment('The attributes that are mass assignable.')
                 ->addComment('')
                 ->addComment('@var array');
