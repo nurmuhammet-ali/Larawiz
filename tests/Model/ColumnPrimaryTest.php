@@ -431,10 +431,16 @@ class ColumnPrimaryTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Thing\User.php'));
+        $model = $this->filesystem->get($this->app->path('Thing' . DS .'User.php'));
 
         $this->assertStringContainsString("use App\HasUuidPrimaryKey;", $model);
         $this->assertStringContainsString("    use HasUuidPrimaryKey;", $model);
+
+        $this->assertFileExistsInFilesystem($this->app->path('HasUuidPrimaryKey.php'));
+
+        $this->assertStringContainsString('namespace \App;',
+            $this->filesystem->get($this->app->path('HasUuidPrimaryKey.php'))
+        );
     }
 
     protected function tearDown() : void
