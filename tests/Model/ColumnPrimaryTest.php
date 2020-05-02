@@ -16,13 +16,16 @@ class ColumnPrimaryTest extends TestCase
     use CleansProjectFromScaffoldData;
     use MocksDatabaseFile;
 
-    public function test_quick_model_includes_primary_id()
+    public function test_quick_model_includes_default_primary_id()
     {
         $this->mockDatabaseFile([
             'models' => [
                 'User' => [
                     'foo' => 'bar',
                 ],
+                'Post' => [
+                    'user' => 'belongsTo'
+                ]
             ],
         ]);
 
@@ -35,6 +38,7 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
+        $this->assertStringNotContainsString('protected $primaryKey', $model);
         $this->assertStringContainsString('@property int $id', $model);
         $this->assertStringContainsString('$table->id();', $migration);
     }

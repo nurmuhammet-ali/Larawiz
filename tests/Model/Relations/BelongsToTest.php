@@ -77,15 +77,62 @@ class BelongsToTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Post.php'));
-        $migration = $this->filesystem->get(
+        $postModel = $this->filesystem->get($this->app->path('Post.php'));
+        $postMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_posts_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\User $user', $model);
-        $this->assertStringContainsString('return $this->belongsTo(User::class);', $model);
+        $this->assertStringContainsString('@property-read \App\User $user', $postModel);
+        $this->assertStringContainsString('return $this->belongsTo(User::class);', $postModel);
         $this->assertStringContainsString(
-            "\$table->unsignedBigInteger('user_id'); // Created for [user] relation.", $migration
+            "\$table->unsignedBigInteger('user_id'); // Created for [user] relation.", $postMigration
+        );
+    }
+
+    public function test_different_relation_name_with_correct_model()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'     => [
+                    'name' => 'name',
+                    'posts' => 'hasMany:Post'
+                ],
+                'Post' => [
+                    'title' => 'name',
+                    'author' => 'belongsTo:User'
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $userModel = $this->filesystem->get($this->app->path('User.php'));
+        $userMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
+        );
+
+        $this->assertStringNotContainsString('protected $primaryKey', $userModel);
+        $this->assertStringContainsString(
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Post[] $posts', $userModel
+        );
+        $this->assertStringContainsString(
+            '@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Post', $userModel);
+        $this->assertStringContainsString('public function posts()', $userModel);
+        $this->assertStringContainsString("return \$this->hasMany(Post::class);", $userModel);
+        $this->assertStringNotContainsString('post', $userMigration);
+
+        $postModel = $this->filesystem->get($this->app->path('Post.php'));
+        $postMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_posts_table.php')
+        );
+
+        $this->assertStringContainsString('@property-read \App\User $author', $postModel);
+        $this->assertStringContainsString('public function author()', $postModel);
+        $this->assertStringContainsString("return \$this->belongsTo(User::class, 'user_id');", $postModel);
+        $this->assertStringContainsString(
+            "\$table->unsignedBigInteger('user_id'); // Created for [author] relation.", $postMigration
         );
     }
 

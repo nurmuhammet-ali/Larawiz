@@ -79,6 +79,8 @@ class ParseModelBelongToColumnRelation
         $key = $relation->getModelColumnFromColumnKey();
 
         if ($column = $relation->model->columns->get($key)) {
+            $column = clone $column;
+
             $column->type = $this->getTypeForRelation($column);
             $column->name = $relation->columnKey;
             return $column;
