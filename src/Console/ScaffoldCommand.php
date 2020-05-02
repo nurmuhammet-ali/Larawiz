@@ -73,11 +73,14 @@ class ScaffoldCommand extends BaseLarawizCommand
             $this->backupDirectories();
             $this->info('Making a backup of your project files and cleaning migrations.');
         }
+        $this->line('');
 
         $this->info('Scaffolding your project, it will take a little time...');
+        $this->line('');
 
         $this->write($this->parse());
 
+        $this->line('');
         $this->info('Your scaffold is ready. Happy coding!');
     }
 
