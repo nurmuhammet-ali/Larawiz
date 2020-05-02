@@ -100,7 +100,7 @@ class WriteFactory
      *
      * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
      * @return string
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException|\ReflectionException
      */
     protected function createFile(Model $model)
     {
@@ -164,7 +164,7 @@ class WriteFactory
      *
      * @param  \Larawiz\Larawiz\Lexing\Database\Column  $column
      * @return string|void
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException|\ReflectionException
      */
     protected function getPropertyString(Column $column)
     {

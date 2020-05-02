@@ -203,7 +203,7 @@ class ColumnsTest extends TestCase
         $this->assertStringContainsString('protected $incrementing = false;', $model);
         $this->assertStringNotContainsString('protected $keyType;', $model);
         $this->assertStringContainsString("\$table->bar('foo', 'quz', 'qux');", $migration);
-        $this->assertStringContainsString("'foo' => \$faker->foo,", $factory);
+        $this->assertStringContainsString("'foo' => '', // TODO: Add a random generated value for the [foo (bar)] property,", $factory);
     }
 
     public function test_does_not_creates_timestamps()

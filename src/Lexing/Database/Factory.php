@@ -22,7 +22,14 @@ class Factory
      *
      * @var string
      */
-    protected $secretPassword;
+    protected $hashedPassword;
+
+    /**
+     * The password string to hash.
+     *
+     * @var string
+     */
+    protected $password;
 
     /**
      * A cached list of formatters.
@@ -42,10 +49,12 @@ class Factory
      * Factory constructor.
      *
      * @param  \Faker\Generator  $faker
+     * @param  string  $password
      */
-    public function __construct(Generator $faker)
+    public function __construct(Generator $faker, string $password = 'secret')
     {
         $this->faker = $faker;
+        $this->password = $password;
     }
 
     /**
@@ -58,15 +67,33 @@ class Factory
      */
     public function guess(string $name, string $type)
     {
-        // If it's a password, we return the password string.
-        if ($name === 'password' && $type === 'string') {
-            return "'" . $this->returnPassword() . "'";
+        // If it's a password, we return the static password string.
+        if ($password = $this->returnPassword($name, $type)) {
+            return $password;
         }
 
+        // We will try to get the correct formatter from Faker's providers.
         if ($formatter = $this->getFakerFormatter(Str::camel($name))) {
             return $formatter;
         }
 
+        // Try to return an standard value from the type
+        if ($defaultType = $this->returnDefaultFakerValue($type)) {
+            return $defaultType;
+        }
+
+        // Everything has failed, so return an empty string and a to-do note.
+        return "'', // TODO: Add a random generated value for the [{$name} ({$type})] property";
+    }
+
+    /**
+     * Returns a default faker value based on the property type.
+     *
+     * @param string $type
+     * @return string|void
+     */
+    protected function returnDefaultFakerValue(string $type)
+    {
         switch ($type) {
             case 'boolean':
                 return '$faker->boolean';
@@ -76,10 +103,10 @@ class Factory
                 return '$faker->date';
             case 'dateTime':
             case 'dateTimeTz':
-            return '$faker->dateTime';
+                return '$faker->dateTime';
             case 'time':
             case 'timeTz':
-            return '$faker->time';
+                return '$faker->time';
             case 'year':
                 return '$faker->year';
             case 'text':
@@ -105,20 +132,22 @@ class Factory
             case 'unsignedDecimal':
                 return '$faker->randomFloat()';
         }
-
-        return '$faker->' . $name;
     }
 
     /**
      * Returns a password string.
      *
-     * @return string
+     * @param  string  $name
+     * @param  string  $type
+     * @return string|void
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function returnPassword()
+    protected function returnPassword(string $name, string $type)
     {
-        // To avoid creating the password every time, we will just
-        return $this->secretPassword = $this->secretPassword ?? app('hash')->make('secret');
+        if ($name === 'password' && $type === 'string') {
+            return $this->hashedPassword = $this->hashedPassword
+                ?? "'" . app('hash')->make($this->password) . "'";
+        }
     }
 
     /**
@@ -139,10 +168,22 @@ class Factory
 
         foreach ($this->faker->getProviders() as $provider) {
             if (method_exists($provider, $formatter)) {
-                $parameters = (new ReflectionMethod($provider, $formatter))->getNumberOfParameters();
-
-                return $this->formatters[$formatter] = '$faker->' . $formatter . ($parameters ? '()' : '');
+                return $this->formatterString($formatter, (new ReflectionMethod($provider, $formatter)));
             }
         }
+    }
+
+    /**
+     * Returns the correct formatter string from the Faker Provider.
+     *
+     * @param  string  $formatter
+     * @param  \ReflectionMethod  $method
+     * @return string
+     */
+    protected function formatterString(string $formatter, ReflectionMethod $method)
+    {
+        return $this->formatters[$formatter] = '$faker->'
+            . $formatter
+            . ($method->getNumberOfParameters() ? '()' : '');
     }
 }
