@@ -438,7 +438,7 @@ class ColumnPrimaryTest extends TestCase
 
         $this->assertFileExistsInFilesystem($this->app->path('HasUuidPrimaryKey.php'));
 
-        $this->assertStringContainsString('namespace \App;',
+        $this->assertStringContainsString('namespace App;',
             $this->filesystem->get($this->app->path('HasUuidPrimaryKey.php'))
         );
     }
