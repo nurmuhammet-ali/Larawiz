@@ -16,6 +16,11 @@ class MigrationTest extends TestCase
     public function test_migration_sets_table_name_and_class_name()
     {
         $this->mockDatabaseFile([
+            'models' => [
+                'model' => [
+                    'foo' => 'bar'
+                ]
+            ],
             'migrations' => [
                 'foos' => [
                     'name' => 'string',
@@ -39,7 +44,7 @@ class MigrationTest extends TestCase
     public function test_migration_receives_column_declarations()
     {
         $this->mockDatabaseFile([
-            'model' => [
+            'models' => [
                 'test',
             ],
             'migrations' => [
@@ -66,6 +71,11 @@ class MigrationTest extends TestCase
         $this->expectExceptionMessage('Relations are not allowed in the [relation] column definition.');
 
         $this->mockDatabaseFile([
+            'models' => [
+                'model' => [
+                    'foo' => 'bar'
+                ]
+            ],
             'migrations' => [
                 'foos' => [
                     'relation' => 'hasMany:things',
