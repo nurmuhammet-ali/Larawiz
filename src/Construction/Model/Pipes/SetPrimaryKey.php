@@ -19,7 +19,7 @@ class SetPrimaryKey
     public function handle(ModelConstruction $construction, Closure $next)
     {
         if ($construction->model->isPivot()) {
-            $this->pivotManyEnablePrimary($construction->model, $construction->class);
+            $this->pivotMayEnablePrimary($construction->model, $construction->class);
         } elseif (! $construction->model->primary->using) {
             $this->modelDisablePrimary($construction->class);
         } elseif (! $construction->model->primary->isDefault()) {
@@ -36,7 +36,7 @@ class SetPrimaryKey
      * @param  \Nette\PhpGenerator\ClassType  $class
      * @return void
      */
-    protected function pivotManyEnablePrimary(Model $model, ClassType $class)
+    protected function pivotMayEnablePrimary(Model $model, ClassType $class)
     {
         if ($model->primary->column && ! $model->primary->using) {
             return $model->columns->pull($model->primary->column->name);
