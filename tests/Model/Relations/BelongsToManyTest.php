@@ -384,7 +384,7 @@ class BelongsToManyTest extends TestCase
 
         $this->assertStringNotContainsString("protected \$primaryKey = 'id';", $pivotModel);
         $this->assertStringNotContainsString("protected \$keyType = 'int';", $pivotModel);
-        $this->assertStringContainsString('protected $incrementing = true;', $pivotModel);
+        $this->assertStringContainsString('public $incrementing = true;', $pivotModel);
 
         $this->assertStringContainsString('$table->id();', $pivotMigration);
     }
@@ -422,7 +422,7 @@ class BelongsToManyTest extends TestCase
 
         $this->assertStringContainsString("protected \$primaryKey = 'thing';", $pivotModel);
         $this->assertStringContainsString("protected \$keyType = 'string';", $pivotModel);
-        $this->assertStringNotContainsString('protected $incrementing = false;', $pivotModel);
+        $this->assertStringNotContainsString('public $incrementing = false;', $pivotModel);
 
         $this->assertStringContainsString("\$table->uuid('thing');", $pivotMigration);
     }
