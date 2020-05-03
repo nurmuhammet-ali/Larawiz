@@ -135,6 +135,22 @@ class ModelTest extends TestCase
         $this->artisan('larawiz:scaffold');
     }
 
+    public function test_error_when_no_models_set()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('No models where detected. Are you sure you filled the [models] key?');
+
+        $this->mockDatabaseFile([
+            'model' => [
+                'User' => [
+                    'foo' => 'bar'
+                ]
+            ]
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+    }
+
     protected function tearDown() : void
     {
         $this->cleanProject();
