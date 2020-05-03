@@ -107,7 +107,11 @@ class ParsePreliminaryHasOneOrManyData
      */
     protected function checkTargetModelBelongsToParentModel(Model $model, HasOneOrMany $relation)
     {
-        if (! ($relation->model->relations->filter->is('belongsTo')->contains('model.key', $model->key))) {
+        $contains = $relation->model->relations->filter(function ($relation) {
+            return $relation && $relation->is('belongsTo');
+        })->contains('model.key', $model->key);
+
+        if (! $contains) {
             throw new LogicException(
                 "The target model [{$model->key}] for [{$relation->name}] must contains a [belongsTo] relation."
             );

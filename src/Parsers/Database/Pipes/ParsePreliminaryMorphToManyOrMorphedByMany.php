@@ -9,7 +9,6 @@ use Larawiz\Larawiz\Scaffold;
 use Illuminate\Support\Collection;
 use Larawiz\Larawiz\Lexing\Code\Method;
 use Larawiz\Larawiz\Lexing\Database\Model;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 use Larawiz\Larawiz\Lexing\Database\Relations\MorphToManyOrMorphedByMany;
 
@@ -73,7 +72,7 @@ class ParsePreliminaryMorphToManyOrMorphedByMany
 
         $this->validateRelation($model, $relation);
 
-        $this->mayGetDeclaredPivotModel($models, $relation);
+        $this->mayGetDeclaredPivotModel($models, $model, $relation);
 
         return $relation;
     }
@@ -103,15 +102,27 @@ class ParsePreliminaryMorphToManyOrMorphedByMany
      * Returns the Pivot Model if it has been issued.
      *
      * @param  \Illuminate\Support\Collection  $models
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
      * @param  \Larawiz\Larawiz\Lexing\Database\Relations\MorphToManyOrMorphedByMany  $relation
      */
-    protected function mayGetDeclaredPivotModel(Collection $models, MorphToManyOrMorphedByMany $relation)
+    protected function mayGetDeclaredPivotModel(Collection $models, Model $model, MorphToManyOrMorphedByMany $relation)
     {
-        // Same as the "belongsToMany" relation type, this may also use a Pivot model.
-        if ($relation->methods->contains('name', 'using')) {
-            $relation->using = $this->getUsingPivotModel($models, $relation);
-            $relation->using->modelType = MorphPivot::class;
+        if (! $relation->methods->contains('name', 'using')) {
+            return;
         }
+
+        $relation->using = $this->getUsingPivotModel($models, $relation);
+        $relation->using->modelType = MorphPivot::class;
+
+        // If the pivot model is using a "morphTo" relation, we will inject the relation parent
+        // model into the "morphTo" relation itself, so the PHP Docs later can point to them.
+        // If we can't find it, we will forcefully exit and tell the developer to issue it.
+        if (! $morphTo = $relation->using->relations->get($relation->relationKey)) {
+            throw new LogicException(
+                "The pivot model [{$relation->using->key}] must have a [{$relation->relationKey}] as [morphTo] relation.");
+        }
+
+        $morphTo->models->put($model->key, $model);
     }
 
     /**

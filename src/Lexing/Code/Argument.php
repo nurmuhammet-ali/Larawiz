@@ -4,7 +4,6 @@ namespace Larawiz\Larawiz\Lexing\Code;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Fluent;
-use Illuminate\Support\Collection;
 
 /**
  * Class Argument
@@ -152,47 +151,6 @@ class Argument extends Fluent
         ]);
     }
 
-    /**
-     * Creates a new Argument using the argument as Class name.
-     *
-     * @param  string  $argument
-     * @param  \Illuminate\Support\Collection  $models
-     * @return static
-     */
-    public static function fromClass(string $argument, Collection $models)
-    {
-        return static::from($argument);
-    }
-
-    /**
-     * Creates a new Argument using the argument as variable.
-     *
-     * @param  string  $argument
-     * @return static
-     */
-    public static function fromVariable(string $argument)
-    {
-        $instance = static::from($argument);
-
-        $instance->type = 'variable';
-
-        return $instance;
-    }
-
-    /**
-     * Creates a new Argument using the argument as string.
-     *
-     * @param  string  $argument
-     * @return static
-     */
-    public static function fromString(string $argument)
-    {
-        $instance = static::from($argument);
-
-        $instance->type = 'string';
-
-        return $instance;
-    }
 
     /**
      * Returns the Argument as a string.
@@ -211,6 +169,10 @@ class Argument extends Fluent
 
         if ($this->isBool() || $this->isNumeric()) {
             return $this->value;
+        }
+
+        if ($this->isNull()) {
+            return '';
         }
 
         return "\${$this->value}" . ($this->property ? "->{$this->property}" : '');

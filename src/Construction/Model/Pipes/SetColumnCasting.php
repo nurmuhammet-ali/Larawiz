@@ -27,6 +27,7 @@ class SetColumnCasting
 
         if (! empty($castValue)) {
             $construction->class->addProperty('casts', $castValue)
+                ->setProtected()
                 ->addComment('The attributes that should be cast.')
                 ->addComment('')
                 ->addComment('@var.');

@@ -22,26 +22,29 @@ class SetRelations
      */
     public function handle(ModelConstruction $construction, Closure $next)
     {
-        foreach ($construction->model->relations as $relation) {
+        if ($construction->model->relations->isNotEmpty()) {
 
-            if ($relation instanceof MorphTo) {
-                $this->setMorphToComment($construction->class, $relation);
-                $this->setMorphToRelation($construction->class, $relation);
-            } elseif($relation instanceof BelongsTo) {
-                $construction->namespace->addUse($relation->model->fullNamespace());
+            foreach ($construction->model->relations as $relation) {
 
-                $this->setBelongsToComment($construction->class, $relation);
-                $this->setBelongsToRelation($construction->class, $relation);
+                if ($relation instanceof MorphTo) {
+                    $this->setMorphToComment($construction->class, $relation);
+                    $this->setMorphToRelation($construction->class, $relation);
+                } elseif($relation instanceof BelongsTo) {
+                    $construction->namespace->addUse($relation->model->fullNamespace());
+
+                    $this->setBelongsToComment($construction->class, $relation);
+                    $this->setBelongsToRelation($construction->class, $relation);
+                }
+                else {
+                    $construction->namespace->addUse($relation->model->fullNamespace());
+                    $this->setClassComment($construction->class, $relation);
+                    $this->setRelation($construction->namespace, $construction->class, $relation)
+                        ->addComment("@return \\{$relation->class()}|{$relation->model->fullRootNamespace()}");
+                }
             }
-            else {
-                $construction->namespace->addUse($relation->model->fullNamespace());
-                $this->setClassComment($construction->class, $relation);
-                $this->setRelation($construction->namespace, $construction->class, $relation)
-                    ->addComment("@return \\{$relation->class()}|{$relation->model->fullRootNamespace()}");
-            }
+
+            $construction->class->addComment('');
         }
-
-        $construction->class->addComment('');
 
         return $next($construction);
     }
@@ -60,13 +63,7 @@ class SetRelations
             $start .= 'null|';
         }
 
-        if ($relation->returnsCollection()) {
-            $start .= '\Illuminate\Database\Eloquent\Collection|';
-            $start .= $relation->models->map->fullRootNamespaceArray()->implode('|');
-        }
-        else {
-            $start .= $relation->models->map->fullRootNamespace()->implode('|');
-        }
+        $start .= $relation->models->map->fullRootNamespace()->implode('|');
 
         $class->addComment("{$start} \${$relation->name}");
     }
@@ -146,12 +143,12 @@ class SetRelations
     {
         $start = '@property-read ';
 
-        if (! $relation->usesWithDefault() && $relation->isNullable()) {
+        if (! $relation->returnsCollection() && ! $relation->usesWithDefault()) {
             $start .= 'null|';
         }
 
         if ($relation->returnsCollection()) {
-            $start .= "\Illuminate\Database\Eloquent\Collection|{$relation->model->fullRootNamespace()}[]";
+            $start .= "\Illuminate\Database\Eloquent\Collection|{$relation->model->fullRootNamespaceArray()}";
         }
         else {
             $start .= $relation->model->fullRootNamespace();

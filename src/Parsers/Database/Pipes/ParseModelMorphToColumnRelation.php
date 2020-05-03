@@ -49,7 +49,11 @@ class ParseModelMorphToColumnRelation
         // There is no need to worry for this column. Later, we will cross-check the "morphOne",
         // "morphMany" and "morphToMany" relations from other models and set the column as
         // "uuidMorphs" or just "morphs". If we found different target models, we will bail.
-        return $model->columns->put($relation->name, Column::fromLine($relation->columnName, $methods));
+        $column = Column::fromLine($relation->columnName, $methods);
+
+        $column->relation = $relation;
+
+        return $model->columns->put($relation->name, $column);
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Nette\PhpGenerator\Property;
 use Nette\PhpGenerator\ClassType;
 use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
@@ -20,13 +19,12 @@ class SetPrimaryKey
     public function handle(ModelConstruction $construction, Closure $next)
     {
         if ($construction->model->isPivot()) {
-            $this->pivotManyEnablePrimary($construction->model, $construction->class);
+            $this->pivotMayEnablePrimary($construction->model, $construction->class);
         } elseif (! $construction->model->primary->using) {
             $this->modelDisablePrimary($construction->class);
         } elseif (! $construction->model->primary->isDefault()) {
             $this->modelEnableCustomPrimary($construction->model, $construction->class);
         }
-
 
         return $next($construction);
     }
@@ -38,22 +36,18 @@ class SetPrimaryKey
      * @param  \Nette\PhpGenerator\ClassType  $class
      * @return void
      */
-    protected function pivotManyEnablePrimary(Model $model, ClassType $class)
+    protected function pivotMayEnablePrimary(Model $model, ClassType $class)
     {
-        if ($model->isPivot() && $model->primary->column && ! $model->primary->using) {
-                return $model->columns->pull($model->primary->column->name);
-        }
-
-        if (! $model->primary->using && $model->primary->column) {
+        if ($model->primary->column && ! $model->primary->using) {
             return $model->columns->pull($model->primary->column->name);
-        }
-
-        if ($model->primary->column->isPrimary()) {
-            $this->setIncrementingProperty($class, true);
         }
 
         if ('id' !== $name = $model->primary->column->getName()) {
             $this->setPrimaryKeyProperty($class, $name);
+        }
+
+        if ($model->primary->column->isPrimary()) {
+            $this->setIncrementingProperty($class, true);
         }
 
         if ('int' !== $type = $model->primary->column->castType()) {
@@ -81,12 +75,12 @@ class SetPrimaryKey
      */
     protected function modelEnableCustomPrimary(Model $model, ClassType $class)
     {
-        if (! $model->primary->column->isPrimary()) {
-            $this->setIncrementingProperty($class, false);
-        }
-
         if ('id' !== $name = $model->primary->column->getName()) {
             $this->setPrimaryKeyProperty($class, $name);
+        }
+
+        if (! $model->primary->column->isPrimary()) {
+            $this->setIncrementingProperty($class, false);
         }
 
         if ('int' !== $type = $model->primary->column->castType()) {

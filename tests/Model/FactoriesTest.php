@@ -2,6 +2,7 @@
 
 namespace Tests\Model;
 
+use Faker\Generator;
 use Tests\RegistersPackage;
 use Tests\MocksDatabaseFile;
 use Orchestra\Testbench\TestCase;
@@ -29,8 +30,8 @@ class FactoriesTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists($this->app->databasePath('factories' . DS . 'UserFactory.php'));
-        $this->assertFileExists($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
 
         $userFactory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
         $adminFactory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
@@ -41,32 +42,34 @@ class FactoriesTest extends TestCase
 
     public function test_doesnt_fill_id_or_autoincrement()
     {
-        $this->mockDatabaseFile([
-            'models' => [
-                'User' => [
-                    'foo'   => 'id',
-                    'bar'   => 'increments',
-                    'quz'   => 'integerIncrements',
-                    'qux'   => 'tinyIncrements',
-                    'quux'  => 'smallIncrements',
-                    'quuz'  => 'mediumIncrements',
-                    'corge' => 'bigIncrements',
+        $increments = [
+            'foo'   => 'id',
+            'bar'   => 'increments',
+            'quz'   => 'integerIncrements',
+            'qux'   => 'tinyIncrements',
+            'quux'  => 'smallIncrements',
+            'quuz'  => 'mediumIncrements',
+            'corge' => 'bigIncrements',
+        ];
+
+        foreach ($increments as $key => $increment) {
+            $this->mockDatabaseFile([
+                'models' => [
+                    'User' => [
+                        'columns' => [
+                            'name' => 'string',
+                            $key   => $increment,
+                        ],
+                    ],
                 ],
-            ],
-        ]);
+            ]);
 
-        $this->artisan('larawiz:scaffold');
+            $this->artisan('larawiz:scaffold');
 
-        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+            $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("'id' => ", $factory);
-        $this->assertStringNotContainsString("'foo' => ", $factory);
-        $this->assertStringNotContainsString("'bar' => ", $factory);
-        $this->assertStringNotContainsString("'quz' => ", $factory);
-        $this->assertStringNotContainsString("'qux' => ", $factory);
-        $this->assertStringNotContainsString("'quux' => ", $factory);
-        $this->assertStringNotContainsString("'quuz' => ", $factory);
-        $this->assertStringNotContainsString("'corge' => ", $factory);
+            $this->assertStringNotContainsString("$key => ", $factory);
+        }
     }
 
     public function test_doesnt_fill_timestamps()
@@ -312,7 +315,7 @@ class FactoriesTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->databasePath('factories' . DS . 'UserFactory.php'));
     }
 
     public function test_creates_factory_states()
@@ -375,6 +378,262 @@ class FactoriesTest extends TestCase
             "\$factory->state(User::class, 'deleted', function (Faker \$faker) {",
             $factory
         );
+    }
+
+    public function test_adds_empty_string_to_non_guessable_model_property()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'bar' => 'string',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringContainsString("'bar' => '', // TODO: Add a random generated value for the [bar (string)] property", $factory);
+    }
+
+    public function test_uses_factory_provider_formatter_from_column_name()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'foo_bar'      => 'string',
+                        'quz_qux_quuz' => 'string',
+                        'bar' => 'string',
+                    ],
+                ],
+            ],
+        ]);
+
+        $mock = $this->mock(Generator::class);
+
+        $mock->shouldReceive('getProviders')
+            ->andReturn([
+                new class {
+                    public function fooBar()
+                    {
+
+                    }
+
+                    public function quzQuxQuuz($time = null)
+                    {
+
+                    }
+                },
+            ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringContainsString("'foo_bar' => \$faker->fooBar,", $factory);
+        $this->assertStringContainsString("'quz_qux_quuz' => \$faker->quzQuxQuuz(),", $factory);
+        $this->assertStringContainsString("'bar' => '', // TODO: Add a random generated value for the [bar (string)] property", $factory);
+    }
+
+    public function test_doesnt_fills_auto_incrementing()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'id' => null,
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringNotContainsString("'id' =>", $factory);
+    }
+
+    public function test_doesnt_fills_custom_auto_incrementing()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'foo' => 'bigIncrements',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringNotContainsString("'foo' =>", $factory);
+    }
+
+    public function test_doesnt_fills_timestamps()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'timestamps' => null,
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringNotContainsString("'created_at' =>", $factory);
+        $this->assertStringNotContainsString("'updated_at' =>", $factory);
+    }
+
+    public function test_doesnt_fills_custom_timestamps()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'foo' => 'timestamp nullable',
+                    ],
+                    'timestamps' => [
+                        'created_at' => 'foo',
+                    ]
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringNotContainsString("'foo' =>", $factory);
+    }
+
+    public function test_doesnt_fills_timestamp()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'foo' => 'timestamp',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringNotContainsString("'foo' =>", $factory);
+    }
+
+    public function test_doesnt_fill_soft_deletes()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'softDeletes' => null,
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringNotContainsString("\$factory->define(User::class, function (Faker \$faker) {\n    return [\n        'deleted_at'", $factory);
+    }
+
+    public function test_doesnt_fills_custom_soft_deletes()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'softDeletes' => null,
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringNotContainsString("\$factory->define(User::class, function (Faker \$faker) {\n        return [\n        'deleted_at' =>", $factory);
+    }
+
+    public function test_doesnt_fills_belongs_to_relation()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'teams' => 'belongsTo'
+                ],
+                'Team' => [
+                    'name' => 'string'
+                ]
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringNotContainsString("'team_id' =>", $factory);
+    }
+
+    public function test_doesnt_fills_morph_to_relation()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'teamable' => 'morphTo'
+                ],
+                'Company' => [
+                    'name' => 'string'
+                ],
+                'Team' => [
+                    'name' => 'string'
+                ]
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringNotContainsString("'teamable' =>", $factory);
+    }
+
+    public function test_doesnt_fills_nullables()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'foo' => 'string nullable'
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+
+        $this->assertStringNotContainsString("'foo' =>", $factory);
     }
 
     protected function tearDown() : void

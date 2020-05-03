@@ -7,6 +7,7 @@ use LogicException;
 use Illuminate\Support\Arr;
 use Larawiz\Larawiz\Scaffold;
 use Larawiz\Larawiz\Lexing\Database\Model;
+use Larawiz\Larawiz\Lexing\Database\Column;
 
 class ParseModelPrimaryKey
 {
@@ -20,22 +21,19 @@ class ParseModelPrimaryKey
     public function handle(Scaffold $scaffold, Closure $next)
     {
         foreach ($scaffold->database->models as $key => $model) {
-            $data = $scaffold->rawDatabase->get("models.{$key}");
 
-            // If the Model data sets explicitly it shouldn't a use primary key we will disable it.
-            // Of course, this is moot if the model already has set an incrementing key like "id",
-            // because these will forcefully become primary keys even if the dev doesn't want to.
-            if ($this->modelShouldNotUsePrimary($model, $data)) {
-                $this->disablePrimary($model);
-                continue;
-            }
+            // If the model has more than one auto-increment, we will tell the dev to pick
+            // one. This will avoid any non-intended behaviour for scaffolding since most
+            // SQL databases don't support more than one auto-incrementing column types.
+            $this->shouldHaveOnlyOneAutoIncrementing($model);
 
-            // Now that we know the the developer has not disabled the primary key, we can check if
-            // the model has any primary key information filled so we can guess the primary key
-            // properties. We will use that information to fill the primary inside the model.
-            if ($this->hasPrimaryFilled($data)) {
-                $this->fillPrimary($data, $model);
-                continue;
+            // If there is a primary key declaration we will use that to set the primary
+            // key in the model. If not, we will try to guess it from the model columns
+            // declared previously. If there is no primary column, we will disable it.
+            if ($primary = $scaffold->rawDatabase->get("models.{$key}.primary")) {
+                $this->setPrimaryKey($model, $primary);
+            } else {
+                $this->guessPrimaryKeyStatus($model);
             }
         }
 
@@ -43,96 +41,101 @@ class ParseModelPrimaryKey
     }
 
     /**
-     * Returns if the model should not use any primary key.
+     * Guesses the primary key status of the model.
      *
      * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
-     * @param  array  $data
-     * @return bool
+     * @return void
      */
-    protected function modelShouldNotUsePrimary(Model $model, array $data)
+    protected function guessPrimaryKeyStatus(Model $model)
     {
-        $notUsingPrimaryKey = Arr::get($data, 'primary') === false;
+        // First, we are gonna check if the "id" key exists. If not, we will check for any
+        // other column set as auto-incrementing. If both fails we will set the model as
+        // not having any primary key at all since it may be what the developer wants.
+        $primary = $model->columns->get('id') ?? $model->columns->first->isPrimary();
 
-        // We will bail out if the model is not using a primary key, and there is a column
-        // that is an incrementing one. With stopping here we can tell the developer to
-        // make up his mind because he may accidentally have filled one or the other.
-        if ($notUsingPrimaryKey && optional($model->primary->column)->isPrimary()) {
-            throw new LogicException("The [{$model->key}] uses a incrementing column, but primary key is [false].");
+        if ($primary) {
+            $this->setColumnAsPrimaryKey($model, $primary);
+        } else {
+            $this->disablePrimaryKey($model);
         }
-
-        return $notUsingPrimaryKey;
     }
 
     /**
-     * Disable the primary key for the Model.
+     * Sets the model Primary Key as the ID column.
+     *
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
+     * @param  \Larawiz\Larawiz\Lexing\Database\Column  $primary
+     */
+    protected function setColumnAsPrimaryKey(Model $model, Column $primary)
+    {
+        $model->primary->using = true;
+
+        $model->primary->column = $primary;
+        $model->primary->type = $primary->phpType();
+        $model->primary->incrementing = $primary->isPrimary();
+    }
+
+    /**
+     * Verify the model has only one auto-incrementing column.
      *
      * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
      */
-    protected function disablePrimary(Model $model)
+    protected function shouldHaveOnlyOneAutoIncrementing(Model $model)
+    {
+        $autoIncrementing = $model->columns->filter(function ($column) {
+            return $column && $column->isPrimary();
+        });
+
+        if ($autoIncrementing->count() > 1) {
+            throw new LogicException("The [{$model->key}] has more than one auto-incrementing column.");
+        }
+    }
+
+    /**
+     * Disable the primary key for the model.
+     *
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
+     */
+    protected function disablePrimaryKey(Model $model)
     {
         $model->primary->using = false;
     }
 
     /**
-     * Checks if the Primary key has been properly filled.
-     *
-     * @param  array  $data
-     * @return bool
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
+     * @param array|string $primary
      */
-    protected function hasPrimaryFilled(array $data)
+    protected function setPrimaryKey(Model $model, $primary)
     {
-        return Arr::has($data, 'primary');
+        // There are two types of primary declarations: a simple column name or a custom type.
+        // Because I'm lazy, we will transform the string declaration to an array and let it
+        // guess the type and auto-incrementing nature of it in case these are not issued.
+        if (is_string($primary)) {
+            $primary = [ 'column' => $primary ];
+        }
+
+        $this->setColumnAsPrimaryKey($model,
+            $this->retrieveColumnFromPrimaryData($model, Arr::get($primary, 'column'))
+        );
+
+        // If the primary key data as keys that override the type, we will use them.
+        $model->primary->incrementing = Arr::get($primary, 'incrementing', $model->primary->incrementing);
+        $model->primary->type = Arr::get($primary, 'type', $model->primary->type);
     }
 
     /**
-     * Fill the primary key with the data supplied.
-     *
-     * @param  array  $data
-     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
-     */
-    protected function fillPrimary(array $data, Model $model)
-    {
-        $model->primary->using = true;
-
-        // If there is an incrementing column, we bail out so the developer decides what to use.
-        if (optional($model->primary->column)->isPrimary()) {
-            throw new LogicException(
-                "The [{$model->key}] already uses the primary column [{$model->primary->column->name}]."
-            );
-        }
-
-        // If the developer issued just a string, we can use the string as the name of the column
-        // to use as primary key. If he issued an array, we will use that information too as
-        // it comes, since the developer may want to fix a non-standard column type.
-        if (is_string($column = Arr::get($data, 'primary'))) {
-            $model->primary->column = $model->columns->get($column);
-
-            if (! $model->primary->column) {
-                $this->throwColumnAbsentException($model, $column);
-            }
-
-        } else {
-            $model->primary->column = $model->columns->get(Arr::get($data, 'column'));
-            $model->primary->type = Arr::get($data, 'type');
-            $model->primary->incrementing = (bool)Arr::get($data, 'incrementing');
-
-
-            if (! $model->primary->column) {
-                $this->throwColumnAbsentException($model, Arr::get($data, 'column'));
-            }
-        }
-
-
-    }
-
-    /**
-     * Throw an exception if the column doesnt exists.
+     * Returns the column used for primary key.
      *
      * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
-     * @param  string  $column
+     * @param  null|string  $primary
+     * @return \Larawiz\Larawiz\Lexing\Database\Column
      */
-    protected function throwColumnAbsentException(Model $model, string $column)
+    protected function retrieveColumnFromPrimaryData(Model $model, string $primary)
     {
-        throw new LogicException("The [{$column}] column for primary key doesn't exists in [{$model->key}] model.");
+        if ($column = $model->columns->get($primary)) {
+            return $column;
+        }
+
+        throw new LogicException("The [{$primary}] primary column in [{$model->key}] doesn't exists.");
     }
 }

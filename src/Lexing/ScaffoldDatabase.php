@@ -2,9 +2,7 @@
 
 namespace Larawiz\Larawiz\Lexing;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Fluent;
-use Illuminate\Config\Repository;
 
 /**
  * Class ScaffoldDatabase
@@ -16,19 +14,6 @@ use Illuminate\Config\Repository;
  */
 class ScaffoldDatabase extends Fluent
 {
-    /**
-     * Sets the namespace for the Scaffold Database models.
-     *
-     * @param  null|string  $namespace
-     * @return string
-     */
-    public function setNamespace(?string $namespace)
-    {
-        $namespace = Str::of($namespace)->start(app()->getNamespace())->finish('\\')->beforeLast('\\')->__toString();
-
-        return $this->namespace = $namespace;
-    }
-
     /**
      * Creates a new Scaffold Database.
      *

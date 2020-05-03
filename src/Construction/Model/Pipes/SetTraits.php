@@ -3,6 +3,7 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
+use Illuminate\Support\Arr;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
 
 class SetTraits
@@ -18,6 +19,9 @@ class SetTraits
     {
         if ($construction->model->quickTraits->isNotEmpty()) {
             foreach ($construction->model->quickTraits as $trait) {
+
+                Arr::first($construction->file->getNamespaces())->addUse($trait->fullNamespace());
+
                 $construction->class->addTrait($trait->fullNamespace());
             }
         }

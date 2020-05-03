@@ -26,7 +26,7 @@ class SeedersTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
     }
 
     public function test_custom_model_automatically_creates_seeder()
@@ -43,7 +43,7 @@ class SeedersTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
     }
 
     public function test_disables_seeder()
@@ -61,7 +61,7 @@ class SeedersTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
     }
 
     protected function tearDown() : void

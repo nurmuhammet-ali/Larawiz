@@ -5,7 +5,6 @@ namespace Larawiz\Larawiz\Construction\Model\Pipes;
 use Closure;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\ClassType;
-use Nette\PhpGenerator\PhpNamespace;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notifiable;
 use Larawiz\Larawiz\Lexing\Database\Model;
@@ -30,7 +29,7 @@ class CreateModelInstance
         $construction->class->addExtend($construction->model->modelType);
 
         // If the model is an Authenticatable class instance, we will add the needed classes and traits.
-        if ($construction->model->modelType === User::class) {
+        if ($construction->model->isUser()) {
             $construction->namespace->addUse(User::class, 'Authenticatable');
             $construction->namespace->addUse(MustVerifyEmail::class);
             $construction->namespace->addUse(Notifiable::class);
@@ -63,7 +62,7 @@ class CreateModelInstance
             'firstOrNew(array $attributes = [], array $values = [])',
             'firstOrFail($columns = [\'*\'])',
             'firstOrCreate(array $attributes, array $values = [])',
-            'firstOr($columns = [\'*\'], Closure $callback = null)',
+            'firstOr($columns = [\'*\'], \Closure $callback = null)',
             'firstWhere($column, $operator = null, $value = null, $boolean = \'and\')',
             'updateOrCreate(array $attributes, array $values = [])',
             'findOrFail($id, $columns = [\'*\'])',
@@ -71,7 +70,7 @@ class CreateModelInstance
         ];
 
         foreach ($methods as $method) {
-            $class->addComment("@method static $method");
+            $class->addComment("@method {$model->fullRootNamespace()} {$method}");
         }
 
         $methods = [
@@ -80,7 +79,7 @@ class CreateModelInstance
         ];
 
         foreach ($methods as $method) {
-            $class->addComment("@method null|static $method");
+            $class->addComment("@method null|{$model->fullRootNamespace()} {$method}");
         }
 
         $class->addComment('');

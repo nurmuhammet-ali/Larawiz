@@ -22,7 +22,7 @@ class ParseReservationOfRelations
             foreach ($scaffold->rawDatabase->get("models.{$key}.columns") as $name => $line) {
 
                 // Here we'll only reserve the relations so these can appear in order in the model and migration.
-                if (Str::startsWith($line, BaseRelation::RELATION_CLASSES)) {
+                if (Str::startsWith($line, array_keys(BaseRelation::RELATION_CLASSES))) {
                     $model->relations->put($name, null);
                 }
             }

@@ -4,6 +4,8 @@ namespace Tests\Commands;
 
 use LogicException;
 use Tests\RegistersPackage;
+use Illuminate\Support\Str;
+use Larawiz\Larawiz\Larawiz;
 use Larawiz\Larawiz\Scaffold;
 use Illuminate\Support\Carbon;
 use Symfony\Component\Yaml\Yaml;
@@ -80,11 +82,14 @@ class ScaffoldTest extends TestCase
 
     public function test_backups_app_migrations_seeds_and_factories_folders()
     {
+        $appDir = Str::of(rtrim($this->app->path(), '\\'))->afterLast(DS)->__toString();
+        $databaseDir = Str::of(rtrim($this->app->databasePath(), '\\'))->afterLast(DS)->__toString();
+
         File::put($this->app->path('Foo.php'), 'test');
 
-        File::makeDirectory($this->app->databasePath('migrations'), null, null, true);
-        File::makeDirectory($this->app->databasePath('factories'), null, null, true);
-        File::makeDirectory($this->app->databasePath('seeds'), null, null, true);
+        File::ensureDirectoryExists($this->app->databasePath('migrations'), null, true);
+        File::ensureDirectoryExists($this->app->databasePath('factories'), null, true);
+        File::ensureDirectoryExists($this->app->databasePath('seeds'), null, true);
 
         File::put($this->app->databasePath('migrations' . DS . 'Bar.php'), 'test');
         File::put($this->app->databasePath('factories' . DS . 'Quz.php'), 'test');
@@ -106,14 +111,14 @@ class ScaffoldTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $path = 'larawiz' . DS . 'backups' . DS . $time->format('Y-m-d_His');
+        $path = Larawiz::BACKUPS_DIR . DS . $time->format('Y-m-d_His');
 
         $this->assertDirectoryExists(storage_path($path));
 
-        $this->assertFileExists(storage_path($path . DS . 'app' . DS . 'Foo.php'));
-        $this->assertFileExists(storage_path($path . DS . 'migrations' . DS . 'Bar.php'));
-        $this->assertFileExists(storage_path($path . DS . 'factories' . DS . 'Quz.php'));
-        $this->assertFileExists(storage_path($path . DS . 'seeds' . DS . 'Qux.php'));
+        $this->assertFileExists(storage_path($path . DS . $appDir . DS . 'Foo.php'));
+        $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'migrations' . DS . 'Bar.php'));
+        $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'factories' . DS . 'Quz.php'));
+        $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'seeds' . DS . 'Qux.php'));
     }
 
     public function test_accepts_no_backups_flag_and_doesnt_backups()
@@ -136,6 +141,7 @@ class ScaffoldTest extends TestCase
         $path = 'larawiz' . DS . 'backups' . DS . $time->format('Y-m-d_His');
 
         $this->assertDirectoryNotExists(storage_path($path));
+
         $this->assertFileExists($this->app->path('Foo.php'));
         $this->assertFileExists($this->app->databasePath('migrations' . DS . 'Bar.php'));
         $this->assertFileExists($this->app->databasePath('factories' . DS . 'Quz.php'));

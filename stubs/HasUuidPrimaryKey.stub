@@ -1,0 +1,28 @@
+<?php
+
+namespace {DummyNamespace};
+
+use Illuminate\Support\Str;
+
+trait HasUuidPrimaryKey
+{
+    /**
+     * Sets the primary key for the model as an UUID.
+     *
+     * @return void
+     */
+    protected function initializeHasUuidPrimaryKey()
+    {
+        $this->attributes[$this->getKeyName()] = $this->generateUuid();
+    }
+
+    /**
+     * Generates an UUID to use as Primary Key.
+     *
+     * @return \Ramsey\Uuid\UuidInterface|string
+     */
+    protected function generateUuid()
+    {
+        return Str::uuid();
+    }
+}

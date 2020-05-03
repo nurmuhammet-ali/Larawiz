@@ -3,7 +3,6 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Illuminate\Support\Str;
 use Larawiz\Larawiz\Helpers;
 use Illuminate\Support\Collection;
 use Illuminate\Filesystem\Filesystem;
@@ -51,7 +50,7 @@ class WriteFactory
     }
 
     /**
-     * Registers the factory instance as a singleton.
+     * Registers the factory instance as a singleton at runtime.
      *
      * @param  \Larawiz\Larawiz\Lexing\Database\Factory  $factory
      * @return \Larawiz\Larawiz\Lexing\Database\Factory
@@ -69,7 +68,7 @@ class WriteFactory
      * @param  \Larawiz\Larawiz\Construction\Model\ModelConstruction  $construction
      * @param  \Closure  $next
      * @return mixed
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException|\ReflectionException
      */
     public function handle(ModelConstruction $construction, Closure $next)
     {
@@ -101,7 +100,7 @@ class WriteFactory
      *
      * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
      * @return string
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException|\ReflectionException
      */
     protected function createFile(Model $model)
     {
@@ -112,7 +111,7 @@ class WriteFactory
                 . "\n"
                 . "\n// TODO: Review the Factory for the {$model->class} model."
                 . "\n"
-                . "\n/** @var \Illuminate\Database\Eloquent\FactoryBuilder \$factory */"
+                . "\n/** @var \Illuminate\Database\Eloquent\Factory \$factory */"
                 . "\n"
                 . "\n\$factory->define({$model->class}::class, function (Faker \$faker) {"
                 . "\n    return [";
@@ -165,7 +164,7 @@ class WriteFactory
      *
      * @param  \Larawiz\Larawiz\Lexing\Database\Column  $column
      * @return string|void
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException|\ReflectionException
      */
     protected function getPropertyString(Column $column)
     {
@@ -187,7 +186,7 @@ class WriteFactory
             && ! $column->isTimestamp()
             && ! $column->isSoftDeletes()
             && ! $column->isForRelation()
-            && ! $column->isNullable;
+            && ! $column->isNullable();
     }
 
     /**

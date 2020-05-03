@@ -2,14 +2,11 @@
 
 namespace Larawiz\Larawiz\Console;
 
-use Illuminate\Support\Str;
-use Larawiz\Larawiz\Larawiz;
 use Larawiz\Larawiz\Scaffold;
 use Illuminate\Filesystem\Filesystem;
 use Larawiz\Larawiz\Writer\WriterPipeline;
 use Larawiz\Larawiz\Scaffolding\ScaffoldParserPipeline;
 use Larawiz\Larawiz\Scaffolding\Pipes\ParseDatabaseData;
-use const DIRECTORY_SEPARATOR as DS;
 
 class ScaffoldCommand extends BaseLarawizCommand
 {
@@ -74,12 +71,16 @@ class ScaffoldCommand extends BaseLarawizCommand
         }
         else {
             $this->backupDirectories();
+            $this->info('Making a backup of your project files and cleaning migrations.');
         }
+        $this->line('');
 
         $this->info('Scaffolding your project, it will take a little time...');
+        $this->line('');
 
         $this->write($this->parse());
 
+        $this->line('');
         $this->info('Your scaffold is ready. Happy coding!');
     }
 
@@ -96,14 +97,14 @@ class ScaffoldCommand extends BaseLarawizCommand
     /**
      * Parse the YAML files into Scaffold-able data.
      *
-     * @return Scaffold
+     * @return \Larawiz\Larawiz\Scaffold
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     protected function parse()
     {
         $pipeline = $this->getLaravel()->make(ScaffoldParserPipeline::class);
 
-        $this->setCustomYamlFiles();
+        $this->maySetCustomScaffoldFiles();
 
         return $this->getLaravel()->instance(
             Scaffold::class, $pipeline->send(Scaffold::make())->thenReturn()
@@ -115,7 +116,7 @@ class ScaffoldCommand extends BaseLarawizCommand
      *
      * @return void
      */
-    protected function setCustomYamlFiles()
+    protected function maySetCustomScaffoldFiles()
     {
         foreach (static::ENABLED_SECTIONS as $option => $parser) {
             if ($file = $this->option($option)) {
@@ -125,7 +126,7 @@ class ScaffoldCommand extends BaseLarawizCommand
     }
 
     /**
-     * Write the scaffold files from the Scaffold data.
+     * Write the project files from the parsed scaffold data.
      *
      * @param  \Larawiz\Larawiz\Scaffold  $scaffold
      * @return Scaffold
@@ -133,39 +134,17 @@ class ScaffoldCommand extends BaseLarawizCommand
      */
     protected function write(Scaffold $scaffold)
     {
-        $pipeline = $this->getLaravel()->make(WriterPipeline::class);
-
-        return $pipeline->send($scaffold)->thenReturn();
+        return $this->getLaravel()->make(WriterPipeline::class)->send($scaffold)->thenReturn();
     }
 
     /**
-     * Backup the application, routes and database directories.
+     * Backup the application and database directories.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     protected function backupDirectories()
     {
-        $backupDirectory = implode(DS, [
-            $this->getLaravel()->storagePath(),
-            Larawiz::BACKUPS_DIR,
-            now()->format('Y-m-d_His'),
-        ]);
-
-        $this->filesystem->makeDirectory($backupDirectory, null, true, true);
-
-        $array = [
-            $this->getLaravel()->path(),
-            $this->getLaravel()->databasePath('migrations'),
-            $this->getLaravel()->databasePath('factories'),
-            $this->getLaravel()->databasePath('seeds'),
-        ];
-
-        // For each "backup-able" directory, we will copy it and then clean it so we can start fresh.
-        foreach ($array as $path) {
-            $this->filesystem->copyDirectory($path, $backupDirectory . DS . Str::afterLast($path, DS));
-        }
-
-        // Clean the migrations folder so the developer doesn't run into multiple tables.
-        $this->filesystem->deleteDirectory($this->getLaravel()->databasePath('migrations'), true);
+        $this->getLaravel()->make(ApplicationBackup::class)->backup();
     }
 }

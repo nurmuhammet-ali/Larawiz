@@ -4,6 +4,7 @@ namespace Larawiz\Larawiz\Console;
 
 use Larawiz\Larawiz\Larawiz;
 use Illuminate\Filesystem\Filesystem;
+use const DIRECTORY_SEPARATOR;
 
 class ClearBackupsCommand extends BaseLarawizCommand
 {
@@ -58,9 +59,11 @@ class ClearBackupsCommand extends BaseLarawizCommand
             return $this->line('No backups were deleted.');
         }
 
+        $this->line('Deleting backups...');
+
         $deleted = $this->deleteBackups();
 
-        $this->line("A total of {$deleted} backups were deleted");
+        $this->info("A total of {$deleted} backups were deleted.");
     }
 
     /**
@@ -70,7 +73,7 @@ class ClearBackupsCommand extends BaseLarawizCommand
      */
     protected function doesntHasBackups()
     {
-        $path = storage_path(Larawiz::BACKUPS_DIR);
+        $path = $this->getLaravel()->storagePath() . DIRECTORY_SEPARATOR . Larawiz::BACKUPS_DIR;
 
         return $this->filesystem->missing($path) || empty($this->filesystem->directories($path));
     }
@@ -92,7 +95,7 @@ class ClearBackupsCommand extends BaseLarawizCommand
      */
     protected function deleteBackups()
     {
-        $path = storage_path(Larawiz::BACKUPS_DIR);
+        $path = $this->getLaravel()->storagePath() . DIRECTORY_SEPARATOR . Larawiz::BACKUPS_DIR;
 
         $directories = count($this->filesystem->directories($path));
 

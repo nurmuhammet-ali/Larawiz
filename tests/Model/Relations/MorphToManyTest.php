@@ -116,9 +116,9 @@ class MorphToManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Taggable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_taggables_table.php'));
 
         $photoModel = $this->filesystem->get($this->app->path('Photo.php'));
@@ -302,9 +302,9 @@ class MorphToManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Taggable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php'));
 
         $photoModel = $this->filesystem->get($this->app->path('Photo.php'));
@@ -325,6 +325,71 @@ class MorphToManyTest extends TestCase
         $this->assertStringContainsString("\$table->unsignedBigInteger('tag_id');", $vegetableMigration);
         $this->assertStringContainsString("\$table->morphs('taggable');", $vegetableMigration);
         $this->assertStringNotContainsString('$table->id();', $vegetableMigration);
+    }
+
+    public function test_pivot_accepts_morph_to_nullable()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'Photo'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Video'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Tag'           => [
+                    'name' => 'string',
+                ],
+                'Vegetable' => [
+                    'enforce'  => 'bool',
+                    'tag'      => 'belongsTo',
+                    'taggable' => 'morphTo nullable',
+                ],
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $vegetableModel = $this->filesystem->get($this->app->path('Vegetable.php'));
+        $vegetableMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')
+        );
+
+        $this->assertStringContainsString('@property-read null|\App\Photo|\App\Video $taggable', $vegetableModel);
+        $this->assertStringContainsString("\$table->nullableMorphs('taggable');", $vegetableMigration);
+    }
+
+    public function test_error_when_pivot_doesnt_uses_morphTo()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The pivot model [Vegetable] must have a [taggable] as [morphTo] relation.');
+
+        $this->mockDatabaseFile([
+            'models' => [
+                'Photo'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Video'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Tag'           => [
+                    'name' => 'string',
+                ],
+                'Vegetable' => [
+                    'enforce'  => 'bool',
+                    'tag'      => 'belongsTo',
+                    'taggable' => 'string',
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
     }
 
     public function test_creates_pivot_model_if_one_parent_doesnt_uses_using()
@@ -354,12 +419,12 @@ class MorphToManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Taggable.php'));
-        $this->assertFileExists($this->app->path('Vegetable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Vegetable.php'));
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php'));
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_taggables_table.php'));
     }
 
@@ -401,6 +466,47 @@ class MorphToManyTest extends TestCase
         $this->assertStringContainsString('protected $incrementing = true;', $vegetableModel);
 
         $this->assertStringContainsString('$table->id();', $vegetableMigration);
+    }
+
+    public function test_pivot_model_has_custom_primary_id()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'Photo'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Video'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Tag'           => [
+                    'name' => 'string',
+                ],
+                'Vegetable' => [
+                    'uuid' => 'thing',
+                    'enforce'  => 'bool',
+                    'tag'      => 'belongsTo',
+                    'taggable' => 'morphTo',
+                ],
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $vegetableModel = $this->filesystem->get($this->app->path('Vegetable.php'));
+
+        $vegetableMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')
+        );
+
+        $this->assertStringContainsString("protected \$primaryKey = 'thing';", $vegetableModel);
+        $this->assertStringNotContainsString('protected $incrementing = false;', $vegetableModel);
+        $this->assertStringContainsString("protected \$keyType = 'string';", $vegetableModel);
+
+        $this->assertStringContainsString("\$table->uuid('thing');", $vegetableMigration);
     }
 
     public function test_error_when_using_model_doesnt_exists()

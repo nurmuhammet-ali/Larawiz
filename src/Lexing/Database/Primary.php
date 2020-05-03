@@ -2,10 +2,7 @@
 
 namespace Larawiz\Larawiz\Lexing\Database;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Support\Fluent;
-use Illuminate\Support\Collection;
 
 /**
  * Class Primary
@@ -57,40 +54,15 @@ class Primary extends Fluent
     }
 
     /**
-     * Returns if the Primary uses an incrementing column.
+     * Creates a Primary ID Column from the a line.
      *
-     * @return bool
+     * @param  null|string  $line
+     * @return \Larawiz\Larawiz\Lexing\Database\Column
      */
-    public function usesIncrementing()
+    public static function createFromId(?string $line)
     {
-        return $this->column && in_array($this->column->type, self::PRIMARY_COLUMN_METHODS, true);
-    }
-
-    /**
-     * Returns if the column definition should be considered a primary key.
-     *
-     * @param  array  $columnsLines
-     * @return bool
-     */
-    public static function hasColumnWithPrimary(array $columnsLines)
-    {
-        foreach ($columnsLines as $line) {
-            if (Str::contains($line, static::PRIMARY_COLUMN_METHODS)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Returns if the Column line is using an incrementing column.
-     *
-     * @param  string  $columnLine
-     * @return bool
-     */
-    public static function hasIncrementingKey(string $columnLine)
-    {
-        return Str::contains($columnLine, static::PRIMARY_COLUMN_METHODS);
+        // If the line is null, we will just create the ID column as default. Otherwise,
+        // we can just issue whatever the line includes.
+        return Column::fromLine('id', $line);
     }
 }

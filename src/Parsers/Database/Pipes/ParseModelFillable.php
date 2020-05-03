@@ -4,8 +4,6 @@ namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
 use LogicException;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Larawiz\Larawiz\Scaffold;
 use Illuminate\Support\Collection;
 
@@ -71,7 +69,6 @@ class ParseModelFillable
         $difference = collect(array_flip($fillable))->diffKeys($columns);
 
         if ($difference->count()) {
-
             $difference = $difference->keys()->map(function ($column) {
                 return "[{$column}]";
             })->implode(', ');

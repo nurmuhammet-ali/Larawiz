@@ -110,7 +110,7 @@ class ParseQuickModelData
      */
     protected function setPrimaryColumn(array &$data)
     {
-        // If the user is using an 'uuid', we will set the primary column to uuid.
+        // If the user is using an 'uuid', we will set the primary column to its name.
         if (Arr::has($data, 'columns.uuid')) {
             $data['primary'] = 'uuid';
         }

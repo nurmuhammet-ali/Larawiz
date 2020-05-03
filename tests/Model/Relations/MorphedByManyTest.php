@@ -110,9 +110,9 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Taggable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_taggables_table.php'));
 
         $tagModel = $this->filesystem->get($this->app->path('Tag.php'));
@@ -159,7 +159,7 @@ class MorphedByManyTest extends TestCase
         Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
     }
 
-    public function test_creates_pivot_model_using_parents_uuid()
+    public function test_creates_pivot_table_using_parents_uuid()
     {
         $this->mockDatabaseFile([
             'models' => [
@@ -249,9 +249,9 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Taggable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php'));
 
         $tagModel = $this->filesystem->get($this->app->path('Tag.php'));
@@ -300,12 +300,12 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Taggable.php'));
-        $this->assertFileExists($this->app->path('Vegetable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Vegetable.php'));
 
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php'));
-        $this->assertFileExists(
+        $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_taggables_table.php'));
     }
 
@@ -347,6 +347,47 @@ class MorphedByManyTest extends TestCase
         $this->assertStringContainsString('protected $incrementing = true;', $vegetableModel);
 
         $this->assertStringContainsString('$table->id();', $vegetableMigration);
+    }
+
+    public function test_pivot_model_has_custom_primary_id()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'Photo'         => [
+                    'name' => 'string',
+                ],
+                'Video'         => [
+                    'name' => 'string',
+                ],
+                'Tag'           => [
+                    'name' => 'string',
+                    'photos' => 'morphedByMany:Photo,taggable using:Vegetable',
+                    'videos' => 'morphedByMany:Video,taggable using:Vegetable',
+                ],
+                'Vegetable' => [
+                    'uuid' => 'thing',
+                    'enforce'  => 'bool',
+                    'tag'      => 'belongsTo',
+                    'taggable' => 'morphTo',
+                ],
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $vegetableModel = $this->filesystem->get($this->app->path('Vegetable.php'));
+
+        $vegetableMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')
+        );
+
+        $this->assertStringContainsString("protected \$primaryKey = 'thing';", $vegetableModel);
+        $this->assertStringNotContainsString('protected $incrementing = false;', $vegetableModel);
+        $this->assertStringContainsString("protected \$keyType = 'string';", $vegetableModel);
+
+        $this->assertStringContainsString("\$table->uuid('thing');", $vegetableMigration);
     }
 
     public function test_error_when_using_model_doesnt_exists()

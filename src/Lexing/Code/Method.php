@@ -3,7 +3,6 @@
 namespace Larawiz\Larawiz\Lexing\Code;
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Collection;
 
@@ -82,7 +81,10 @@ class Method extends Fluent
     public static function methodsToString(Collection $methods)
     {
         if ($methods->isNotEmpty()) {
-            return implode('->', $methods->map->__toString()->toArray());
+            $string = implode('->', $methods->map->__toString()->toArray());
+
+            // Replace null arguments inside the declaration as null strings.
+            return str_replace(', ,', ', null,', $string);
         }
 
         return null;

@@ -4,7 +4,9 @@ namespace Tests\Model;
 
 use Tests\RegistersPackage;
 use Tests\MocksDatabaseFile;
+use Larawiz\Larawiz\Larawiz;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Filesystem\Filesystem;
 use Tests\CleansProjectFromScaffoldData;
 use const DIRECTORY_SEPARATOR as DS;
 
@@ -28,7 +30,7 @@ class ObserversTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExists($this->app->path('Observers' . DS . 'UserObserver.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Observers' . DS . 'UserObserver.php'));
     }
 
     public function test_custom_model_creates_observer()
@@ -44,11 +46,23 @@ class ObserversTest extends TestCase
             ],
         ]);
 
+        $this->shouldUseArrayFilesystem(false);
+
+        $fileystem = $this->partialMock(Filesystem::class);
+
+        $fileystem->shouldReceive('exists')
+            ->with($this->app->basePath(Larawiz::PATH . DS . 'database.yml'))
+            ->andReturnTrue();
+
+        $fileystem->shouldReceive('get')
+            ->with($this->app->basePath(Larawiz::PATH . DS . 'database.yml'))
+            ->andReturnTrue('');
+
         $this->artisan('larawiz:scaffold');
 
         $observer = $this->app->path('Observers' . DS . 'UserObserver.php');
 
-        $this->assertFileExists($observer);
+        $this->assertFileExistsInFilesystem($observer);
 
         $this->assertStringContainsString('namespace App\Observers;', $this->filesystem->get($observer));
         $this->assertStringContainsString('use App\User;', $this->filesystem->get($observer));

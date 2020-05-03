@@ -5,9 +5,7 @@ namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 use Closure;
 use LogicException;
 use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
 use Larawiz\Larawiz\Scaffold;
-use Illuminate\Config\Repository;
 use Illuminate\Support\Collection;
 use Larawiz\Larawiz\Lexing\Database\Model;
 use Illuminate\Contracts\Foundation\Application;
@@ -64,8 +62,9 @@ class PrepareModels
      */
     protected function createModel(string $name, ?string $namespace = null)
     {
-        $name = trim($name, '\\');
-        $namespace = trim($namespace, '\\');
+        // We are gonna normalize the name and namespace automatically.
+        $name = Str::of($name)->replace('/', '\\')->trim('\\')->__toString();
+        $namespace = Str::of($namespace)->replace('/', '\\')->trim('\\')->__toString();
 
         return Model::make([
             'key' => $name,
@@ -132,6 +131,7 @@ class PrepareModels
             ->replace('\\', DIRECTORY_SEPARATOR)
             ->finish(DIRECTORY_SEPARATOR)
             ->append($name)
+            ->replace('\\', DIRECTORY_SEPARATOR)
             ->finish('.php')
             ->__toString();
 

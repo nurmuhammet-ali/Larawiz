@@ -29,10 +29,10 @@ class ColumnsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExists($this->app->path('User.php'));
-        $this->assertFileExists($this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
-        $this->assertFileExists($this->app->databasePath('factories' . DS . 'UserFactory.php'));
-        $this->assertFileExists($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('User.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
     }
 
     public function test_custom_model_creates_id()
@@ -84,6 +84,38 @@ class ColumnsTest extends TestCase
         $this->assertStringContainsString('$table->id(\'foo\');', $migration);
     }
 
+    public function test_chains_method_preceded_with_null()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'  => [
+                    'columns' => [
+                        'id' => '~ foo bar:qux,quz',
+                        'softDeletes' => '~ foo bar:qux,quz',
+                        'foo' => 'bar:~,quz,qux',
+                    ]
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get(
+            $this->app->path('User.php'));
+        $migration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
+
+        $this->assertStringNotContainsString('protected $primaryKey', $model);
+        $this->assertStringNotContainsString('protected $keyType', $model);
+        $this->assertStringNotContainsString('protected $incrementing', $model);
+
+        $this->assertStringContainsString("\$table->id()->foo()->bar('qux', 'quz');", $migration);
+        $this->assertStringContainsString("\$table->softDeletes()->foo()->bar('qux', 'quz');", $migration);
+        $this->assertStringContainsString("\$table->bar('foo', null, 'quz', 'qux');", $migration);
+    }
+
     public function test_creates_uuid()
     {
         $this->mockDatabaseFile([
@@ -110,7 +142,7 @@ class ColumnsTest extends TestCase
         $this->assertStringContainsString('protected $primaryKey = null;', $model);
         $this->assertStringContainsString('protected $incrementing = false;', $model);
         $this->assertStringNotContainsString('protected $keyType;', $model);
-        $this->assertStringContainsString('$table->uuid();', $migration);
+        $this->assertStringContainsString("\$table->uuid('uuid');", $migration);
         $this->assertStringContainsString("'uuid' => \$faker->uuid,", $factory);
     }
 
@@ -171,7 +203,7 @@ class ColumnsTest extends TestCase
         $this->assertStringContainsString('protected $incrementing = false;', $model);
         $this->assertStringNotContainsString('protected $keyType;', $model);
         $this->assertStringContainsString("\$table->bar('foo', 'quz', 'qux');", $migration);
-        $this->assertStringContainsString("'foo' => \$faker->foo,", $factory);
+        $this->assertStringContainsString("'foo' => '', // TODO: Add a random generated value for the [foo (bar)] property,", $factory);
     }
 
     public function test_does_not_creates_timestamps()
@@ -248,8 +280,7 @@ class ColumnsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -259,6 +290,25 @@ class ColumnsTest extends TestCase
 
         $this->assertStringNotContainsString('$table->timestamps();', $migration);
         $this->assertStringContainsString('$table->timestampsTz();', $migration);
+    }
+
+    public function test_comments_nullable_property_with_null()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'  => [
+                    'name' => 'string nullable'
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get($this->app->path('User.php'));
+
+        $this->assertStringContainsString('@property null|string $name', $model);
     }
 
     protected function tearDown() : void

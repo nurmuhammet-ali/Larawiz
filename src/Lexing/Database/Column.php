@@ -6,7 +6,6 @@ use LogicException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
-use Illuminate\Support\Collection;
 use Larawiz\Larawiz\Lexing\Code\Method;
 use Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation;
 
@@ -159,6 +158,7 @@ class Column extends Fluent
      */
     public const DEFAULT_NAMES = [
         'id' => 'id',
+        'uuid' => 'uuid',
         'rememberToken' => 'remember_token',
         'softDeletes' => SoftDelete::COLUMN,
     ];
@@ -178,6 +178,7 @@ class Column extends Fluent
         'timestampsTz',
         'rememberToken',
         'morphs',
+        'uuidMorphs',
         'softDeletes',
         'softDeletesTz',
     ];
@@ -201,6 +202,21 @@ class Column extends Fluent
     ];
 
     /**
+     * Columns that are short-hands.
+     *
+     * @var string
+     */
+    public const SHORTHANDS = [
+        'morphs',
+        'nullableMorphs',
+        'uuidMorphs',
+        'nullableUuidMorphs',
+        'softDeletes',
+        'softDeletesTz',
+        'rememberToken',
+    ];
+
+    /**
      * Create a new fluent instance.
      *
      * @param  array|object  $attributes
@@ -209,11 +225,41 @@ class Column extends Fluent
     public function __construct($attributes = [])
     {
         $this->attributes['methods'] = collect();
-        $this->attributes['isNullable'] = isset($attributes['name']) && in_array(
-            $attributes['name'], static::NULLABLE, true
-        );
-
         parent::__construct($attributes);
+    }
+
+    /**
+     * Returns the shorthand default name if the line doesn't have it.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return mixed|string
+     */
+    public static function getShorthandDefault(string $name, ?string $line)
+    {
+        if (! $line) {
+            return static::DEFAULT_NAMES[$name];
+        }
+
+        $calls = explode(' ', $line);
+
+        if (in_array(strtolower($calls[0]), ['~', 'null'])) {
+            return $name;
+        }
+
+        return $calls[0];
+    }
+
+    /**
+     * Returns if the column is nullable or not.
+     *
+     * @return bool
+     */
+    public function isNullable()
+    {
+        return in_array($this->name, static::NULLABLE, true)
+            || in_array($this->type, static::NULLABLE, true)
+            || $this->methods->contains('name', 'nullable');
     }
 
     /**
@@ -389,35 +435,6 @@ class Column extends Fluent
     }
 
     /**
-     * Guess and creates a Column instance based on a given Relation.
-     *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Relation  $relation
-     * @param  \Illuminate\Support\Collection  $models
-     * @return \Larawiz\Larawiz\Lexing\Database\Column
-     */
-    public static function guessRelationColumn(Relation $relation, Collection $models)
-    {
-        /** @var \Larawiz\Larawiz\Lexing\Database\Model $model */
-        if (! $model = $models->firstWhere('class', $relation->hasModel)) {
-            throw new LogicException("The model for the {$relation->name} doesn't exists.");
-        }
-
-        $column = new Column;
-
-        // If the model is using primary column, we will use that information to locate the column.
-        if ($model->primary->column) {
-            $column->name = Str::snake($model->class) . '_' . $model->primary->column->name;
-            $column->type = $model->columns->firstWhere('name', $model->primary->column)->type;
-        }
-        else {
-            $column->name = Str::snake($model->class) . '_' . $relation->name;
-            $column->type = $model->columns->firstWhere('name', $relation->name)->type;
-        }
-
-        return $column;
-    }
-
-    /**
      * Creates a Column instance from a name and line.
      *
      * @param  string  $name
@@ -438,21 +455,19 @@ class Column extends Fluent
         // If the name is "id" or "uuid", we will understand that the model wants to use UUID as
         // primary key, and the first argument will be the name. In that case we will swap both
         // values. With this we ensure the developer only sets one UUID as primary key instead.
-        if ($line && in_array($name, ['id', 'uuid'])) {
-            $column->name = Str::before($line, ' ');
-            $column->type = $name;
-            $column->methods = Method::parseManyMethods("$name:$column->name");
+        if (in_array($name, ['id', 'uuid'])) {
+            static::adjustPrimaryColumn($column, $name, $line);
         }
         // If the column is a Soft Deletes declaration using "softDeletes" or "softDeletesTz", we
         // will understand the developer wants to use soft deletes that may or may not come with
         // a custom column. In that case we will prepare these migration methods automatically.
         elseif (in_array($name, SoftDelete::SOFT_DELETES, true)) {
-            $column->name = $line ? Str::before($line, ' ') : SoftDelete::COLUMN;
+            $column->name = static::firstArgument($line) ?? SoftDelete::COLUMN;
             $column->type = $name;
             $column->methods = Method::parseManyMethods($name . ($line ? ':' . $line : null));
         }
-        // If the line is empty, like "id: ~", then we will assume the developer wants to declare
-        // something like "id()". In that case we will just swap the type for the name and add
+        // If the line is empty, like "rut: ~", then we will assume the developer wants to declare
+        // something like "rut()". In that case we will just swap the type for the name and add
         // the name as the only method for the Column. That way we will not break anything.
         elseif (empty($line)) {
             $column->type = $name;
@@ -470,6 +485,48 @@ class Column extends Fluent
         $column->isNullable = Str::contains($line, 'nullable');
 
         return $column;
+    }
+
+    /**
+     * Adjusts the column as primary key.
+     *
+     * @param  \Larawiz\Larawiz\Lexing\Database\Column  $column
+     * @param  string  $name
+     * @param  string  $line
+     */
+    protected static function adjustPrimaryColumn(Column $column, string $name, ?string $line)
+    {
+        $column->name = self::firstArgument($line) ?? $name;
+        $column->type = $name;
+
+        $methods = $column->type . ($column->name !== $name ? ":{$column->name}" : '');
+
+        if (Str::after($line, ' ') !== $line) {
+            $methods .= ' ' . Str::after($line, ' ');
+        }
+
+        $column->methods = Method::parseManyMethods($methods);
+    }
+
+    /**
+     * Gets the first argument if it's not "null";
+     *
+     * @param  string  $line
+     * @return null|string
+     */
+    protected static function firstArgument(?string $line)
+    {
+        if ($line === null) {
+            return null;
+        }
+
+        $firstArgument = Str::before($line, ' ');
+
+        if (in_array(strtolower($firstArgument), ['~' , 'null'])) {
+            return null;
+        }
+
+        return $firstArgument;
     }
 
     /**
@@ -516,5 +573,67 @@ class Column extends Fluent
     public function realMethod()
     {
         return Arr::get(static::INCREMENTING_TO_INTEGER, $this->type, $this->type);
+    }
+
+    /**
+     * Normalize a line for a shorthand column.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return string
+     */
+    public static function normalizeShorthandLine(string $name, ?string $line)
+    {
+        if (! $line) {
+            return $name;
+        }
+
+        $calls = explode(' ', $line);
+
+        // If the first call is "~" or "null", then we will replace it for the name itself.
+        if (Str::contains($calls[0], ['~', 'null'])) {
+            $calls[0] = $name;
+        }
+        // If the first call has something, append the name and take that
+        elseif (Str::contains($calls[0], ':')) {
+            $calls[0] = Str::of($calls[0])->replace(':', $name . ':')->__toString();
+        } else {
+            $calls[0] = $name . ':' . $line;
+        }
+
+        return implode(' ', $calls);
+    }
+
+    /**
+     * Normalizes a column declaration line to the intended method call string.
+     *
+     * @param  string  $name
+     * @param  null|string  $line
+     * @return null|string
+     */
+    public static function normalizeColumnLine(string $name, ?string $line)
+    {
+        // If there is no line, we understand the column is a method with no parameters.
+        if (! $line) {
+            return $name;
+        }
+
+        $calls = explode(' ', $line);
+        // If the first call is "~" or "null", then we will replace it for the name itself.
+        if (in_array($calls[0], ['~', 'null'])) {
+            $calls[0] = $name;
+        }
+        // If the first call has something with arguments, we will inject the name as first argument.
+        elseif (Str::contains($calls[0], ':')) {
+            $replace = Str::contains($calls[0], ',') ? $name . ',' : $name;
+
+            $calls[0] = Str::of($calls[0])->replace(':', ':' . $replace)->__toString();
+        }
+        // If it doesn't, we will add it as first argument.
+        else {
+            $calls[0] .= ':' . $name;
+        }
+
+        return implode(' ', $calls);
     }
 }

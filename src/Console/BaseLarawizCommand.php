@@ -11,7 +11,7 @@ abstract class BaseLarawizCommand extends Command
      *
      * @var string
      */
-    protected const COMMAND_HEADER = "🧙‍ Larawiz \n";
+    protected const COMMAND_HEADER = "🧙‍‍ Larawiz";
 
     /**
      * Execute the console command.
@@ -21,5 +21,6 @@ abstract class BaseLarawizCommand extends Command
     public function handle()
     {
         $this->line(self::COMMAND_HEADER);
+        $this->line('');
     }
 }

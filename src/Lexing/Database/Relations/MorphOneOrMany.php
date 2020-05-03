@@ -13,23 +13,5 @@ namespace Larawiz\Larawiz\Lexing\Database\Relations;
  */
 class MorphOneOrMany extends BaseRelation
 {
-    /**
-     * Returns if the Has Relation returns a collection of items.
-     *
-     * @return bool
-     */
-    public function isMany()
-    {
-        return in_array($this->type, parent::RETURN_COLLECTIONS, true);
-    }
 
-    /**
-     * Returns the Column name of the morph.
-     *
-     * @return string
-     */
-    public function getColumnName()
-    {
-        return $this->column ?? $this->name;
-    }
 }

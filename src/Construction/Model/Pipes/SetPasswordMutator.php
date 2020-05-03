@@ -25,6 +25,7 @@ class SetPasswordMutator
                 ->addComment('')
                 ->addComment('@param  string  $password')
                 ->addComment('@return void')
+                ->addComment('@throws \Illuminate\Contracts\Container\BindingResolutionException')
                 ->addBody("\$this->attributes['password'] = app('hash')->make(\$password);")
                 ->addParameter('password');
         }

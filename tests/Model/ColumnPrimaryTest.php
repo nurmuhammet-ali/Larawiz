@@ -16,13 +16,16 @@ class ColumnPrimaryTest extends TestCase
     use CleansProjectFromScaffoldData;
     use MocksDatabaseFile;
 
-    public function test_quick_model_includes_primary_id()
+    public function test_quick_model_includes_default_primary_id()
     {
         $this->mockDatabaseFile([
             'models' => [
                 'User' => [
                     'foo' => 'bar',
                 ],
+                'Post' => [
+                    'user' => 'belongsTo'
+                ]
             ],
         ]);
 
@@ -35,6 +38,7 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
+        $this->assertStringNotContainsString('protected $primaryKey', $model);
         $this->assertStringContainsString('@property int $id', $model);
         $this->assertStringContainsString('$table->id();', $migration);
     }
@@ -85,7 +89,9 @@ class ColumnPrimaryTest extends TestCase
 
         $this->assertStringContainsString('@property string $uuid', $model);
         $this->assertStringContainsString("protected \$primaryKey = 'uuid';", $model);
-        $this->assertStringContainsString('$table->uuid();', $migration);
+
+        $this->assertStringContainsString("\$table->uuid('uuid');", $migration);
+        $this->assertStringContainsString("\$table->primary('uuid');", $migration);
         $this->assertStringNotContainsString('$table->id();', $migration);
     }
 
@@ -113,6 +119,54 @@ class ColumnPrimaryTest extends TestCase
         $this->assertStringContainsString("protected \$primaryKey = 'quz';", $model);
         $this->assertStringContainsString("\$table->uuid('quz');", $migration);
         $this->assertStringNotContainsString('$table->id();', $migration);
+    }
+
+    public function test_accepts_uuid_named_as_id()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'uuid' => 'id',
+                    'foo'  => 'bar',
+                ],
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get(
+            $this->app->path('User.php'));
+        $migration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
+
+        $this->assertStringContainsString('@property string $id', $model);
+        $this->assertStringNotContainsString("protected \$primaryKey = 'id';", $model);
+        $this->assertStringContainsString("\$table->uuid('id');", $migration);
+        $this->assertStringNotContainsString('$table->id();', $migration);
+    }
+
+    public function test_error_when_quick_model_has_more_than_one_incrementing_key()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The [User] has more than one auto-incrementing column.');
+
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'foo'   => 'id',
+                    'bar'   => 'increments',
+                    'quz'   => 'integerIncrements',
+                    'qux'   => 'tinyIncrements',
+                    'quux'  => 'smallIncrements',
+                    'quuz'  => 'mediumIncrements',
+                    'corge' => 'bigIncrements',
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
     }
 
     public function test_model_does_not_includes_primary()
@@ -336,11 +390,8 @@ class ColumnPrimaryTest extends TestCase
         $this->assertStringNotContainsString('$table->id();', $migration);
     }
 
-    public function test_error_if_id_is_set_and_primary_is_set()
+    public function test_can_have_incrementing_key_and_set_different_primary()
     {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The [User] already uses the primary column [id].');
-
         $this->mockDatabaseFile([
             'models' => [
                 'User' => [
@@ -353,13 +404,27 @@ class ColumnPrimaryTest extends TestCase
             ],
         ]);
 
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
         $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get(
+            $this->app->path('User.php'));
+        $migration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
+
+        $this->assertStringContainsString('@property int $id', $model);
+        $this->assertStringContainsString('@property string $foo', $model);
+        $this->assertStringContainsString("protected \$primaryKey = 'foo';", $model);
+        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString("protected \$keyType = 'string';", $model);
+        $this->assertStringContainsString('$table->id();', $migration);
     }
 
     public function test_error_if_primary_column_set_does_not_exists()
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage("The [bar] column for primary key doesn't exists in [User] model.");
+        $this->expectExceptionMessage("The [bar] primary column in [User] doesn't exists.");
 
         $this->mockDatabaseFile([
             'models' => [
@@ -373,6 +438,35 @@ class ColumnPrimaryTest extends TestCase
         ]);
 
         $this->artisan('larawiz:scaffold');
+    }
+
+    public function test_adds_uuid_trait_to_model_using_uuid_has_primary_key()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'Thing\User' => [
+                    'uuid' => null,
+                    'foo'  => 'bar',
+                ],
+            ],
+        ]);
+
+        $this->shouldMockUuidTraitFile(false);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get($this->app->path('Thing' . DS .'User.php'));
+
+        $this->assertStringContainsString("use App\HasUuidPrimaryKey;", $model);
+        $this->assertStringContainsString("    use HasUuidPrimaryKey;", $model);
+
+        $this->assertFileExistsInFilesystem($this->app->path('HasUuidPrimaryKey.php'));
+
+        $this->assertStringContainsString('namespace App;',
+            $this->filesystem->get($this->app->path('HasUuidPrimaryKey.php'))
+        );
     }
 
     protected function tearDown() : void

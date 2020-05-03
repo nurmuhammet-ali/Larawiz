@@ -55,13 +55,13 @@ class SetTimestamp
                 ->addComment('@var ' . ($timestamps->updatedAtColumn ? 'string' : 'null'));
         }
 
-        if ($timestamps->createdAtColumn !== null) {
+        if ($timestamps->usingCreatedAt()) {
             $class->addComment(
                 '@property-read \Illuminate\Support\Carbon $' . $timestamps->createdAtColumn
             );
         }
 
-        if ($timestamps->updatedAtColumn !== null) {
+        if ($timestamps->usingUpdatedAt()) {
             $class->addComment(
                 '@property-read \Illuminate\Support\Carbon $' . $timestamps->updatedAtColumn
             );

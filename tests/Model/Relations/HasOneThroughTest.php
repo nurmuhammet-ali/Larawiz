@@ -44,7 +44,7 @@ class HasOneThroughTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_mechanics_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Owner $carOwner', $model);
+        $this->assertStringContainsString('@property-read null|\App\Owner $carOwner', $model);
         $this->assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\HasOneThrough|\App\Owner', $model);
         $this->assertStringContainsString('public function carOwner()', $model);
@@ -156,7 +156,7 @@ class HasOneThroughTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_mechanics_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Owner $owner', $model);
+        $this->assertStringContainsString('@property-read null|\App\Owner $owner', $model);
         $this->assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\HasOneThrough|\App\Owner', $model);
         $this->assertStringContainsString('public function owner()', $model);
