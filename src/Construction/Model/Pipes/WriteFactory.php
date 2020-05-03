@@ -111,7 +111,7 @@ class WriteFactory
                 . "\n"
                 . "\n// TODO: Review the Factory for the {$model->class} model."
                 . "\n"
-                . "\n/** @var \Illuminate\Database\Eloquent\FactoryBuilder \$factory */"
+                . "\n/** @var \Illuminate\Database\Eloquent\Factory \$factory */"
                 . "\n"
                 . "\n\$factory->define({$model->class}::class, function (Faker \$faker) {"
                 . "\n    return [";
