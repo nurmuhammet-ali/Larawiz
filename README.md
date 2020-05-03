@@ -20,7 +20,7 @@ Larawiz reads one YAML file to create multiple files for your database, without 
 Install this package using Composer directly inside your development packages.
 
 ```bash
-composer require larawiz/larawiz:dev-master --dev
+composer require larawiz/larawiz --dev
 ```
 
 ## Usage
