@@ -72,6 +72,11 @@ class Factory
             return $password;
         }
 
+        // Use the faker's name guesser as basis to guess the correct value
+        if ($guessed = $this->guessFakerName($name)) {
+            return $guessed;
+        }
+
         // We will try to get the correct formatter from Faker's providers.
         if ($formatter = $this->getFakerFormatter(Str::camel($name))) {
             return $formatter;
@@ -84,6 +89,86 @@ class Factory
 
         // Everything has failed, so return an empty string and a to-do note.
         return "'', // TODO: Add a random generated value for the [{$name} ({$type})] property";
+    }
+
+    /**
+     * Returns a password string.
+     *
+     * @param  string  $name
+     * @param  string  $type
+     * @return string|void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function returnPassword(string $name, string $type)
+    {
+        if ($name === 'password' && $type === 'string') {
+            return $this->hashedPassword = $this->hashedPassword
+                ?? "'" . app('hash')->make($this->password) . "'";
+        }
+    }
+
+    /**
+     * Guess the proper faker property based on the name.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function guessFakerName(string $name)
+    {
+
+        switch (Str::of($name)->snake('')->lower()->__toString()) {
+            case 'firstname':
+                return "\$faker->firstName";
+            case 'lastname':
+                return "\$faker->lastName";
+            case 'username':
+            case 'name':
+            case 'login':
+                return "\$faker->userName";
+            case 'email':
+            case 'emailaddress':
+                return "\$faker->email";
+            case 'phonenumber':
+            case 'phone':
+            case 'telephone':
+            case 'telnumber':
+                return "\$faker->phoneNumber";
+            case 'address':
+                return "\$faker->address";
+            case 'city':
+            case 'town':
+                return "\$faker->city";
+            case 'street':
+            case 'streetaddress':
+                return "\$faker->streetAddress";
+            case 'postcode':
+            case 'zipcode':
+                return "\$faker->postcode";
+            case 'state':
+            case 'county':
+                return "\$faker->state";
+            case 'country':
+                return "\$faker->countryCode";
+            case 'locale':
+                return "\$faker->locale";
+            case 'currency':
+            case 'currencycode':
+                return "\$faker->currencyCode";
+            case 'url':
+            case 'website':
+                return "\$faker->url";
+            case 'company':
+            case 'companyname':
+            case 'employer':
+                return "\$faker->company";
+            case 'title':
+                return "\$faker->sentence";
+            case 'body':
+            case 'summary':
+            case 'article':
+            case 'description':
+                return "\$faker->text";
+        }
     }
 
     /**
@@ -131,22 +216,6 @@ class Factory
             case 'unsignedDouble':
             case 'unsignedDecimal':
                 return '$faker->randomFloat()';
-        }
-    }
-
-    /**
-     * Returns a password string.
-     *
-     * @param  string  $name
-     * @param  string  $type
-     * @return string|void
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    protected function returnPassword(string $name, string $type)
-    {
-        if ($name === 'password' && $type === 'string') {
-            return $this->hashedPassword = $this->hashedPassword
-                ?? "'" . app('hash')->make($this->password) . "'";
         }
     }
 

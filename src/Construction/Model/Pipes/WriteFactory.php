@@ -68,7 +68,7 @@ class WriteFactory
      * @param  \Larawiz\Larawiz\Construction\Model\ModelConstruction  $construction
      * @param  \Closure  $next
      * @return mixed
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException|\ReflectionException
      */
     public function handle(ModelConstruction $construction, Closure $next)
     {
