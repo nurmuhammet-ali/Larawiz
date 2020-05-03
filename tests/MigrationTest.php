@@ -46,7 +46,7 @@ class MigrationTest extends TestCase
         $this->mockDatabaseFile([
             'models' => [
                 'test' => [
-                    'test'
+                    'foo' => 'bar'
                 ]
             ],
             'migrations' => [
