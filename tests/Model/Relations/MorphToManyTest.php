@@ -468,6 +468,47 @@ class MorphToManyTest extends TestCase
         $this->assertStringContainsString('$table->id();', $vegetableMigration);
     }
 
+    public function test_pivot_model_has_custom_primary_id()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'Photo'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Video'         => [
+                    'name' => 'string',
+                    'tags' => 'morphToMany:Tag,taggable using:Vegetable',
+                ],
+                'Tag'           => [
+                    'name' => 'string',
+                ],
+                'Vegetable' => [
+                    'uuid' => 'thing',
+                    'enforce'  => 'bool',
+                    'tag'      => 'belongsTo',
+                    'taggable' => 'morphTo',
+                ],
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $vegetableModel = $this->filesystem->get($this->app->path('Vegetable.php'));
+
+        $vegetableMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')
+        );
+
+        $this->assertStringContainsString("protected \$primaryKey = 'thing';", $vegetableModel);
+        $this->assertStringNotContainsString('protected $incrementing = false;', $vegetableModel);
+        $this->assertStringContainsString("protected \$keyType = 'string';", $vegetableModel);
+
+        $this->assertStringContainsString("\$table->uuid('thing');", $vegetableMigration);
+    }
+
     public function test_error_when_using_model_doesnt_exists()
     {
         $this->expectException(LogicException::class);

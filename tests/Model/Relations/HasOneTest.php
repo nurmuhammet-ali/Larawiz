@@ -83,7 +83,7 @@ class HasOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Post $post', $model);
+        $this->assertStringContainsString('@property-read null|\App\Post $post', $model);
         $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Post', $model);
         $this->assertStringContainsString('public function post()', $model);
         $this->assertStringContainsString('return $this->hasOne(Post::class);', $model);
@@ -136,7 +136,7 @@ class HasOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Post $publication', $model);
+        $this->assertStringContainsString('@property-read null|\App\Post $publication', $model);
         $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Post', $model);
         $this->assertStringContainsString('public function publication()', $model);
         $this->assertStringContainsString('return $this->hasOne(Post::class);', $model);
@@ -189,7 +189,7 @@ class HasOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Post $publication', $model);
+        $this->assertStringContainsString('@property-read null|\App\Post $publication', $model);
         $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Post', $model);
         $this->assertStringContainsString('public function publication()', $model);
         $this->assertStringContainsString("return \$this->hasOne(Post::class, 'title', 'name');", $model);

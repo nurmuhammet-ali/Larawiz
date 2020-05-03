@@ -163,7 +163,7 @@ class BelongsToManyTest extends TestCase
         $this->artisan('larawiz:scaffold');
     }
 
-    public function test_allows_pivot_table_migration_override()
+    public function test_allows_pivot_model_migration_override()
     {
         $this->mockDatabaseFile([
             'models' => [
@@ -349,6 +349,82 @@ class BelongsToManyTest extends TestCase
         $this->assertFileExistsInFilesystem($this->app->path('Permission.php'));
         $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_permissions_table.php'));
+    }
+
+    public function test_pivot_model_has_enabled_id_when_manually_is_set()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'   => [
+                    'name' => 'string',
+                    'roles' => 'belongsToMany using:Permission'
+                ],
+                'Role' => [
+                    'type' => 'string',
+                    'users' => 'belongsToMany using:Permission',
+                ],
+                'Permission' => [
+                    'id' => null,
+                    'enforce' => 'bool',
+                    'user' => 'belongsTo',
+                    'role' => 'belongsTo',
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $pivotModel = $this->filesystem->get($this->app->path('Permission.php'));
+        $pivotMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_permissions_table.php')
+        );
+
+
+        $this->assertStringNotContainsString("protected \$primaryKey = 'id';", $pivotModel);
+        $this->assertStringNotContainsString("protected \$keyType = 'int';", $pivotModel);
+        $this->assertStringContainsString('protected $incrementing = true;', $pivotModel);
+
+        $this->assertStringContainsString('$table->id();', $pivotMigration);
+    }
+
+    public function test_pivot_model_has_custom_primary_id()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'   => [
+                    'name' => 'string',
+                    'roles' => 'belongsToMany using:Permission'
+                ],
+                'Role' => [
+                    'type' => 'string',
+                    'users' => 'belongsToMany using:Permission',
+                ],
+                'Permission' => [
+                    'uuid' => 'thing',
+                    'enforce' => 'bool',
+                    'user' => 'belongsTo',
+                    'role' => 'belongsTo',
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $pivotModel = $this->filesystem->get($this->app->path('Permission.php'));
+        $pivotMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_permissions_table.php')
+        );
+
+
+        $this->assertStringContainsString("protected \$primaryKey = 'thing';", $pivotModel);
+        $this->assertStringContainsString("protected \$keyType = 'string';", $pivotModel);
+        $this->assertStringNotContainsString('protected $incrementing = false;', $pivotModel);
+
+        $this->assertStringContainsString("\$table->uuid('thing');", $pivotMigration);
     }
 
     protected function tearDown() : void

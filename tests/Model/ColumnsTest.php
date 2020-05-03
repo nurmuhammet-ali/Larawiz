@@ -280,8 +280,7 @@ class ColumnsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -291,6 +290,25 @@ class ColumnsTest extends TestCase
 
         $this->assertStringNotContainsString('$table->timestamps();', $migration);
         $this->assertStringContainsString('$table->timestampsTz();', $migration);
+    }
+
+    public function test_comments_nullable_property_with_null()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'  => [
+                    'name' => 'string nullable'
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get($this->app->path('User.php'));
+
+        $this->assertStringContainsString('@property null|string $name', $model);
     }
 
     protected function tearDown() : void

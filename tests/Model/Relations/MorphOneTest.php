@@ -45,13 +45,13 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Classroom $classroom', $studentModel);
+        $this->assertStringContainsString('@property-read null|\App\Classroom $classroom', $studentModel);
         $this->assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $studentModel);
         $this->assertStringContainsString('public function classroom()', $studentModel);
         $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
 
-        $this->assertStringContainsString('@property-read \App\Classroom $classroom', $teacherModel);
+        $this->assertStringContainsString('@property-read null|\App\Classroom $classroom', $teacherModel);
         $this->assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $teacherModel);
         $this->assertStringContainsString('public function classroom()', $teacherModel);
@@ -90,13 +90,13 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Classroom $foo', $studentModel);
+        $this->assertStringContainsString('@property-read null|\App\Classroom $foo', $studentModel);
         $this->assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $studentModel);
         $this->assertStringContainsString('public function foo()', $studentModel);
         $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
 
-        $this->assertStringContainsString('@property-read \App\Classroom $bar', $teacherModel);
+        $this->assertStringContainsString('@property-read null|\App\Classroom $bar', $teacherModel);
         $this->assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $teacherModel);
         $this->assertStringContainsString('public function bar()', $teacherModel);
@@ -247,13 +247,13 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Classroom $foo', $studentModel);
+        $this->assertStringContainsString('@property-read null|\App\Classroom $foo', $studentModel);
         $this->assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $studentModel);
         $this->assertStringContainsString('public function foo()', $studentModel);
         $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
 
-        $this->assertStringContainsString('@property-read \App\Classroom $bar', $teacherModel);
+        $this->assertStringContainsString('@property-read null|\App\Classroom $bar', $teacherModel);
         $this->assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $teacherModel);
         $this->assertStringContainsString('public function bar()', $teacherModel);
@@ -344,7 +344,7 @@ class MorphOneTest extends TestCase
         $this->assertStringContainsString(
             "return \$this->morphOne(Classroom::class, 'assistable')->withDefault();", $studentModel);
 
-        $this->assertStringContainsString('@property-read \App\Classroom $classroom', $teacherModel);
+        $this->assertStringContainsString('@property-read null|\App\Classroom $classroom', $teacherModel);
         $this->assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $teacherModel);
         $this->assertStringContainsString('public function classroom()', $teacherModel);

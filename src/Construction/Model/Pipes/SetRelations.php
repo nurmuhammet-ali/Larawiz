@@ -63,13 +63,7 @@ class SetRelations
             $start .= 'null|';
         }
 
-        if ($relation->returnsCollection()) {
-            $start .= '\Illuminate\Database\Eloquent\Collection|';
-            $start .= $relation->models->map->fullRootNamespaceArray()->implode('|');
-        }
-        else {
-            $start .= $relation->models->map->fullRootNamespace()->implode('|');
-        }
+        $start .= $relation->models->map->fullRootNamespace()->implode('|');
 
         $class->addComment("{$start} \${$relation->name}");
     }
@@ -149,7 +143,7 @@ class SetRelations
     {
         $start = '@property-read ';
 
-        if (! $relation->usesWithDefault() && $relation->isNullable()) {
+        if (! $relation->returnsCollection() && ! $relation->usesWithDefault()) {
             $start .= 'null|';
         }
 
