@@ -121,6 +121,32 @@ class ColumnPrimaryTest extends TestCase
         $this->assertStringNotContainsString('$table->id();', $migration);
     }
 
+    public function test_accepts_uuid_named_as_id()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'uuid' => 'id',
+                    'foo'  => 'bar',
+                ],
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get(
+            $this->app->path('User.php'));
+        $migration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
+
+        $this->assertStringContainsString('@property string $id', $model);
+        $this->assertStringNotContainsString("protected \$primaryKey = 'id';", $model);
+        $this->assertStringContainsString("\$table->uuid('id');", $migration);
+        $this->assertStringNotContainsString('$table->id();', $migration);
+    }
+
     public function test_error_when_quick_model_has_more_than_one_incrementing_key()
     {
         $this->expectException(LogicException::class);
