@@ -24,7 +24,7 @@ class SetColumnComments
         foreach ($columns as $column) {
             $start = '@property ';
 
-            if ($column->isNullable) {
+            if ($column->isNullable()) {
                 $start .= 'null|';
             }
 
