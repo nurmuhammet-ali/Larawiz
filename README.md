@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/larawiz/larawiz.svg?style=flat-square)](https://packagist.org/packages/larawiz/larawiz) [![License](https://poser.pugx.org/larawiz/larawiz/license)](https://packagist.org/packages/larawiz/larawiz)
 ![](https://img.shields.io/packagist/php-v/larawiz/larawiz.svg)
- ![](https://github.com/Larawiz/larawiz/workflows/PHP%20Composer/badge.svg)
+ [![](https://github.com/Larawiz/larawiz/workflows/PHP%20Composer/badge.svg)](https://github.com/Larawiz/Larawiz/actions)
 [![Coverage Status](https://coveralls.io/repos/github/Larawiz/Larawiz/badge.svg?branch=master)](https://coveralls.io/github/Larawiz/Larawiz?branch=master)
 
 # Larawiz  
@@ -37,9 +37,9 @@ Larawiz will automatically create the files needed to set up your project like i
 
 ### Safety first
 
-Larawiz will automatically copy your `app`, `routes` and some of your `database` directories as backups every time you scaffold. It only deletes the `migrations` folder.
+Larawiz will automatically copy your `app` and some of your `database` directories as backups every time you scaffold. It only deletes the `migrations` folder.
 
-You can find it in your application default storage path under the `storage/larawiz/backups` directory, and copy them over your project file. 
+You can find it in your application default storage path under the `storage/larawiz/backups` directory, and copy them over your project directory if you need.
 
 ## Generating your app
 
@@ -59,18 +59,7 @@ models:
     author: belongsTo
 ```
 
-You shouldn't need to read the documentation, but if you're unsure or you want something more, go ahead, it explains everything.
-
-## How this works
-
-Larawiz goes around many loops that parses, prepares, associates and writes files.
-
-1. Reads your YAML files and parses them into data.
-2. Prepares the data ands fills the gaps.
-3. Associates the data between it.
-4. Writes the files. 
-
-This is powered by multiple pipelines, allowing this package to be easily maintained by adding features or fixing the existing ones.
+You shouldn't need to read the documentation, but if you're unsure, or you want something more advanced, go ahead, it explains everything.
 
 ## License
 
