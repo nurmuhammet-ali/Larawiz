@@ -16,9 +16,9 @@ class ParseModelHidden
      */
     public function handle(Scaffold $scaffold, Closure $next)
     {
-        foreach ($scaffold->database->models as $model) {
+        foreach ($scaffold->database->models as $key => $model) {
 
-            foreach ($scaffold->database->get("models.{$model->key}.hidden", []) as $column) {
+            foreach ($scaffold->rawDatabase->get("models.{$key}.hidden", []) as $column) {
                 $model->hidden->push($column);
             }
         }

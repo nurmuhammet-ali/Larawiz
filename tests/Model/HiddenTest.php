@@ -2,7 +2,6 @@
 
 namespace Tests\Model;
 
-use LogicException;
 use Tests\RegistersPackage;
 use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
@@ -15,31 +14,6 @@ class HiddenTest extends TestCase
     use RegistersPackage;
     use CleansProjectFromScaffoldData;
     use MocksDatabaseFile;
-
-    public function test_quick_model_creates_hidden_column()
-    {
-        $this->mockDatabaseFile([
-            'models' => [
-                'User' => [
-                    'foo' => 'string *',
-                    'bar' => 'boolean',
-                    'quz' => 'string * nullable',
-                ],
-            ],
-        ]);
-
-        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
-
-        $this->artisan('larawiz:scaffold');
-
-        $model = $this->filesystem->get($this->app->path('User.php'));
-        $migration = $this->filesystem->get(
-            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
-
-        $this->assertStringContainsString("protected \$hidden = ['foo', 'quz'];", $model);
-        $this->assertStringContainsString("\$table->string('foo');", $migration);
-        $this->assertStringContainsString("\$table->boolean('bar');", $migration);
-    }
 
     public function test_quick_model_adds_sensible_columns_automatically()
     {
@@ -70,7 +44,6 @@ class HiddenTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
         $this->assertStringContainsString("protected \$hidden = [
-        'foo',
         'password',
         'password_foo',
         'private',
@@ -172,11 +145,8 @@ class HiddenTest extends TestCase
         $this->assertStringContainsString("\$table->string('quz');", $migration);
     }
 
-    public function test_error_when_custom_model_hidden_column_doesnt_exists()
+    public function test_no_error_when_custom_model_hidden_column_doesnt_exists()
     {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage("The hidden column [quux] doesn't exists in [User]");
-
         $this->mockDatabaseFile([
             'models' => [
                 'User' => [

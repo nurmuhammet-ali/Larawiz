@@ -166,7 +166,7 @@ class ParseQuickModelData
 
         foreach (Arr::get($data, 'columns') as $column => $line) {
             if (Str::contains($column, Column::HIDDEN)) {
-                $hidden[$column] = Column::isShorthand($column)
+                $hidden[] = Column::isShorthand($column)
                     ? Column::getShorthandDefault($column, $line)
                     : $column;
             }
