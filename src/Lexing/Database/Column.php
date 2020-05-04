@@ -217,6 +217,19 @@ class Column extends Fluent
     ];
 
     /**
+     * Hidden matching column names.
+     *
+     * @var array
+     */
+    public const HIDDEN = [
+        'password',
+        'rememberToken',
+        'hidden',
+        'private',
+        'secret'
+    ];
+
+    /**
      * Create a new fluent instance.
      *
      * @param  array|object  $attributes
@@ -390,6 +403,17 @@ class Column extends Fluent
     public function isUnfillable()
     {
         return in_array($this->type, array_merge(static::getUnfillable()), true);
+    }
+
+    /**
+     * Returns if the Column should be marked has hidden.
+     *
+     * @return bool
+     */
+    public function shouldBeHidden()
+    {
+        return Str::contains($this->getName(), ['password', 'rememberToken', 'hidden', 'private'])
+            || $this->methods->contains('name', '*');
     }
 
     /**

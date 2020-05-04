@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\MorphPivot;
  * @property null|string $table  The table name, in case it's not the default.
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Column[] $columns
  * @property \Illuminate\Support\Collection|string[] $fillable
+ * @property \Illuminate\Support\Collection|string[] $hidden
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation[] $relations
  *
  * @property \Larawiz\Larawiz\Lexing\Database\Primary $primary  Primary column information
@@ -178,6 +179,7 @@ class Model extends Fluent
             'perPage'       => static::MODEL_PER_PAGE,
             'columns'       => collect(),
             'fillable'      => collect(),
+            'hidden'        => collect(),
             'relations'     => collect(),
             'primary'       => new Primary,
             'timestamps'    => new Timestamps,

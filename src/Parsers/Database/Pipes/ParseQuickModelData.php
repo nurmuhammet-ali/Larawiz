@@ -5,7 +5,9 @@ namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 use Closure;
 use LogicException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Scaffold;
+use Larawiz\Larawiz\Lexing\Database\Column;
 
 class ParseQuickModelData
 {
@@ -58,6 +60,7 @@ class ParseQuickModelData
 
         $this->setPrimaryColumn($data);
         $this->setTimestamps($data);
+        $this->setHiddenColumns($data);
 
         $this->maySetUserType($data);
 
@@ -150,5 +153,41 @@ class ParseQuickModelData
         if (Arr::has($data, 'columns.password') || Arr::has($data, 'columns.rememberToken')) {
             $data['type'] = 'user';
         }
+    }
+
+    /**
+     * Set the hidden columns
+     *
+     * @param  array  $data
+     */
+    protected function setHiddenColumns(array &$data)
+    {
+        $hidden = [];
+
+        foreach (Arr::get($data, 'columns') as $column => $line) {
+            if (Str::contains($column, Column::HIDDEN) || Str::contains($line, '*')) {
+                $hidden[] = $column;
+                $data['columns'][$column] = $this->removeHiddenAsterisk($line);
+            }
+        }
+
+        Arr::set($data, 'hidden', $hidden);
+    }
+
+    /**
+     * Removes the asterisk from the column line.
+     *
+     * @param  string  $column
+     * @return string
+     */
+    protected function removeHiddenAsterisk(?string $column)
+    {
+        if (! $column) {
+            return $column;
+        }
+
+        return implode(' ', array_filter(explode(' ', $column), function ($expression) {
+            return $expression !== '*';
+        }));
     }
 }

@@ -44,6 +44,7 @@ class DatabaseParserPipeline extends Pipeline
         Pipes\ParseMigrationFromModel::class,                   // Creates a migration for each model.
         Pipes\ParseModelIndexesForMigration::class,             // Adds additional indexes declared for the model.
         Pipes\ParseModelFillable::class,                        // Set each model fillable properties.
+        Pipes\ParseModelHidden::class,                          // Adds hidden columns to the list.
         Pipes\ParseModelObserver::class,                        // Set model eloquent events.
         Pipes\ParseModelRouteBinding::class,                    // Set model column to use as route binding.
         Pipes\ParseModelFactory::class,                         // Set the factory states.
