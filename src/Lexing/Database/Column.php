@@ -254,6 +254,10 @@ class Column extends Fluent
             return static::DEFAULT_NAMES[$name];
         }
 
+        if ($name === 'rememberToken') {
+            return 'remember_token';
+        }
+
         $calls = explode(' ', $line);
 
         if (in_array(strtolower($calls[0]), ['~', 'null'])) {
