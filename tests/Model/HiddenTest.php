@@ -46,7 +46,7 @@ class HiddenTest extends TestCase
         $this->mockDatabaseFile([
             'models' => [
                 'User' => [
-                    'foo' => 'string *',
+                    'foo' => 'string',
                     'bar' => 'boolean',
                     'password' => 'string',
                     'password_foo' => 'string',

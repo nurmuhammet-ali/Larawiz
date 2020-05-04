@@ -165,33 +165,13 @@ class ParseQuickModelData
         $hidden = [];
 
         foreach (Arr::get($data, 'columns') as $column => $line) {
-            if (Str::contains($column, Column::HIDDEN) || Str::contains($line, '*')) {
-
+            if (Str::contains($column, Column::HIDDEN)) {
                 $hidden[$column] = Column::isShorthand($column)
                     ? Column::getShorthandDefault($column, $line)
                     : $column;
-
-                $data['columns'][$column] = $this->removeHiddenAsterisk($line);
             }
         }
 
         Arr::set($data, 'hidden', $hidden);
-    }
-
-    /**
-     * Removes the asterisk from the column line.
-     *
-     * @param  string  $column
-     * @return string
-     */
-    protected function removeHiddenAsterisk(?string $column)
-    {
-        if (! $column) {
-            return $column;
-        }
-
-        return implode(' ', array_filter(explode(' ', $column), function ($expression) {
-            return $expression !== '*';
-        }));
     }
 }
