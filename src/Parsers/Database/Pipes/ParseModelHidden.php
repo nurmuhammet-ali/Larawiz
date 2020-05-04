@@ -4,6 +4,8 @@ namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
 use Larawiz\Larawiz\Scaffold;
+use Illuminate\Support\Collection;
+use Larawiz\Larawiz\Lexing\Database\Column;
 
 class ParseModelHidden
 {
@@ -18,11 +20,39 @@ class ParseModelHidden
     {
         foreach ($scaffold->database->models as $key => $model) {
 
-            foreach ($scaffold->rawDatabase->get("models.{$key}.hidden", []) as $column) {
-                $model->hidden->push($column);
+            $hidden = $scaffold->rawDatabase->get("models.{$key}.hidden");
+
+            if ($hidden === false) {
+                continue;
+            }
+
+            if ($hidden === null) {
+                $model->hidden->push(...$this->getHiddenColumns($model->columns));
+            }
+
+            if (is_array($hidden)) {
+                $model->hidden->push(...$hidden);
             }
         }
 
         return $next($scaffold);
+    }
+
+    /**
+     * Return a list of columns that should be hidden.
+     *
+     * @param  \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Column[]  $columns
+     * @return array
+     */
+    protected function getHiddenColumns(Collection $columns)
+    {
+        return $columns->map(function (Column $column) {
+            if ($column->shouldBeHidden()) {
+                return Column::isShorthand($column->name)
+                    ? Column::getShorthandDefault($column, null)
+                    : $column->name;
+            }
+            return null;
+        })->filter()->values()->all();
     }
 }

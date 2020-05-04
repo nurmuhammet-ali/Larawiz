@@ -223,7 +223,7 @@ class Column extends Fluent
      */
     public const HIDDEN = [
         'password',
-        'rememberToken',
+        'remember_token',
         'hidden',
         'private',
         'secret'
@@ -427,8 +427,7 @@ class Column extends Fluent
      */
     public function shouldBeHidden()
     {
-        return Str::contains($this->getName(), ['password', 'rememberToken', 'hidden', 'private'])
-            || $this->methods->contains('name', '*');
+        return Str::contains($this->name, static::HIDDEN);
     }
 
     /**
