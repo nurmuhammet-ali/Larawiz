@@ -217,6 +217,19 @@ class Column extends Fluent
     ];
 
     /**
+     * Hidden matching column names.
+     *
+     * @var array
+     */
+    public const HIDDEN = [
+        'password',
+        'remember_token',
+        'hidden',
+        'private',
+        'secret'
+    ];
+
+    /**
      * Create a new fluent instance.
      *
      * @param  array|object  $attributes
@@ -241,6 +254,10 @@ class Column extends Fluent
             return static::DEFAULT_NAMES[$name];
         }
 
+        if ($name === 'rememberToken') {
+            return 'remember_token';
+        }
+
         $calls = explode(' ', $line);
 
         if (in_array(strtolower($calls[0]), ['~', 'null'])) {
@@ -248,6 +265,17 @@ class Column extends Fluent
         }
 
         return $calls[0];
+    }
+
+    /**
+     * Checks if the column is a shorthand.
+     *
+     * @param  string  $column
+     * @return bool
+     */
+    public static function isShorthand(string $column)
+    {
+        return isset(static::DEFAULT_NAMES[$column]);
     }
 
     /**
@@ -390,6 +418,16 @@ class Column extends Fluent
     public function isUnfillable()
     {
         return in_array($this->type, array_merge(static::getUnfillable()), true);
+    }
+
+    /**
+     * Returns if the Column should be marked has hidden.
+     *
+     * @return bool
+     */
+    public function shouldBeHidden()
+    {
+        return Str::contains($this->name, static::HIDDEN);
     }
 
     /**

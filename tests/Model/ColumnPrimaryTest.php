@@ -192,7 +192,7 @@ class ColumnPrimaryTest extends TestCase
 
         $this->assertStringNotContainsString('@property int $id', $model);
         $this->assertStringContainsString('protected $primaryKey = null;', $model);
-        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringNotContainsString('$table->id();', $migration);
     }
 
@@ -297,7 +297,7 @@ class ColumnPrimaryTest extends TestCase
 
         $this->assertStringNotContainsString('@property int $id', $model);
         $this->assertStringContainsString("protected \$primaryKey = 'name';", $model);
-        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringContainsString("protected \$keyType = 'string';", $model);
         $this->assertStringNotContainsString('$table->id();', $migration);
     }
@@ -326,7 +326,7 @@ class ColumnPrimaryTest extends TestCase
 
         $this->assertStringNotContainsString('@property int $id', $model);
         $this->assertStringContainsString("protected \$primaryKey = 'name';", $model);
-        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringNotContainsString("protected \$keyType = 'int';", $model);
         $this->assertStringNotContainsString('$table->id();', $migration);
     }
@@ -355,7 +355,7 @@ class ColumnPrimaryTest extends TestCase
 
         $this->assertStringNotContainsString('@property int $id', $model);
         $this->assertStringContainsString("protected \$primaryKey = 'name';", $model);
-        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringContainsString("protected \$keyType = 'datetime';", $model);
         $this->assertStringNotContainsString('$table->id();', $migration);
     }
@@ -385,7 +385,7 @@ class ColumnPrimaryTest extends TestCase
         $this->assertStringNotContainsString('@property int $id', $model);
         $this->assertStringContainsString('@property string $foo', $model);
         $this->assertStringContainsString("protected \$primaryKey = 'foo';", $model);
-        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringContainsString("protected \$keyType = 'string';", $model);
         $this->assertStringNotContainsString('$table->id();', $migration);
     }
@@ -416,7 +416,7 @@ class ColumnPrimaryTest extends TestCase
         $this->assertStringContainsString('@property int $id', $model);
         $this->assertStringContainsString('@property string $foo', $model);
         $this->assertStringContainsString("protected \$primaryKey = 'foo';", $model);
-        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringContainsString("protected \$keyType = 'string';", $model);
         $this->assertStringContainsString('$table->id();', $migration);
     }

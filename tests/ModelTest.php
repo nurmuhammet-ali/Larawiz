@@ -26,6 +26,20 @@ class ModelTest extends TestCase
         $this->artisan('larawiz:scaffold');
     }
 
+    public function test_custom_model_error_model_doesnt_contains_list()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Ensure the [User] is a model declaration.');
+
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => ''
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+    }
+
     public function test_custom_model_error_if_declaration_is_list()
     {
         $this->expectException(LogicException::class);
@@ -130,6 +144,22 @@ class ModelTest extends TestCase
                     'name' => 'name',
                 ],
             ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+    }
+
+    public function test_error_when_no_models_set()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('No models where detected. Are you sure you filled the [models] key?');
+
+        $this->mockDatabaseFile([
+            'model' => [
+                'User' => [
+                    'foo' => 'bar'
+                ]
+            ]
         ]);
 
         $this->artisan('larawiz:scaffold');

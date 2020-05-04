@@ -114,7 +114,7 @@ class SetPrimaryKey
     protected function setIncrementingProperty(ClassType $class, bool $incrementing)
     {
         $class->addProperty('incrementing', $incrementing)
-            ->setProtected()
+            ->setPublic()
             ->addComment('Indicates if the IDs are auto-incrementing.')
             ->addComment('')
             ->addComment('@var bool');

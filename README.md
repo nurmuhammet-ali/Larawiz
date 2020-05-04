@@ -13,7 +13,7 @@ Larawiz reads one YAML file to create multiple files for your database, without 
 
 ## Requirements:
 
-* Laravel 7
+* Laravel 7.2+
 
 ## Install:
 

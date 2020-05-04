@@ -463,7 +463,7 @@ class MorphToManyTest extends TestCase
         );
 
         $this->assertStringNotContainsString("protected \$primaryKey = 'id';", $vegetableModel);
-        $this->assertStringContainsString('protected $incrementing = true;', $vegetableModel);
+        $this->assertStringContainsString('public $incrementing = true;', $vegetableModel);
 
         $this->assertStringContainsString('$table->id();', $vegetableMigration);
     }
@@ -503,7 +503,7 @@ class MorphToManyTest extends TestCase
         );
 
         $this->assertStringContainsString("protected \$primaryKey = 'thing';", $vegetableModel);
-        $this->assertStringNotContainsString('protected $incrementing = false;', $vegetableModel);
+        $this->assertStringNotContainsString('public $incrementing = false;', $vegetableModel);
         $this->assertStringContainsString("protected \$keyType = 'string';", $vegetableModel);
 
         $this->assertStringContainsString("\$table->uuid('thing');", $vegetableMigration);

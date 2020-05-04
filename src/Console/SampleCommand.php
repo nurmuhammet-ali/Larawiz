@@ -66,7 +66,7 @@ class SampleCommand extends BaseLarawizCommand
         $this->copySamplesFilesToLarawizPath();
 
         foreach ($this->filesInScaffoldDirectory() as $file) {
-            $this->line(' * ' . $this->larawizDirectory() . DS . $file);
+            $this->line(' * ' . $file);
         }
 
         // We will conveniently instance the command to get the command name.
@@ -115,7 +115,7 @@ class SampleCommand extends BaseLarawizCommand
      */
     protected function filesInScaffoldDirectory()
     {
-        return $this->filesystem->files($this->getLaravel()->basePath('larawiz'));
+        return $this->filesystem->files($this->getLaravel()->basePath(Larawiz::PATH));
     }
 
     /**

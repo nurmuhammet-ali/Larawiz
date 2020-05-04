@@ -109,7 +109,7 @@ class ColumnsTest extends TestCase
 
         $this->assertStringNotContainsString('protected $primaryKey', $model);
         $this->assertStringNotContainsString('protected $keyType', $model);
-        $this->assertStringNotContainsString('protected $incrementing', $model);
+        $this->assertStringNotContainsString('public $incrementing', $model);
 
         $this->assertStringContainsString("\$table->id()->foo()->bar('qux', 'quz');", $migration);
         $this->assertStringContainsString("\$table->softDeletes()->foo()->bar('qux', 'quz');", $migration);
@@ -140,7 +140,7 @@ class ColumnsTest extends TestCase
             $this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
         $this->assertStringContainsString('protected $primaryKey = null;', $model);
-        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringNotContainsString('protected $keyType;', $model);
         $this->assertStringContainsString("\$table->uuid('uuid');", $migration);
         $this->assertStringContainsString("'uuid' => \$faker->uuid,", $factory);
@@ -170,7 +170,7 @@ class ColumnsTest extends TestCase
             $this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
         $this->assertStringContainsString('protected $primaryKey = null;', $model);
-        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringNotContainsString('protected $keyType;', $model);
         $this->assertStringContainsString("\$table->uuid('foo');", $migration);
         $this->assertStringContainsString("'foo' => \$faker->uuid,", $factory);
@@ -200,7 +200,7 @@ class ColumnsTest extends TestCase
             $this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
         $this->assertStringContainsString('protected $primaryKey = null;', $model);
-        $this->assertStringContainsString('protected $incrementing = false;', $model);
+        $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringNotContainsString('protected $keyType;', $model);
         $this->assertStringContainsString("\$table->bar('foo', 'quz', 'qux');", $migration);
         $this->assertStringContainsString("'foo' => '', // TODO: Add a random generated value for the [foo (bar)] property,", $factory);

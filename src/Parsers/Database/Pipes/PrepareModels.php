@@ -41,7 +41,9 @@ class PrepareModels
     {
         $namespace = $scaffold->rawDatabase->get('namespace');
 
-        foreach ($scaffold->rawDatabase->get('models') as $name => $model) {
+        $this->checkModelsNotEmpty($models = $scaffold->rawDatabase->get('models'));
+
+        foreach ($models as $name => $model) {
             $scaffold->database->models->put($name, $this->createModel($name, $namespace));
         }
 
@@ -51,6 +53,18 @@ class PrepareModels
         $this->ensureNoModelsClassDuplicated($scaffold->database->models);
 
         return $next($scaffold);
+    }
+
+    /**
+     * Check if the models array is not empty.
+     *
+     * @param array|string $param
+     */
+    protected function checkModelsNotEmpty($param)
+    {
+        if (empty($param)) {
+            throw new LogicException('No models where detected. Are you sure you filled the [models] key?');
+        }
     }
 
     /**
