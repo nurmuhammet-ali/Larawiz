@@ -264,6 +264,17 @@ class Column extends Fluent
     }
 
     /**
+     * Checks if the column is a shorthand.
+     *
+     * @param  string  $column
+     * @return bool
+     */
+    public static function isShorthand(string $column)
+    {
+        return isset(static::DEFAULT_NAMES[$column]);
+    }
+
+    /**
      * Returns if the column is nullable or not.
      *
      * @return bool

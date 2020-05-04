@@ -75,7 +75,7 @@ class HiddenTest extends TestCase
         'password_foo',
         'private',
         'private_foo',
-        'rememberToken',
+        'remember_token',
         'hidden',
         'foo_hidden',
         'secret',
