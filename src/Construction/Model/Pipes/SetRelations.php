@@ -76,13 +76,7 @@ class SetRelations
      */
     protected function setMorphToRelation(ClassType $class, MorphTo $relation)
     {
-        $comment = '@return ';
-
-        if ($relation->isNullable()) {
-            $comment .= 'null|';
-        }
-
-        $comment .= '\Illuminate\Database\Eloquent\Relations\MorphTo|';
+        $comment = '@return \Illuminate\Database\Eloquent\Relations\MorphTo|';
 
         $comment .= $relation->models->map->fullRootNamespace()->implode('|');
 
@@ -119,13 +113,7 @@ class SetRelations
      */
     protected function setBelongsToRelation(ClassType $class, BelongsTo $relation)
     {
-        $comment = '@return ';
-
-        if (! $relation->usesWithDefault() && $relation->isNullable()) {
-            $comment .= 'null|';
-        }
-
-        $comment .= "\Illuminate\Database\Eloquent\Relations\BelongsTo|{$relation->model->fullRootNamespace()}";
+        $comment = "@return \Illuminate\Database\Eloquent\Relations\BelongsTo|{$relation->model->fullRootNamespace()}";
 
         $class->addMethod($relation->name)
             ->setPublic()

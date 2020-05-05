@@ -83,6 +83,7 @@ class BelongsToTest extends TestCase
         );
 
         $this->assertStringContainsString('@property-read \App\User $user', $postModel);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\User', $postModel);
         $this->assertStringContainsString('return $this->belongsTo(User::class);', $postModel);
         $this->assertStringContainsString(
             "\$table->unsignedBigInteger('user_id'); // Created for [user] relation.", $postMigration
@@ -128,7 +129,7 @@ class BelongsToTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_posts_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\User $author', $postModel);
+        $this->assertStringContainsString('@property-read \App\User $author', $postModel);        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\User', $postModel);
         $this->assertStringContainsString('public function author()', $postModel);
         $this->assertStringContainsString("return \$this->belongsTo(User::class, 'user_id');", $postModel);
         $this->assertStringContainsString(
@@ -161,6 +162,7 @@ class BelongsToTest extends TestCase
         );
 
         $this->assertStringContainsString('@property-read \App\User $user', $model);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\User', $model);
         $this->assertStringContainsString("return \$this->belongsTo(User::class, 'user_name');", $model);
         $this->assertStringContainsString(
             "\$table->string('user_name'); // Created for [user] relation.", $migration
@@ -235,7 +237,7 @@ class BelongsToTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_posts_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\User $user', $model);
+        $this->assertStringContainsString('@property-read null|\App\User $user', $model);        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\User', $model);
         $this->assertStringContainsString("return \$this->belongsTo(User::class, 'user_name');", $model);
         $this->assertStringContainsString(
             "\$table->string('user_name')->nullable(); // Created for [user] relation.", $migration
@@ -266,7 +268,7 @@ class BelongsToTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_posts_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\User $user', $model);
+        $this->assertStringContainsString('@property-read \App\User $user', $model);        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\User', $model);
         $this->assertStringContainsString("return \$this->belongsTo(User::class, 'user_name');", $model);
         $this->assertStringContainsString(
             "\$table->string('user_name')->index(); // Created for [user] relation.", $migration
@@ -298,6 +300,7 @@ class BelongsToTest extends TestCase
         );
 
         $this->assertStringContainsString('@property-read \App\User $user', $model);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\User', $model);
         $this->assertStringContainsString("return \$this->belongsTo(User::class, 'user_name');", $model);
         $this->assertStringContainsString(
             "\$table->string('user_name')->unique(); // Created for [user] relation.", $migration
@@ -329,6 +332,7 @@ class BelongsToTest extends TestCase
         );
 
         $this->assertStringContainsString('@property-read \App\User $user', $model);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\User', $model);
         $this->assertStringContainsString("return \$this->belongsTo(User::class, 'user_name')->withDefault();", $model);
         $this->assertStringContainsString(
             "\$table->string('user_name')->nullable(); // Created for [user] relation.", $migration
@@ -360,6 +364,7 @@ class BelongsToTest extends TestCase
         );
 
         $this->assertStringContainsString('@property-read null|\App\User $user', $model);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\User', $model);
         $this->assertStringContainsString("return \$this->belongsTo(User::class, 'user_name');", $model);
         $this->assertStringContainsString(
             "\$table->string('user_name')->nullable(); // Created for [user] relation.", $migration
