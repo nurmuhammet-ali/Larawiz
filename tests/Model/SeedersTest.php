@@ -103,7 +103,7 @@ class UserSeeder extends Seeder
         if ($this->modelHasFactory($factory)) {
             $this->createRecords($factory, $this->amount($user));
 
-            $this->createAdditionalRecords($factory);
+            $this->additionalRecords($factory);
 
             return $this->createStates($factory);
         }

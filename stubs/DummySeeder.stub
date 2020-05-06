@@ -20,7 +20,7 @@ class {DummySeeder} extends Seeder
         if ($this->modelHasFactory($factory)) {
             $this->createRecords($factory, $this->amount(${dummyModel}));
 
-            $this->createAdditionalRecords($factory);
+            $this->additionalRecords($factory);
 
             return $this->createStates($factory);
         }
