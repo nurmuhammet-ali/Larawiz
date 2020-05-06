@@ -12,7 +12,7 @@ class {DummySeeder} extends Seeder
      * Run the database seeds.
      *
      * @param  \Illuminate\Database\Eloquent\Factory  $factory
-     * @param  \{DummyModelNamespace}  {$dummyModel}
+     * @param  \{DummyModelNamespace}  ${dummyModel}
      * @return void
      */
     public function run(Factory $factory, {DummyModel} ${dummyModel})
@@ -20,7 +20,7 @@ class {DummySeeder} extends Seeder
         if ($this->modelHasFactory($factory)) {
             $this->createRecords($factory, $this->amount(${dummyModel}));
 
-            return $this->createStates();
+            return $this->createStates($factory);
         }
 
         throw new LogicException('The [{DummyModel}] has no factory defined to use for seeding.');
@@ -42,11 +42,12 @@ class {DummySeeder} extends Seeder
     /**
      * Returns a useful amount of records to create.
      *
-     * @param \{DummyModelNamespace} $dummyModel
+     * @param \{DummyModelNamespace} ${$dummyModel}
      * @return int
      */
     protected function amount(${dummyModel})
     {
+        // We will conveniently multiple to two and a half pages.
         return (int) (${dummyModel}->getPerPage() * 2.5);
     }
 
