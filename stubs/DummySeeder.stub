@@ -1,9 +1,7 @@
 <?php
 
-use LogicException;
 use {DummyModelNamespace};
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factory;
 
 class {DummySeeder} extends Seeder

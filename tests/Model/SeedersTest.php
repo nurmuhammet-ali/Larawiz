@@ -83,10 +83,8 @@ class SeedersTest extends TestCase
         $this->assertEquals(<<<'CONTENT'
 <?php
 
-use LogicException;
 use App\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factory;
 
 class UserSeeder extends Seeder
