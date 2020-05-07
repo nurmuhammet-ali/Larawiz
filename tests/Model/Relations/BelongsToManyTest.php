@@ -211,7 +211,7 @@ class BelongsToManyTest extends TestCase
             '@return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\App\Role', $userModel);
         $this->assertStringContainsString('public function roles()', $userModel);
         $this->assertStringContainsString(
-            'return $this->belongsToMany(Role::class)->using(Permission::class);', $userModel);
+            'return $this->belongsToMany(Role::class, \'permissions\')->using(Permission::class);', $userModel);
 
         $this->assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $users', $roleModel);
@@ -219,7 +219,7 @@ class BelongsToManyTest extends TestCase
             '@return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\App\User', $roleModel);
         $this->assertStringContainsString('public function users()', $roleModel);
         $this->assertStringContainsString(
-            'return $this->belongsToMany(User::class)->using(Permission::class);', $roleModel);
+            'return $this->belongsToMany(User::class, \'permissions\')->using(Permission::class);', $roleModel);
 
         $this->assertStringContainsString('class Permission extends Pivot', $pivotModel);
         $this->assertStringContainsString('@property-read \App\User $user', $pivotModel);

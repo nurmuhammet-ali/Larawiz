@@ -5,7 +5,12 @@ namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 use Closure;
 use Larawiz\Larawiz\Scaffold;
 use Illuminate\Config\Repository;
+use Illuminate\Support\Collection;
+use Larawiz\Larawiz\Lexing\Code\Argument;
 use Larawiz\Larawiz\Lexing\Database\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation;
+use Larawiz\Larawiz\Lexing\Database\Relations\BelongsToMany;
 
 class ParsePivotModelsMigrations
 {
@@ -20,6 +25,11 @@ class ParsePivotModelsMigrations
     {
         foreach ($scaffold->database->models->filter->isPivot() as $model) {
             $this->cleanPivotModel($model, $scaffold->rawDatabase);
+
+            if ($model->modelType === Pivot::class) {
+                $model->table = $model->getTableName();
+                $this->addTableName($model, $scaffold->database->models);
+            }
         }
 
         return $next($scaffold);
@@ -54,6 +64,66 @@ class ParsePivotModelsMigrations
         if ($database->get("models.{$model->key}.quick.shouldDeleteId")) {
             $model->primary->using = false;
         }
+    }
+
+    /**
+     * Adds the Pivot Model table name to the relation methods.
+     *
+     * @param \Larawiz\Larawiz\Lexing\Database\Model  $pivot
+     * @param  \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Model  $models
+     */
+    protected function addTableName(Model $pivot, Collection $models)
+    {
+        // We will cycle through each model with a "belongsToMany" relation that is using this
+        // Pivot model, and forcefully inject the Pivot table name to the relation methods.
+        // We have to do it because Laravel doesn't uses the Pivot automatic table name.
+        $models->each(function (Model $model) use ($pivot) {
+            $model->relations->each(function (BaseRelation $relation) use ($pivot) {
+                if ($this->usesPivotModel($relation, $pivot) && $this->hasNoTableName($relation)) {
+                    $this->addPivotTableName($relation->methods, $pivot);
+                }
+            });
+        });
+    }
+
+    /**
+     * Check if the relation uses the Model has a pivot and doesn't uses a custom table.
+     *
+     * @param  \Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation  $relation
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $pivot
+     * @return bool
+     */
+    protected function usesPivotModel(BaseRelation $relation, Model $pivot)
+    {
+        return $relation instanceof BelongsToMany
+            && $relation->isUsingPivotModel()
+            && $relation->using->key === $pivot->key;
+    }
+
+    /**
+     * Returns if the second argument of the relation is empty.
+     *
+     * @param  \Larawiz\Larawiz\Lexing\Database\Relations\BelongsToMany  $relation
+     * @return bool
+     */
+    protected function hasNoTableName(BelongsToMany $relation)
+    {
+        return ! $relation->methods->first()->arguments->get(1);
+    }
+
+    /**
+     * Takes the table name of the model and injects it as second parameter to the
+     * "belongsToMany" method call.
+     *
+     * @param  \Illuminate\Support\Collection  $methods
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $pivot
+     */
+    protected function addPivotTableName(Collection $methods, Model $pivot)
+    {
+        $methods->first()->arguments->put(1, new Argument([
+            'value' => $pivot->getTableName(),
+            'type' => 'string'
+        ]));
     }
 
 }
