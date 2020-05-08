@@ -3,6 +3,7 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Scaffold;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Collection;
@@ -27,8 +28,7 @@ class ParsePivotModelsMigrations
             $this->cleanPivotModel($model, $scaffold->rawDatabase);
 
             if ($model->modelType === Pivot::class) {
-                $model->table = $model->getTableName();
-                $this->addTableName($model, $scaffold->database->models);
+                $this->mayCorrectTableName($model, $scaffold->database->models);
             }
         }
 
@@ -43,28 +43,18 @@ class ParsePivotModelsMigrations
      */
     protected function cleanPivotModel(Model $model, Repository $database)
     {
-        $this->mayDisablePrimaryKey($model, $database);
-
-        // Soft Deletes in Pivot Models are not supported, se we need to disable them.
-        // @see https://github.com/laravel/framework/pull/31224
-        $model->softDelete->using = false;
-    }
-
-    /**
-     * May disable primary key for the Pivot Model.
-     *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
-     * @param  \Illuminate\Config\Repository  $database
-     */
-    protected function mayDisablePrimaryKey(Model $model, Repository $database)
-    {
         // If the model had an ID automatically set, we will strip it here. Otherwise,
         // when the model is later constructed, the ID or UUID will be automatically
         // set as primary key if the developer issued them into the columns array.
         if ($database->get("models.{$model->key}.quick.shouldDeleteId")) {
             $model->primary->using = false;
         }
+
+        // Soft Deletes in Pivot Models are not supported, se we need to disable them.
+        // @see https://github.com/laravel/framework/pull/31224
+        $model->softDelete->using = false;
     }
+
 
     /**
      * Adds the Pivot Model table name to the relation methods.
@@ -72,15 +62,21 @@ class ParsePivotModelsMigrations
      * @param \Larawiz\Larawiz\Lexing\Database\Model  $pivot
      * @param  \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Model  $models
      */
-    protected function addTableName(Model $pivot, Collection $models)
+    protected function mayCorrectTableName(Model $pivot, Collection $models)
     {
         // We will cycle through each model with a "belongsToMany" relation that is using this
         // Pivot model, and forcefully inject the Pivot table name to the relation methods.
         // We have to do it because Laravel doesn't uses the Pivot automatic table name.
         $models->each(function (Model $model) use ($pivot) {
-            $model->relations->each(function (BaseRelation $relation) use ($pivot) {
-                if ($this->usesPivotModel($relation, $pivot) && $this->hasNoTableName($relation)) {
-                    $this->addPivotTableName($relation->methods, $pivot);
+            $model->relations->each(function ($relation) use ($model, $pivot) {
+                if ($this->usesPivotModel($relation, $pivot) &&
+                    $this->pivotDoesntFollowsNamingConvention($model, $relation->model, $pivot)) {
+
+                    $this->setTableNameInPivot($pivot);
+
+                    if ($this->hasNoTableName($relation)) {
+                        $this->addPivotTableName($relation->methods, $pivot);
+                    }
                 }
             });
         });
@@ -112,6 +108,26 @@ class ParsePivotModelsMigrations
     }
 
     /**
+     * Check if the pivot uses "singular_singular" naming convention.
+     *
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $parent
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $child
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $pivot
+     * @return bool
+     */
+    protected function pivotDoesntFollowsNamingConvention(Model $parent, Model $child, Model $pivot)
+    {
+        // Let's say we have "UserRole". The correct table name for this is "role_user" so we
+        // will get the class name singular-snaked automatically and compare that with what
+        // Eloquent expects, which is the sorted model names together with an underscore.
+        $expected = collect([$parent, $child])->map->singular()->sort()->implode('_');
+
+        $received = Str::of($pivot->class)->singular()->snake();
+
+        return ! $received->is($expected);
+    }
+
+    /**
      * Takes the table name of the model and injects it as second parameter to the
      * "belongsToMany" method call.
      *
@@ -124,6 +140,16 @@ class ParsePivotModelsMigrations
             'value' => $pivot->getTableName(),
             'type' => 'string'
         ]));
+    }
+
+    /**
+     * Sets the plural name as table name in the pivot.
+     *
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $pivot
+     */
+    protected function setTableNameInPivot(Model $pivot)
+    {
+        $pivot->table = $pivot->table ?? $pivot->getPluralTableName();
     }
 
 }

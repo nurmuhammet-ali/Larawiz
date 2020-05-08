@@ -38,8 +38,11 @@ class SetPrimaryKey
      */
     protected function pivotMayEnablePrimary(Model $model, ClassType $class)
     {
-        if ($model->primary->column && ! $model->primary->using) {
-            return $model->columns->pull($model->primary->column->name);
+        if (! $model->primary->using) {
+            if ($model->primary->column) {
+                $model->columns->pull($model->primary->column->name);
+            }
+            return;
         }
 
         if ('id' !== $name = $model->primary->column->getName()) {

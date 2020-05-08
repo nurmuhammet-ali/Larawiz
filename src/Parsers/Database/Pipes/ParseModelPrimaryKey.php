@@ -51,7 +51,7 @@ class ParseModelPrimaryKey
         // First, we are gonna check if the "id" key exists. If not, we will check for any
         // other column set as auto-incrementing. If both fails we will set the model as
         // not having any primary key at all since it may be what the developer wants.
-        $primary = $model->columns->get('id') ?? $model->columns->first->isPrimary();
+        $primary = $model->columns->get('id') ?? $model->columns->filter()->first->isPrimary();
 
         if ($primary) {
             $this->setColumnAsPrimaryKey($model, $primary);

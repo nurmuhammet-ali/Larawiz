@@ -113,7 +113,7 @@ class Model extends Fluent
      */
     public function usesNonDefaultTable()
     {
-        return $this->table !== $this->getAutomaticTableName();
+        return $this->table !== $this->getPluralTableName();
     }
 
     /**
@@ -123,17 +123,33 @@ class Model extends Fluent
      */
     public function getTableName()
     {
-        return $this->table ?? $this->getAutomaticTableName();
+        if ($this->table) {
+            return $this->table;
+        }
+
+        return $this->modelType === Pivot::class
+                ? $this->getSingularTableName()
+                : $this->getPluralTableName();
     }
 
     /**
-     * Returns the automatic table name for the model.
+     * Returns the table name as plural (for pivot models)
      *
      * @return string
      */
-    protected function getAutomaticTableName()
+    public function getPluralTableName()
     {
-        return Str::snake(Str::pluralStudly($this->attributes['class']));
+        return Str::snake(Str::pluralStudly($this->class));
+    }
+
+    /**
+     * Returns the table name as snake (for pivot models)
+     *
+     * @return string
+     */
+    public function getSingularTableName()
+    {
+        return Str::snake(Str::singular($this->class));
     }
 
     /**
