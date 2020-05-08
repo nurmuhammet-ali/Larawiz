@@ -25,11 +25,11 @@ composer require larawiz/larawiz --dev
 
 ## Usage
 
-I it's your first time, publish the sample YAML files into `larawiz/`.
+If it's your first time, publish the sample YAML files into the `larawiz/` directory:
 
     php artisan larawiz:sample
 
-Check it out and play with it. Once you're done, scaffold your project with this artisan command.
+Check it out and play with it. Once you're done, scaffold your project with this artisan command:
 
     php artisan larawiz:scaffold
 
