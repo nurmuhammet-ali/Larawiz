@@ -169,6 +169,88 @@ class BelongsToManyTest extends TestCase
             'models' => [
                 'User'   => [
                     'name' => 'string',
+                    'roles' => 'belongsToMany using:RoleUser'
+                ],
+                'Role' => [
+                    'type' => 'string',
+                    'users' => 'belongsToMany using:RoleUser',
+                ],
+                'RoleUser' => [
+                    'enforce' => 'bool',
+                    'user' => 'belongsTo',
+                    'role' => 'belongsTo',
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $this->assertFileExistsInFilesystem($this->app->path('RoleUser.php'));
+        $this->assertFileExistsInFilesystem(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_role_user_table.php'));
+
+        $userModel = $this->filesystem->get($this->app->path('User.php'));
+        $roleModel = $this->filesystem->get($this->app->path('Role.php'));
+        $pivotModel = $this->filesystem->get($this->app->path('RoleUser.php'));
+
+        $userMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
+        );
+        $roleMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_roles_table.php')
+        );
+        $pivotMigration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_role_user_table.php')
+        );
+
+        $this->assertStringContainsString(
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Role[] $roles', $userModel);
+        $this->assertStringContainsString(
+            '@return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\App\Role', $userModel);
+        $this->assertStringContainsString('public function roles()', $userModel);
+        $this->assertStringContainsString(
+            'return $this->belongsToMany(Role::class)->using(RoleUser::class);', $userModel);
+
+        $this->assertStringContainsString(
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $users', $roleModel);
+        $this->assertStringContainsString(
+            '@return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\App\User', $roleModel);
+        $this->assertStringContainsString('public function users()', $roleModel);
+        $this->assertStringContainsString(
+            'return $this->belongsToMany(User::class)->using(RoleUser::class);', $roleModel);
+
+        $this->assertStringContainsString('class RoleUser extends Pivot', $pivotModel);
+        $this->assertStringContainsString('@property-read \App\User $user', $pivotModel);
+        $this->assertStringContainsString('@property-read \App\Role $role', $pivotModel);
+        $this->assertStringContainsString(
+            '@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\User', $pivotModel);
+        $this->assertStringContainsString(
+            '@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Role', $pivotModel);
+        $this->assertStringContainsString('public function user()', $pivotModel);
+        $this->assertStringContainsString('public function role()', $pivotModel);
+        $this->assertStringContainsString('return $this->belongsTo(User::class);', $pivotModel);
+        $this->assertStringContainsString('return $this->belongsTo(Role::class);', $pivotModel);
+
+        $this->assertStringNotContainsString('$table->id();', $pivotMigration);
+        $this->assertStringContainsString(
+            "\$table->unsignedBigInteger('user_id'); // Created for [user] relation.", $pivotMigration
+        );
+        $this->assertStringContainsString(
+            "\$table->unsignedBigInteger('role_id'); // Created for [role] relation.\n", $pivotMigration
+        );
+
+        $this->assertStringNotContainsString('roles', $userMigration);
+        $this->assertStringNotContainsString('users', $roleMigration);
+    }
+
+    public function test_allows_pivot_model_migration_override_with_different_name()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'   => [
+                    'name' => 'string',
                     'roles' => 'belongsToMany using:Permission'
                 ],
                 'Role' => [
@@ -243,6 +325,92 @@ class BelongsToManyTest extends TestCase
 
         $this->assertStringNotContainsString('roles', $userMigration);
         $this->assertStringNotContainsString('users', $roleMigration);
+    }
+
+    public function test_issues_table_name_for_pivot_doesnt_get_overwritten()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'   => [
+                    'name' => 'string',
+                    'roles' => 'belongsToMany:Role,cadabra using:Permission'
+                ],
+                'Role' => [
+                    'type' => 'string',
+                    'users' => 'belongsToMany:User,cadabra using:Permission',
+                ],
+                'Permission' => [
+                    'enforce' => 'bool',
+                    'user' => 'belongsTo',
+                    'role' => 'belongsTo',
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $this->assertFileNotExistsInFilesystem($this->app->path('RoleUser.php'));
+        $this->assertFileNotExistsInFilesystem(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_role_user_table.php'));
+        $this->assertFileExistsInFilesystem(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_permissions_table.php'));
+
+        $userModel = $this->filesystem->get($this->app->path('User.php'));
+        $roleModel = $this->filesystem->get($this->app->path('Role.php'));
+
+        $this->assertStringContainsString(
+            'return $this->belongsToMany(Role::class, \'cadabra\')->using(Permission::class);', $userModel);
+
+        $this->assertStringContainsString(
+            'return $this->belongsToMany(User::class, \'cadabra\')->using(Permission::class);', $roleModel);
+    }
+
+    public function test_issues_pivot_with_custom_table_name()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'   => [
+                    'name' => 'string',
+                    'roles' => 'belongsToMany using:Permission'
+                ],
+                'Role' => [
+                    'type' => 'string',
+                    'users' => 'belongsToMany using:Permission',
+                ],
+                'Permission' => [
+                    'columns' => [
+                        'enforce' => 'bool',
+                        'user' => 'belongsTo',
+                        'role' => 'belongsTo',
+                        'timestamps' => null
+                    ],
+                    'table' => 'vegetables'
+                ]
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $this->assertFileNotExistsInFilesystem($this->app->path('RoleUser.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Permission.php'));
+        $this->assertFileExistsInFilesystem(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php'));
+
+        $userModel = $this->filesystem->get($this->app->path('User.php'));
+        $roleModel = $this->filesystem->get($this->app->path('Role.php'));
+        $pivot = $this->filesystem->get($this->app->path('Permission.php'));
+
+        $this->assertStringContainsString(
+            'return $this->belongsToMany(Role::class, \'vegetables\')->using(Permission::class);', $userModel);
+
+        $this->assertStringContainsString(
+            'return $this->belongsToMany(User::class, \'vegetables\')->using(Permission::class);', $roleModel);
+
+        $this->assertStringContainsString("protected \$table = 'vegetables';", $pivot);
     }
 
     public function test_error_when_using_pivot_doesnt_exists()
