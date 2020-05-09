@@ -43,7 +43,7 @@ You can find it in your application default storage path under the `storage/lara
 
 ## Generating your app
 
-[The whole documentation is online](https://darkghosthunter.gitbook.io/larawiz/), but you should get the gist with this:
+[The whole documentation is online](https://larawiz.github.io/docs/), but you should get the gist with this:
 
 ```yaml
 models:
