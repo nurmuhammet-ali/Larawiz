@@ -7,7 +7,7 @@
 
 # Larawiz  
 
-The Laravel Wizard scaffolder you wanted but never got, until now!
+The Laravel scaffolder you wanted but never got, until now!
 
 Use a single YAML file to create models, migrations, factories, seeders, pivot tables... everything with **braindead easy syntax**.
 
