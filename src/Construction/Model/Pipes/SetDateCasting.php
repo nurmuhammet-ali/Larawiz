@@ -3,7 +3,6 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Illuminate\Support\Collection;
 use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Lexing\Database\Column;
 use Larawiz\Larawiz\Lexing\Database\Timestamps;
@@ -54,8 +53,6 @@ class SetDateCasting
      */
     protected function columnShouldBeCastedToDate(Timestamps $timestamps, Column $column)
     {
-        return $column->shouldCastToDate()
-            && ! $column->isTimestamp()
-            && $timestamps->notTimestamps($column->name);
+        return $column->shouldCastToDate() && $timestamps->notTimestamps($column->name);
     }
 }
