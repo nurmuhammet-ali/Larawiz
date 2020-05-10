@@ -147,7 +147,7 @@ class ModelCast extends TestCase
         $this->assertStringNotContainsString('protected $casts = [', $model);
     }
 
-    public function test_adds_dates_to_dates_array_except_timestamps()
+    public function test_adds_dates_to_dates_array_except_touch_timestamps_and_soft_deletes()
     {
         $this->mockDatabaseFile([
             'models'    => [
@@ -161,6 +161,7 @@ class ModelCast extends TestCase
                     'quux' => 'timestamp',
                     'corge' => 'timestampTz',
                     'grault' => 'year',
+                    'softDeletes' => null,
                 ],
             ],
         ]);
@@ -169,6 +170,6 @@ class ModelCast extends TestCase
 
         $model = $this->filesystem->get($this->app->path('Foo.php'));
 
-        $this->assertStringContainsString("public \$dates = ['foo', 'bar', 'quz', 'qux', 'quuz', 'grault'];", $model);
+        $this->assertStringContainsString("public \$dates = ['foo', 'bar', 'quz', 'qux', 'quuz', 'quux', 'corge', 'grault'];", $model);
     }
 }
