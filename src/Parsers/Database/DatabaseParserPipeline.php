@@ -36,6 +36,8 @@ class DatabaseParserPipeline extends Pipeline
         Pipes\ParseModelBelongToColumnRelation::class,          // Creates BelongsTo columns of the relations.
         Pipes\ParseModelMorphToColumnRelation::class,           // Creates MorphTo columns of the relations.
 
+        Pipes\ParseValidateHasOneOrManyThroughRelations::class, // Validates if through relations has needed columns.
+
         Pipes\ParseBelongsToManyAutomaticPivot::class,          // Creates a auto-pivot for "belongsToMany" relations
         Pipes\ParseMorphToOrByManyAutomaticPivot::class,        // Creates a auto-pivot for "belongsToMany" relations
 
