@@ -127,7 +127,7 @@ class ParsePreliminaryBelongsToData
         // a primary key, otherwise we will have to bail out since this has become unguessable.
         if (! $instance->primary->using) {
             throw new LogicException(
-                "The [{$name}] relation in [{$model}] points needs a column name for [{$parent}] model."
+                "The [{$name}] relation in [{$model->key}] points needs a column name for [{$parent}] model."
             );
         }
 
