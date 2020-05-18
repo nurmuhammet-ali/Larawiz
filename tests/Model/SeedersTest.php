@@ -106,7 +106,7 @@ class UserSeeder extends Seeder
             return $this->createStates($factory);
         }
 
-        throw new LogicException('The [User] has no factory defined to use for seeding.');
+        throw new LogicException('The [User] model has no factory defined to use for seeding.');
     }
 
     /**

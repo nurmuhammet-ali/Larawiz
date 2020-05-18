@@ -23,7 +23,7 @@ class {DummySeeder} extends Seeder
             return $this->createStates($factory);
         }
 
-        throw new LogicException('The [{DummyModel}] has no factory defined to use for seeding.');
+        throw new LogicException('The [{DummyModel}] model has no factory defined to use for seeding.');
     }
 
     /**
