@@ -2,6 +2,8 @@
 
 namespace Larawiz\Larawiz\Console;
 
+use ErrorException;
+use RuntimeException;
 use Illuminate\Support\Str;
 use Larawiz\Larawiz\Larawiz;
 use Illuminate\Filesystem\Filesystem;
@@ -69,7 +71,13 @@ class ApplicationBackup
      */
     protected function makeBackupDirectory(string $dir)
     {
-        $this->filesystem->ensureDirectoryExists($dir, null, true);
+        try {
+            $this->filesystem->ensureDirectoryExists($dir, 0755, true);
+        } catch (ErrorException $exception) {
+            throw new RuntimeException(
+                "The directory [$dir] couldn't be made to backup your app. Check permissions."
+            );
+        }
     }
 
     /**
