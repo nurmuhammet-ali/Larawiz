@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": "^7.2.15",
+        "php": "^7.4||^8.0",
         "illuminate/support": "^6.0|^7.0|^8.0",
         "symfony/yaml": "^5.0",
         "symfony/finder": "^5.0",
@@ -27,9 +27,9 @@
         "goaop/parser-reflection": "^2.1.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^5.2",
-        "orchestra/canvas": "^5.3",
-        "phpunit/phpunit": "^8.5"
+        "orchestra/testbench": "^5.2|^6.0",
+        "orchestra/canvas": "^5.3|^6.0",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
