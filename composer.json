@@ -22,7 +22,7 @@
         "illuminate/support": "^7.2||^8.0",
         "symfony/yaml": "^5.2",
         "symfony/finder": "^5.2",
-        "nette/php-generator": "^3.5.4",
+        "nette/php-generator": "^3.5.3",
         "nette/utils" : "^3.2.1",
         "goaop/parser-reflection": "^2.1.0"
     },
