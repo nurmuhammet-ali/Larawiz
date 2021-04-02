@@ -3,13 +3,11 @@
 namespace Larawiz\Larawiz\Writer\Pipes;
 
 use Closure;
-use Larawiz\Larawiz\Scaffold;
-use Nette\PhpGenerator\ClassType;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
 use Larawiz\Larawiz\Construction\Model\ModelConstructorPipeline;
+use Larawiz\Larawiz\Scaffold;
 
-class WriteDatabaseModels
+class WriteModels
 {
     /**
      * Model Constructor Pipeline.

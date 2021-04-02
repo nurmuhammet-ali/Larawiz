@@ -27,11 +27,11 @@ class ModelConstructorPipeline extends Pipeline
         Pipes\SetSoftDeletes::class,
         Pipes\SetPasswordMutator::class,
         Pipes\SetTraits::class,
+        Pipes\SetsFactoryTrait::class,
         Pipes\WriteUuidTrait::class,
         Pipes\WriteModel::class,
         Pipes\WriteObserver::class,
         Pipes\WriteGlobalScopes::class,
-        Pipes\WriteFactory::class,
         Pipes\WriteSeeder::class,
         Pipes\WriteTraits::class,
     ];

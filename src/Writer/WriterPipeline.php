@@ -12,8 +12,9 @@ class WriterPipeline extends Pipeline
      * @var array
      */
     protected $pipes = [
-        Pipes\WriteDatabaseModels::class,
-        Pipes\WriteDatabaseMigrations::class,
+        Pipes\WriteModels::class,
+        Pipes\WriteMigrations::class,
+        Pipes\WriteModelFactories::class,
 
 //        Pipes\WriteHttpMiddleware::class,
 //        Pipes\WriteHttpControllers::class,

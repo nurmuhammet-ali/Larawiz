@@ -3,11 +3,11 @@
 namespace Larawiz\Larawiz\Writer\Pipes;
 
 use Closure;
-use Larawiz\Larawiz\Scaffold;
 use Larawiz\Larawiz\Construction\Migration\MigrationConstruction;
 use Larawiz\Larawiz\Construction\Migration\MigrationConstructorPipeline;
+use Larawiz\Larawiz\Scaffold;
 
-class WriteDatabaseMigrations
+class WriteMigrations
 {
     /**
      * Model Constructor Pipeline.
