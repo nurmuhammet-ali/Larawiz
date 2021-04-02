@@ -37,9 +37,10 @@ class WriteModelFactories
     public function handle(Scaffold $scaffold, Closure $next)
     {
         foreach ($scaffold->database->models as $model) {
-            $this->pipeline->send(
-                new FactoryConstruction(['model' => $model])
-            )->thenReturn();
+            // If the model is using factories, we will create it.
+            if ($model->useFactory) {
+                $this->pipeline->send(new FactoryConstruction(['model' => $model]))->thenReturn();
+            }
         }
 
         return $next($scaffold);
