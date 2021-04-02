@@ -18,8 +18,11 @@ class SetsFactoryTrait
      */
     public function handle(ModelConstruction $construction, Closure $next)
     {
-        Arr::first($construction->file->getNamespaces())->addUse(HasFactory::class);
-        $construction->class->addTrait(HasFactory::class);
+        // If the model is using factories, we will add it to the class.
+        if ($construction->model->useFactory) {
+            Arr::first($construction->file->getNamespaces())->addUse(HasFactory::class);
+            $construction->class->addTrait(HasFactory::class);
+        }
 
         return $next($construction);
     }
