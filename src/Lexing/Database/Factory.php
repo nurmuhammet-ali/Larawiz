@@ -3,8 +3,8 @@
 namespace Larawiz\Larawiz\Lexing\Database;
 
 use Faker\Generator;
-use ReflectionMethod;
 use Illuminate\Support\Str;
+use ReflectionMethod;
 
 class Factory
 {
@@ -118,56 +118,56 @@ class Factory
 
         switch (Str::of($name)->snake('')->lower()->__toString()) {
             case 'firstname':
-                return "\$faker->firstName";
+                return "\$this->faker->firstName";
             case 'lastname':
-                return "\$faker->lastName";
+                return "\$this->faker->lastName";
             case 'username':
             case 'name':
             case 'login':
-                return "\$faker->userName";
+                return "\$this->faker->userName";
             case 'email':
             case 'emailaddress':
-                return "\$faker->email";
+                return "\$this->faker->email";
             case 'phonenumber':
             case 'phone':
             case 'telephone':
             case 'telnumber':
-                return "\$faker->phoneNumber";
+                return "\$this->faker->phoneNumber";
             case 'address':
-                return "\$faker->address";
+                return "\$this->faker->address";
             case 'city':
             case 'town':
-                return "\$faker->city";
+                return "\$this->faker->city";
             case 'street':
             case 'streetaddress':
-                return "\$faker->streetAddress";
+                return "\$this->faker->streetAddress";
             case 'postcode':
             case 'zipcode':
-                return "\$faker->postcode";
+                return "\$this->faker->postcode";
             case 'state':
             case 'county':
-                return "\$faker->state";
+                return "\$this->faker->state";
             case 'country':
-                return "\$faker->countryCode";
+                return "\$this->faker->countryCode";
             case 'locale':
-                return "\$faker->locale";
+                return "\$this->faker->locale";
             case 'currency':
             case 'currencycode':
-                return "\$faker->currencyCode";
+                return "\$this->faker->currencyCode";
             case 'url':
             case 'website':
-                return "\$faker->url";
+                return "\$this->faker->url";
             case 'company':
             case 'companyname':
             case 'employer':
-                return "\$faker->company";
+                return "\$this->faker->company";
             case 'title':
-                return "\$faker->sentence";
+                return "\$this->faker->sentence";
             case 'body':
             case 'summary':
             case 'article':
             case 'description':
-                return "\$faker->text";
+                return "\$this->faker->text";
         }
     }
 
@@ -181,41 +181,41 @@ class Factory
     {
         switch ($type) {
             case 'boolean':
-                return '$faker->boolean';
+                return '$this->faker->boolean';
             case 'uuid':
-                return '$faker->uuid';
+                return '$this->faker->uuid';
             case 'date':
-                return '$faker->date';
+                return '$this->faker->date';
             case 'dateTime':
             case 'dateTimeTz':
-                return '$faker->dateTime';
+                return '$this->faker->dateTime';
             case 'time':
             case 'timeTz':
-                return '$faker->time';
+                return '$this->faker->time';
             case 'year':
-                return '$faker->year';
+                return '$this->faker->year';
             case 'text':
             case 'mediumText':
             case 'longText':
-                return '$faker->realText()';
+                return '$this->faker->realText()';
             case 'integer':
             case 'unsignedInteger':
             case 'unsignedTinyInteger':
             case 'unsignedSmallInteger':
             case 'unsignedMediumInteger':
             case 'unsignedBigInteger':
-                return '$faker->randomNumber()';
+                return '$this->faker->randomNumber()';
             case 'ipAddress':
-                return '$faker->ipv4';
+                return '$this->faker->ipv4';
             case 'macAddress':
-                return '$faker->macAddress';
+                return '$this->faker->macAddress';
             case 'float':
             case 'double':
             case 'decimal':
             case 'unsignedFloat':
             case 'unsignedDouble':
             case 'unsignedDecimal':
-                return '$faker->randomFloat()';
+                return '$this->faker->randomFloat()';
         }
     }
 
@@ -251,7 +251,7 @@ class Factory
      */
     protected function formatterString(string $formatter, ReflectionMethod $method)
     {
-        return $this->formatters[$formatter] = '$faker->'
+        return $this->formatters[$formatter] = '$this->faker->'
             . $formatter
             . ($method->getNumberOfParameters() ? '()' : '');
     }
