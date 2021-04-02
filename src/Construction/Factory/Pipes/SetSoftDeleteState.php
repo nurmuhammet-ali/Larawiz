@@ -46,7 +46,7 @@ class SetSoftDeleteState
             ->addBody(
                 "\n        return \$this->state(function (array \$attributes) {" .
                 "\n            return [" .
-                "\n                '{$model->softDelete->column}' => \$this->faker->dateTime," .
+                "\n                (new {$model->class})->getDeletedAtColumn() => \$this->faker->dateTime," .
                 "\n            ];" .
                 "\n        });"
             );
