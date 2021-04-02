@@ -3,10 +3,11 @@
 namespace Tests\Model;
 
 use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class GlobalScopesTest extends TestCase
@@ -29,7 +30,7 @@ class GlobalScopesTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertDirectoryNotExists($this->app->path('Scopes' . DS . 'User'));
+        $this->assertDirectoryDoesNotExist($this->app->path('Scopes' . DS . 'User'));
     }
 
     public function test_creates_scopes_from_a_list_and_appends_scope_to_each()

@@ -2,17 +2,18 @@
 
 namespace Tests\Commands;
 
-use LogicException;
-use Tests\RegistersPackage;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Larawiz\Larawiz\Larawiz;
 use Larawiz\Larawiz\Scaffold;
-use Illuminate\Support\Carbon;
-use Symfony\Component\Yaml\Yaml;
-use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\File;
-use Tests\CleansProjectFromScaffoldData;
 use Larawiz\Larawiz\Scaffolding\Pipes\ParseDatabaseData;
+use LogicException;
+use Orchestra\Testbench\TestCase;
+use Symfony\Component\Yaml\Yaml;
+use Tests\CleansProjectFromScaffoldData;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class ScaffoldTest extends TestCase
@@ -140,7 +141,7 @@ class ScaffoldTest extends TestCase
 
         $path = 'larawiz' . DS . 'backups' . DS . $time->format('Y-m-d_His');
 
-        $this->assertDirectoryNotExists(storage_path($path));
+        $this->assertDirectoryDoesNotExist(storage_path($path));
 
         $this->assertFileExists($this->app->path('Foo.php'));
         $this->assertFileExists($this->app->databasePath('migrations' . DS . 'Bar.php'));
