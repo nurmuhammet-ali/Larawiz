@@ -4,7 +4,6 @@ namespace Larawiz\Larawiz\Scaffolding\Pipes;
 
 use Illuminate\Support\Arr;
 use Larawiz\Larawiz\Scaffold;
-use Illuminate\Config\Repository;
 
 class ParseDatabaseData extends BaseParserPipe
 {
@@ -20,6 +19,5 @@ class ParseDatabaseData extends BaseParserPipe
     {
         $scaffold->rawDatabase->set('models', Arr::get($data, 'models', []));
         $scaffold->rawDatabase->set('migrations', Arr::get($data, 'migrations', []));
-        $scaffold->rawDatabase->set('namespace', Arr::get($data, 'namespace', null));
     }
 }
