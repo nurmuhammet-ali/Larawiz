@@ -16,5 +16,6 @@ class FactoryConstructorPipeline extends Pipeline
         Pipes\SetStates::class,
         Pipes\SetSoftDeleteState::class,
         Pipes\SetConfigure::class,
+        Pipes\WriteFactory::class,
     ];
 }
