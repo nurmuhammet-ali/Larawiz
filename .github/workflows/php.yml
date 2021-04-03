@@ -51,6 +51,5 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_SERVICE_NAME: github
         run: |
-          sudo rm -rf composer.* vendor/
           composer require php-coveralls/php-coveralls
-          vendor/bin/php-coveralls
+          sudo vendor/bin/php-coveralls
