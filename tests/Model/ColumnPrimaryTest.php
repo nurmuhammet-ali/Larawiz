@@ -2,12 +2,13 @@
 
 namespace Tests\Model;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class ColumnPrimaryTest extends TestCase
@@ -34,7 +35,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -58,7 +59,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -83,7 +84,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -111,7 +112,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -137,7 +138,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -186,7 +187,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -213,7 +214,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -238,7 +239,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -265,7 +266,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -291,7 +292,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -320,7 +321,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -349,7 +350,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -378,7 +379,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -409,7 +410,7 @@ class ColumnPrimaryTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -457,7 +458,7 @@ class ColumnPrimaryTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Thing' . DS .'User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Thing' . DS .'User.php'));
 
         $this->assertStringContainsString("use App\HasUuidPrimaryKey;", $model);
         $this->assertStringContainsString("    use HasUuidPrimaryKey;", $model);

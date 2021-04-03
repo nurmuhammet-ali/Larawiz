@@ -2,12 +2,13 @@
 
 namespace Tests\Model\Relations;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class HasOneThroughTest extends TestCase
@@ -39,14 +40,14 @@ class HasOneThroughTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Mechanic.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Mechanic.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_mechanics_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Owner $carOwner', $model);
+        $this->assertStringContainsString('@property-read null|\App\Models\Owner $carOwner', $model);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\HasOneThrough|\App\Owner', $model);
+            '@return \Illuminate\Database\Eloquent\Relations\HasOneThrough|\App\Models\Owner', $model);
         $this->assertStringContainsString('public function carOwner()', $model);
         $this->assertStringContainsString('return $this->hasOneThrough(Owner::class, Car::class);', $model);
 
@@ -151,14 +152,14 @@ class HasOneThroughTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Mechanic.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Mechanic.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_mechanics_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Owner $owner', $model);
+        $this->assertStringContainsString('@property-read null|\App\Models\Owner $owner', $model);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\HasOneThrough|\App\Owner', $model);
+            '@return \Illuminate\Database\Eloquent\Relations\HasOneThrough|\App\Models\Owner', $model);
         $this->assertStringContainsString('public function owner()', $model);
         $this->assertStringContainsString('return $this->hasOneThrough(Owner::class, Car::class);', $model);
 
@@ -232,7 +233,7 @@ class HasOneThroughTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Mechanic.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Mechanic.php'));
 
         $this->assertStringContainsString(
             'return $this->hasOneThrough(Owner::class, Car::class)->withDefault();', $model);

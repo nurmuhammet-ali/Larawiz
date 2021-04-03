@@ -45,7 +45,7 @@ class ScaffoldTest extends TestCase
                 ],
             ]));
             $this->artisan('larawiz:scaffold')->run();
-            $this->assertFileExists($this->app->path('Foo.php'));
+            $this->assertFileExists($this->app->path('Models/Foo.php'));
             $this->cleanProject();
         }
     }
@@ -63,7 +63,7 @@ class ScaffoldTest extends TestCase
         ]));
 
         $this->artisan('larawiz:scaffold --db=custom.yml')->run();
-        $this->assertFileExists($this->app->path('Foo.php'));
+        $this->assertFileExists($this->app->path('Models/Foo.php'));
     }
 
     public function test_error_no_custom_database_filename_found()

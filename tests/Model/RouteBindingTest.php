@@ -3,10 +3,13 @@
 namespace Tests\Model;
 
 use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
+use const DIRECTORY_SEPARATOR as DS;
+
 
 class RouteBindingTest extends TestCase
 {
@@ -38,7 +41,7 @@ class RouteBindingTest extends TestCase
     {\n
         return $this->name;\n
     }\n',
-            $this->filesystem->get($this->app->path('User.php'))
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
     }
 
@@ -67,7 +70,7 @@ class RouteBindingTest extends TestCase
     {\n
         return $this->name;\n
     }\n',
-            $this->filesystem->get($this->app->path('User.php'))
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
     }
 

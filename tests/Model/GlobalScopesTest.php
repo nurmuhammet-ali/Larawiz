@@ -59,11 +59,11 @@ class GlobalScopesTest extends TestCase
         $this->assertFileExistsInFilesystem($fooObserver);
         $this->assertFileExistsInFilesystem($quxObserver);
 
-        $this->assertStringContainsString('use App\User;', $this->filesystem->get($fooObserver));
+        $this->assertStringContainsString('use App\Models\User;', $this->filesystem->get($fooObserver));
         $this->assertStringContainsString('namespace App\Scopes\User;', $this->filesystem->get($fooObserver));
         $this->assertStringContainsString('class FooScope', $this->filesystem->get($fooObserver));
         $this->assertStringContainsString(
-            '@param  \Illuminate\Database\Eloquent\Model|\App\User', $this->filesystem->get($fooObserver)
+            '@param  \Illuminate\Database\Eloquent\Model|\App\Models\User', $this->filesystem->get($fooObserver)
         );
         $this->assertStringContainsString(
             'public function apply(Builder $builder, User $user)', $this->filesystem->get($fooObserver)

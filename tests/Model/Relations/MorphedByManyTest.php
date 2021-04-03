@@ -2,12 +2,13 @@
 
 namespace Tests\Model\Relations;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class MorphedByManyTest extends TestCase
@@ -110,12 +111,12 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Models' . DS . 'Taggable.php'));
 
         $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_taggables_table.php'));
 
-        $tagModel = $this->filesystem->get($this->app->path('Tag.php'));
+        $tagModel = $this->filesystem->get($this->app->path('Models' . DS . 'Tag.php'));
         $tagMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_tags_table.php')
         );
@@ -125,11 +126,11 @@ class MorphedByManyTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Photo[] $photos', $tagModel);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Photo[] $photos', $tagModel);
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Video[] $videos', $tagModel);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Video[] $videos', $tagModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphToMany|\App\Photo', $tagModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphToMany|\App\Models\Photo', $tagModel);
         $this->assertStringContainsString('public function photos()', $tagModel);
         $this->assertStringContainsString("return \$this->morphedByMany(Photo::class, 'taggable');", $tagModel);
 
@@ -249,13 +250,13 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Models' . DS . 'Taggable.php'));
 
         $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php'));
 
-        $tagModel = $this->filesystem->get($this->app->path('Tag.php'));
-        $vegetableModel = $this->filesystem->get($this->app->path('Vegetable.php'));
+        $tagModel = $this->filesystem->get($this->app->path('Models' . DS . 'Tag.php'));
+        $vegetableModel = $this->filesystem->get($this->app->path('Models' . DS . 'Vegetable.php'));
 
         $vegetableMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')
@@ -300,8 +301,8 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExistsInFilesystem($this->app->path('Taggable.php'));
-        $this->assertFileExistsInFilesystem($this->app->path('Vegetable.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Models' . DS . 'Taggable.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Vegetable.php'));
 
         $this->assertFileExistsInFilesystem(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php'));
@@ -337,7 +338,7 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $vegetableModel = $this->filesystem->get($this->app->path('Vegetable.php'));
+        $vegetableModel = $this->filesystem->get($this->app->path('Models' . DS . 'Vegetable.php'));
 
         $vegetableMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')
@@ -377,7 +378,7 @@ class MorphedByManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $vegetableModel = $this->filesystem->get($this->app->path('Vegetable.php'));
+        $vegetableModel = $this->filesystem->get($this->app->path('Models' . DS . 'Vegetable.php'));
 
         $vegetableMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')

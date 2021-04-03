@@ -2,11 +2,12 @@
 
 namespace Tests\Model;
 
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class HiddenTest extends TestCase
@@ -39,7 +40,7 @@ class HiddenTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -94,7 +95,7 @@ class HiddenTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -150,7 +151,7 @@ class HiddenTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -190,7 +191,7 @@ class HiddenTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 

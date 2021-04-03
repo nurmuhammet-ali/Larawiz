@@ -2,12 +2,13 @@
 
 namespace Tests\Model\Relations;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class MorphToTest extends TestCase
@@ -36,14 +37,14 @@ class MorphToTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Classroom.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Classroom.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Student|\App\Teacher $assistable', $model);
+        $this->assertStringContainsString('@property-read \App\Models\Student|\App\Models\Teacher $assistable', $model);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphTo|\App\Student|\App\Teacher', $model);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphTo|\App\Models\Student|\App\Models\Teacher', $model);
         $this->assertStringContainsString('public function assistable()', $model);
         $this->assertStringContainsString('return $this->morphTo();', $model);
 
@@ -148,14 +149,14 @@ class MorphToTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Classroom.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Classroom.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Student|\App\Teacher $assistable', $model);
+        $this->assertStringContainsString('@property-read \App\Models\Student|\App\Models\Teacher $assistable', $model);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphTo|\App\Student|\App\Teacher', $model);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphTo|\App\Models\Student|\App\Models\Teacher', $model);
         $this->assertStringContainsString('public function assistable()', $model);
         $this->assertStringContainsString("return \$this->morphTo('foobar');", $model);
 
@@ -182,14 +183,14 @@ class MorphToTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Classroom.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Classroom.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Student|\App\Teacher $assistable', $model);
+        $this->assertStringContainsString('@property-read \App\Models\Student|\App\Models\Teacher $assistable', $model);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphTo|\App\Student|\App\Teacher', $model);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphTo|\App\Models\Student|\App\Models\Teacher', $model);
         $this->assertStringContainsString('public function assistable()', $model);
         $this->assertStringContainsString("return \$this->morphTo('foobar')->withDefault();", $model);
 
@@ -216,12 +217,12 @@ class MorphToTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Classroom.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Classroom.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Student|\App\Teacher $assistable', $model);
+        $this->assertStringContainsString('@property-read null|\App\Models\Student|\App\Models\Teacher $assistable', $model);
         $this->assertStringContainsString("return \$this->morphTo('foobar')", $model);
 
         $this->assertStringContainsString("\$table->nullableMorphs('foobar');", $migration);

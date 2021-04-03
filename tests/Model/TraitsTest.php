@@ -3,10 +3,11 @@
 namespace Tests\Model;
 
 use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class TraitsTest extends TestCase
@@ -40,21 +41,21 @@ class TraitsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExistsInFilesystem($this->app->path('Foo.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Foo.php'));
         $this->assertStringContainsString('trait Foo',
-            $this->filesystem->get($this->app->path('Foo.php')));
+            $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php')));
         $this->assertStringContainsString('initializeFoo',
-            $this->filesystem->get($this->app->path('Foo.php')));
+            $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php')));
         $this->assertStringContainsString('bootFoo',
-            $this->filesystem->get($this->app->path('Foo.php')));
+            $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php')));
 
-        $this->assertFileExistsInFilesystem($this->app->path('Bar' . DS . 'Quz.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php'));
         $this->assertStringContainsString('trait Quz',
-            $this->filesystem->get($this->app->path('Bar' . DS . 'Quz.php')));
+            $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
         $this->assertStringContainsString('initializeQuz',
-            $this->filesystem->get($this->app->path('Bar' . DS . 'Quz.php')));
+            $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
         $this->assertStringContainsString('bootQuz',
-            $this->filesystem->get($this->app->path('Bar' . DS . 'Quz.php')));
+            $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
     }
 
     public function test_traits_can_be_referenced_multiple_times()
@@ -86,13 +87,13 @@ class TraitsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExistsInFilesystem($this->app->path('Bar' . DS . 'Quz.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php'));
         $this->assertStringContainsString('trait Quz',
-            $this->filesystem->get($this->app->path('Bar' . DS . 'Quz.php')));
+            $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
         $this->assertStringContainsString('initializeQuz',
-            $this->filesystem->get($this->app->path('Bar' . DS . 'Quz.php')));
+            $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
         $this->assertStringContainsString('bootQuz',
-            $this->filesystem->get($this->app->path('Bar' . DS . 'Quz.php')));
+            $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
     }
 
     public function test_error_when_traits_collides_with_models_paths()
@@ -135,7 +136,7 @@ class TraitsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExistsInFilesystem($this->app->path('Foo.php'));
+        $this->assertFileNotExistsInFilesystem($this->app->path('Models' . DS . 'Foo.php'));
     }
 
     public function test_external_trait_is_only_appended()
@@ -159,8 +160,8 @@ class TraitsTest extends TestCase
             $this->app->path('Illuminate' . DS . 'Foundation' . DS . 'Validation' . DS . 'ValidatesRequests.php')
         );
 
-        $this->assertFileExistsInFilesystem($this->app->path('Foo.php'));
-        $this->assertFileExistsInFilesystem($this->app->path('Bar' . DS . 'Quz.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Foo.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php'));
     }
 
     public function test_error_when_external_trait_is_not_trait_but_class()

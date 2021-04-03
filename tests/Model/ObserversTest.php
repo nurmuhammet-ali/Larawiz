@@ -2,12 +2,13 @@
 
 namespace Tests\Model;
 
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
+use Illuminate\Filesystem\Filesystem;
 use Larawiz\Larawiz\Larawiz;
 use Orchestra\Testbench\TestCase;
-use Illuminate\Filesystem\Filesystem;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class ObserversTest extends TestCase
@@ -65,7 +66,7 @@ class ObserversTest extends TestCase
         $this->assertFileExistsInFilesystem($observer);
 
         $this->assertStringContainsString('namespace App\Observers;', $this->filesystem->get($observer));
-        $this->assertStringContainsString('use App\User;', $this->filesystem->get($observer));
+        $this->assertStringContainsString('use App\Models\User;', $this->filesystem->get($observer));
         $this->assertStringContainsString('class UserObserver', $this->filesystem->get($observer));
     }
 

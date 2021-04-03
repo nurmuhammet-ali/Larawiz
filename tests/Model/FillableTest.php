@@ -3,10 +3,12 @@
 namespace Tests\Model;
 
 use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
+use const DIRECTORY_SEPARATOR as DS;
 
 class FillableTest extends TestCase
 {
@@ -26,7 +28,7 @@ class FillableTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DIRECTORY_SEPARATOR . 'User.php');
 
         $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
@@ -44,7 +46,7 @@ class FillableTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DS . 'User.php');
 
         $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
@@ -62,7 +64,7 @@ class FillableTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DS . 'User.php');
 
         $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
@@ -83,7 +85,7 @@ class FillableTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DS . 'User.php');
 
         $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
@@ -101,7 +103,7 @@ class FillableTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DS . 'User.php');
 
         $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
@@ -132,7 +134,7 @@ class FillableTest extends TestCase
 
             $this->artisan('larawiz:scaffold');
 
-            $model = $this->app->path('User.php');
+            $model = $this->app->path('Models' . DS . 'User.php');
 
             $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
         }
@@ -154,7 +156,7 @@ class FillableTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DS . 'User.php');
 
         $this->assertStringNotContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
@@ -179,7 +181,7 @@ class FillableTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DS . 'User.php');
 
         $this->assertStringNotContainsString("protected \$fillable = ['name', 'age'];", $this->filesystem->get($model));
     }

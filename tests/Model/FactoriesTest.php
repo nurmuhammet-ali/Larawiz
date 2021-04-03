@@ -3,10 +3,11 @@
 namespace Tests\Model;
 
 use Faker\Generator;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class FactoriesTest extends TestCase
@@ -32,12 +33,6 @@ class FactoriesTest extends TestCase
 
         $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'UserFactory.php'));
         $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
-
-        $userFactory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
-        $adminFactory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
-
-        $this->assertStringContainsString('// TODO: Review the Factory for the User model.', $userFactory);
-        $this->assertStringContainsString('// TODO: Review the Factory for the Admin model.', $adminFactory);
     }
 
     public function test_doesnt_fill_id_or_autoincrement()
@@ -107,7 +102,7 @@ class FactoriesTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringContainsString("'is_admin' => \$faker->boolean,",
+        $this->assertStringContainsString("'is_admin' => \$this->faker->boolean,",
             $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php')));
     }
 
@@ -124,10 +119,10 @@ class FactoriesTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringContainsString("'uuid' => \$faker->uuid,",
+        $this->assertStringContainsString("'uuid' => \$this->faker->uuid,",
             $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php')));
 
-        $this->assertStringContainsString("'public_uuid' => \$faker->uuid,",
+        $this->assertStringContainsString("'public_uuid' => \$this->faker->uuid,",
             $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php')));
     }
 
@@ -150,12 +145,12 @@ class FactoriesTest extends TestCase
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$faker->date,", $factory);
-        $this->assertStringContainsString("'bar' => \$faker->dateTime,", $factory);
-        $this->assertStringContainsString("'quz' => \$faker->dateTime,", $factory);
-        $this->assertStringContainsString("'qux' => \$faker->time,", $factory);
-        $this->assertStringContainsString("'quux' => \$faker->time,", $factory);
-        $this->assertStringContainsString("'quuz' => \$faker->year,", $factory);
+        $this->assertStringContainsString("'foo' => \$this->faker->date,", $factory);
+        $this->assertStringContainsString("'bar' => \$this->faker->dateTime,", $factory);
+        $this->assertStringContainsString("'quz' => \$this->faker->dateTime,", $factory);
+        $this->assertStringContainsString("'qux' => \$this->faker->time,", $factory);
+        $this->assertStringContainsString("'quux' => \$this->faker->time,", $factory);
+        $this->assertStringContainsString("'quuz' => \$this->faker->year,", $factory);
 
     }
 
@@ -175,9 +170,9 @@ class FactoriesTest extends TestCase
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$faker->realText(),", $factory);
-        $this->assertStringContainsString("'bar' => \$faker->realText(),", $factory);
-        $this->assertStringContainsString("'quz' => \$faker->realText(),", $factory);
+        $this->assertStringContainsString("'foo' => \$this->faker->realText(),", $factory);
+        $this->assertStringContainsString("'bar' => \$this->faker->realText(),", $factory);
+        $this->assertStringContainsString("'quz' => \$this->faker->realText(),", $factory);
     }
 
     public function test_detects_random_number()
@@ -199,12 +194,12 @@ class FactoriesTest extends TestCase
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$faker->randomNumber(),", $factory);
-        $this->assertStringContainsString("'bar' => \$faker->randomNumber(),", $factory);
-        $this->assertStringContainsString("'quz' => \$faker->randomNumber(),", $factory);
-        $this->assertStringContainsString("'qux' => \$faker->randomNumber(),", $factory);
-        $this->assertStringContainsString("'quux' => \$faker->randomNumber(),", $factory);
-        $this->assertStringContainsString("'quuz' => \$faker->randomNumber(),", $factory);
+        $this->assertStringContainsString("'foo' => \$this->faker->randomNumber(),", $factory);
+        $this->assertStringContainsString("'bar' => \$this->faker->randomNumber(),", $factory);
+        $this->assertStringContainsString("'quz' => \$this->faker->randomNumber(),", $factory);
+        $this->assertStringContainsString("'qux' => \$this->faker->randomNumber(),", $factory);
+        $this->assertStringContainsString("'quux' => \$this->faker->randomNumber(),", $factory);
+        $this->assertStringContainsString("'quuz' => \$this->faker->randomNumber(),", $factory);
     }
 
     public function test_detects_ipv4()
@@ -221,7 +216,7 @@ class FactoriesTest extends TestCase
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$faker->ipv4,", $factory);
+        $this->assertStringContainsString("'foo' => \$this->faker->ipv4,", $factory);
     }
 
     public function test_detects_mac_address()
@@ -238,7 +233,7 @@ class FactoriesTest extends TestCase
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$faker->macAddress,", $factory);
+        $this->assertStringContainsString("'foo' => \$this->faker->macAddress,", $factory);
     }
 
     public function test_detects_mac_random_float()
@@ -261,12 +256,12 @@ class FactoriesTest extends TestCase
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$faker->randomFloat(),", $factory);
-        $this->assertStringContainsString("'bar' => \$faker->randomFloat(),", $factory);
-        $this->assertStringContainsString("'quz' => \$faker->randomFloat(),", $factory);
-        $this->assertStringContainsString("'qux' => \$faker->randomFloat(),", $factory);
-        $this->assertStringContainsString("'quux' => \$faker->randomFloat(),", $factory);
-        $this->assertStringContainsString("'quuz' => \$faker->randomFloat(),", $factory);
+        $this->assertStringContainsString("'foo' => \$this->faker->randomFloat(),", $factory);
+        $this->assertStringContainsString("'bar' => \$this->faker->randomFloat(),", $factory);
+        $this->assertStringContainsString("'quz' => \$this->faker->randomFloat(),", $factory);
+        $this->assertStringContainsString("'qux' => \$this->faker->randomFloat(),", $factory);
+        $this->assertStringContainsString("'quux' => \$this->faker->randomFloat(),", $factory);
+        $this->assertStringContainsString("'quuz' => \$this->faker->randomFloat(),", $factory);
     }
 
     public function test_detects_password_and_hashes_it_statically()
@@ -340,11 +335,11 @@ class FactoriesTest extends TestCase
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
         $this->assertStringContainsString(
-            "\$factory->state(User::class, 'foo', function (Faker \$faker) {",
+            "public function foo()",
             $factory
         );
         $this->assertStringContainsString(
-            "\$factory->state(User::class, 'bar', function (Faker \$faker) {",
+            "public function bar()",
             $factory
         );
     }
@@ -371,11 +366,11 @@ class FactoriesTest extends TestCase
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
         $this->assertStringContainsString(
-            "\$factory->state(User::class, 'foo', function (Faker \$faker) {",
+            'public function foo()',
             $factory
         );
         $this->assertStringContainsString(
-            "\$factory->state(User::class, 'deleted', function (Faker \$faker) {",
+            'public function deleted()',
             $factory
         );
     }
@@ -434,8 +429,8 @@ class FactoriesTest extends TestCase
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo_bar' => \$faker->fooBar,", $factory);
-        $this->assertStringContainsString("'quz_qux_quuz' => \$faker->quzQuxQuuz(),", $factory);
+        $this->assertStringContainsString("'foo_bar' => \$this->faker->fooBar,", $factory);
+        $this->assertStringContainsString("'quz_qux_quuz' => \$this->faker->quzQuxQuuz(),", $factory);
         $this->assertStringContainsString("'bar' => '', // TODO: Add a random generated value for the [bar (string)] property", $factory);
     }
 

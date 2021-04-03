@@ -2,10 +2,11 @@
 
 namespace Tests\Model;
 
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class SeedersTest extends TestCase
@@ -83,89 +84,105 @@ class SeedersTest extends TestCase
         $this->assertEquals(<<<'CONTENT'
 <?php
 
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Creates a new UserSeeder instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Factory  $factory
-     * @param  \App\User  $user
      * @return void
      */
-    public function run(Factory $factory, User $user)
+    public function __construct()
     {
-        if ($this->modelHasFactory($factory)) {
-            $this->createRecords($factory, $this->amount($user));
-
-            $this->additionalRecords($factory);
-
-            return $this->createStates($factory);
+        // Bail out if we can't resolve the factory name, as it may not exist.
+        if (! class_exists($name = Factory::resolveFactoryName(User::class))) {
+            throw new LogicException('The [User] model has no factory: $name.');
         }
-
-        throw new LogicException('The [User] model has no factory defined to use for seeding.');
     }
 
     /**
-     * Creates additional records to populate the database.
+     * Run the database seeder for UserSeeder.
      *
-     * @param  \Illuminate\Database\Eloquent\Factory  $factory
-     */
-    protected function additionalRecords($factory)
-    {
-        // This method is a convenient way to add personalized records.
-        //
-        // $factory->of(User::class)->create(['name' => 'John Doe']);
-    }
-
-    /**
-     * Creates additional record by using states.
-     *
-     * @param  \Illuminate\Database\Eloquent\Factory  $factory
      * @return void
      */
-    public function createStates($factory)
+    public function run()
     {
-        // If your User model has states defined, you can add them here too.
+        // If you are using SQLite file instead of in-memory database, you may
+        // want to wrap this run into a database transaction. It's known that
+        // SQLite is very slow when each database statement runs one by one.
         //
-        // $factory->of(User::class)->times(10)->state('state')->create();
+        // @link https://laravel.com/docs/database#database-transactions
+
+        $this->createRecords(static::factory(), $this->amount());
+
+        $this->createStates(static::factory());
+
+        $this->createAdditionalRecords(static::factory());
     }
 
     /**
-     * Returns a useful amount of records to create.
+     * Returns a useful number of records to create.
      *
-     * @param \App\User $user
      * @return int
      */
-    protected function amount($user)
+    protected function amount()
     {
         // We will conveniently create to two and a half pages of User.
-        return (int) ($user->getPerPage() * 2.5);
-    }
-
-    /**
-     * Check if the model has a factory defined.
-     *
-     * @param  \Illuminate\Database\Eloquent\Factory  $factory
-     * @return bool
-     */
-    protected function modelHasFactory($factory)
-    {
-        return isset($factory[User::class]);
+        return (int) ((new User)->getPerPage() * 2.5);
     }
 
     /**
      * Populate the model records using the factory definition.
      *
-     * @param  \Illuminate\Database\Eloquent\Factory  $factory
+     * @param  \Illuminate\Database\Eloquent\Factories\Factory  $factory
      * @param  int  $amount
+     *
+     * @return void
      */
-    protected function createRecords($factory, int $amount)
+    protected function createRecords(Factory $factory, int $amount)
     {
-        $factory->of(User::class)->times($amount)->create();
+        $factory->times($amount)->create();
+    }
+
+    /**
+     * Creates additional records to populate the database.
+     *
+     * @param  \Illuminate\Database\Eloquent\Factories\Factory  $factory
+     *
+     * @return void
+     */
+    protected function createAdditionalRecords(Factory $factory)
+    {
+        // This method is a convenient way to add personalized records.
+        //
+        // $factory->create(['name' => 'John Doe']);
+    }
+
+    /**
+     * Creates additional records by using states.
+     *
+     * @param  \Illuminate\Database\Eloquent\Factories\Factory  $factory
+     *
+     * @return void
+     */
+    protected function createStates(Factory $factory)
+    {
+        // Add here any states you want to make.
+        //
+        // $factory->times(10)->myAwesomeState()->create();
+    }
+
+    /**
+     * Returns the factory for the given model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function factory()
+    {
+        return Factory::factoryForModel(User::class);
     }
 }
 
