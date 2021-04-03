@@ -83,15 +83,12 @@ class ScaffoldTest extends TestCase
 
     public function test_backups_app_migrations_seeds_and_factories_folders()
     {
-        $appDir = Str::of(rtrim($this->app->path(), '\\'))->afterLast(DS)->__toString();
-        $databaseDir = Str::of(rtrim($this->app->databasePath(), '\\'))->afterLast(DS)->__toString();
-
-        File::put($this->app->path('Foo.php'), 'test');
-
+        File::ensureDirectoryExists($this->app->path('Models'));
         File::ensureDirectoryExists($this->app->databasePath('migrations'), null, true);
         File::ensureDirectoryExists($this->app->databasePath('factories'), null, true);
         File::ensureDirectoryExists($this->app->databasePath('seeders'), null, true);
 
+        File::put($this->app->path('Models' . DS . 'Foo.php'), 'test');
         File::put($this->app->databasePath('migrations' . DS . 'Bar.php'), 'test');
         File::put($this->app->databasePath('factories' . DS . 'Quz.php'), 'test');
         File::put($this->app->databasePath('seeders' . DS . 'Qux.php'), 'test');
@@ -116,7 +113,10 @@ class ScaffoldTest extends TestCase
 
         $this->assertDirectoryExists(storage_path($path));
 
-        $this->assertFileExists(storage_path($path . DS . $appDir . DS . 'Foo.php'));
+        $appDir = Str::of(rtrim($this->app->path(), '\\'))->afterLast(DS)->__toString();
+        $databaseDir = Str::of(rtrim($this->app->databasePath(), '\\'))->afterLast(DS)->__toString();
+
+        $this->assertFileExists(storage_path($path . DS . $appDir . DS . 'Models' . DS . 'Foo.php'));
         $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'migrations' . DS . 'Bar.php'));
         $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'factories' . DS . 'Quz.php'));
         $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'seeders' . DS . 'Qux.php'));
@@ -126,11 +126,12 @@ class ScaffoldTest extends TestCase
     {
         $this->artisan('larawiz:sample')->run();
 
+        File::ensureDirectoryExists($this->app->path('Models'));
         File::makeDirectory($this->app->databasePath('migrations'), null, null, true);
         File::makeDirectory($this->app->databasePath('factories'), null, null, true);
         File::makeDirectory($this->app->databasePath('seeders'), null, null, true);
 
-        File::put($this->app->path('Foo.php'), 'test');
+        File::put($this->app->path('Models' . DS . 'Foo.php'), 'test');
         File::put($this->app->databasePath('migrations' . DS . 'Bar.php'), 'test');
         File::put($this->app->databasePath('factories' . DS . 'Quz.php'), 'test');
         File::put($this->app->databasePath('seeders' . DS . 'Qux.php'), 'test');
@@ -143,7 +144,7 @@ class ScaffoldTest extends TestCase
 
         $this->assertDirectoryDoesNotExist(storage_path($path));
 
-        $this->assertFileExists($this->app->path('Foo.php'));
+        $this->assertFileExists($this->app->path('Models' . DS . 'Foo.php'));
         $this->assertFileExists($this->app->databasePath('migrations' . DS . 'Bar.php'));
         $this->assertFileExists($this->app->databasePath('factories' . DS . 'Quz.php'));
         $this->assertFileExists($this->app->databasePath('seeders' . DS . 'Qux.php'));

@@ -101,7 +101,7 @@ class ApplicationBackup
     protected function getDirectoriesToBackup()
     {
         return [
-            $this->app->path(),
+            $this->app->path('Models'),
             $this->app->databasePath('migrations'),
             $this->app->databasePath('factories'),
             $this->app->databasePath('seeders'),
