@@ -3,11 +3,12 @@
 namespace Larawiz\Larawiz\Console;
 
 use ErrorException;
-use RuntimeException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Larawiz\Larawiz\Larawiz;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Contracts\Foundation\Application;
+use RuntimeException;
+
 use const DIRECTORY_SEPARATOR;
 
 class ApplicationBackup
@@ -103,7 +104,7 @@ class ApplicationBackup
             $this->app->path(),
             $this->app->databasePath('migrations'),
             $this->app->databasePath('factories'),
-            $this->app->databasePath('seeds'),
+            $this->app->databasePath('seeders'),
         ];
     }
 
