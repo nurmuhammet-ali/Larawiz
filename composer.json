@@ -18,18 +18,17 @@
         }
     ],
     "require": {
-        "php": "^7.2.15",
-        "illuminate/support": "^7.2",
-        "symfony/yaml": "^5.0",
-        "symfony/finder": "^5.0",
-        "nette/php-generator": "^3.3.4",
-        "nette/utils" : "^3.1.1",
-        "goaop/parser-reflection": "^2.1.0"
+        "php": ">=7.3",
+        "fakerphp/faker": "^1.14",
+        "illuminate/support": "^8.0",
+        "nette/php-generator": "^3.5.3",
+        "symfony/finder": "^5.2",
+        "symfony/yaml": "^5.2"
     },
     "require-dev": {
-        "orchestra/testbench": "^5.2",
-        "orchestra/canvas": "^5.3",
-        "phpunit/phpunit": "^8.5"
+        "orchestra/testbench": "^6.0",
+        "orchestra/canvas": "^6.0",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {

@@ -11,18 +11,18 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [7.4, 7.3, 7.2.5]
-        laravel: [^7.2]
+        php: [8.0, 7.4, 7.3]
+        laravel: [8.*]
         dependency-version: [prefer-stable, prefer-lowest]
         include:
-          - laravel: ^7.2
-            testbench: 5.*
+          - laravel: 8.*
+            testbench: ^6.15
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -32,7 +32,7 @@ jobs:
           coverage: xdebug
 
       - name: Cache dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.composer/cache/files
           key: ${{ runner.os }}-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
@@ -51,6 +51,7 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_SERVICE_NAME: github
         run: |
+          sudo chown -R $(id -u):$(id -g) ./build
           sudo rm -rf composer.* vendor/
-          composer require cedx/coveralls
-          vendor/bin/coveralls build/logs/clover.xml
+          composer require php-coveralls/php-coveralls
+          vendor/bin/php-coveralls

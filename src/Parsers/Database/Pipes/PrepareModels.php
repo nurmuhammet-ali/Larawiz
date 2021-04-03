@@ -3,12 +3,13 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
-use Illuminate\Support\Str;
-use Larawiz\Larawiz\Scaffold;
-use Illuminate\Support\Collection;
-use Larawiz\Larawiz\Lexing\Database\Model;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Larawiz\Larawiz\Lexing\Database\Model;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
+
 use const DIRECTORY_SEPARATOR;
 
 class PrepareModels
@@ -39,12 +40,10 @@ class PrepareModels
      */
     public function handle(Scaffold $scaffold, Closure $next)
     {
-        $namespace = $scaffold->rawDatabase->get('namespace');
-
         $this->checkModelsNotEmpty($models = $scaffold->rawDatabase->get('models'));
 
         foreach ($models as $name => $model) {
-            $scaffold->database->models->put($name, $this->createModel($name, $namespace));
+            $scaffold->database->models->put($name, $this->createModel($name));
         }
 
         // This is a good opportunity to check all models for duplicate class names and
@@ -71,21 +70,20 @@ class PrepareModels
      * Creates the Model instance with some basic information.
      *
      * @param  string  $name
-     * @param  null|string  $namespace
      * @return \Larawiz\Larawiz\Lexing\Database\Model
      */
-    protected function createModel(string $name, ?string $namespace = null)
+    protected function createModel(string $name)
     {
         // We are gonna normalize the name and namespace automatically.
         $name = Str::of($name)->replace('/', '\\')->trim('\\')->__toString();
-        $namespace = Str::of($namespace)->replace('/', '\\')->trim('\\')->__toString();
+        $namespace = 'Models';
 
         return Model::make([
             'key' => $name,
             'class' => Str::afterLast($name, '\\'),
-            'path' => $this->modelPath($name, $namespace),
-            'namespace' => $this->modelNamespace($name, $namespace),
-            'relativeNamespace' => $namespace ? $namespace . '\\' . $name : $name,
+            'path' => $this->modelPath($name),
+            'namespace' => $this->modelNamespace($name),
+            'relativeNamespace' => $namespace . '\\' . $name,
         ]);
     }
 
@@ -113,12 +111,11 @@ class PrepareModels
      * Returns the model Namespace.
      *
      * @param  string  $name
-     * @param  null|string  $namespace
      * @return string
      */
-    protected function modelNamespace(string $name, ?string $namespace)
+    protected function modelNamespace(string $name)
     {
-        $namespace = Str::of($this->app->getNamespace())->append($namespace)->trim('\\')->__toString();
+        $namespace = Str::of($this->app->getNamespace())->append('Models')->trim('\\')->__toString();
 
         // If the model name has a namespace, we will remove the namespace from the name
         // and prepend it to issued namespace if it exists. If not we will just use the
@@ -134,14 +131,13 @@ class PrepareModels
      * Returns the model path.
      *
      * @param  string  $name
-     * @param  null|string  $namespace
      * @return string
      */
-    protected function modelPath(string $name, ?string $namespace)
+    protected function modelPath(string $name)
     {
         return Str::of($this->app->path())
             ->finish(DIRECTORY_SEPARATOR)
-            ->append($namespace)
+            ->append('Models')
             ->replace('\\', DIRECTORY_SEPARATOR)
             ->finish(DIRECTORY_SEPARATOR)
             ->append($name)

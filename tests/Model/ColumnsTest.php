@@ -2,11 +2,12 @@
 
 namespace Tests\Model;
 
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class ColumnsTest extends TestCase
@@ -29,7 +30,7 @@ class ColumnsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExistsInFilesystem($this->app->path('User.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'User.php'));
         $this->assertFileExistsInFilesystem($this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
         $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'UserFactory.php'));
         $this->assertFileExistsInFilesystem($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
@@ -74,7 +75,7 @@ class ColumnsTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
         $factory = $this->filesystem->get(
@@ -103,7 +104,7 @@ class ColumnsTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -133,7 +134,7 @@ class ColumnsTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
         $factory = $this->filesystem->get(
@@ -143,7 +144,7 @@ class ColumnsTest extends TestCase
         $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringNotContainsString('protected $keyType;', $model);
         $this->assertStringContainsString("\$table->uuid('uuid');", $migration);
-        $this->assertStringContainsString("'uuid' => \$faker->uuid,", $factory);
+        $this->assertStringContainsString("'uuid' => \$this->faker->uuid,", $factory);
     }
 
     public function test_creates_uuid_with_name()
@@ -163,7 +164,7 @@ class ColumnsTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
         $factory = $this->filesystem->get(
@@ -173,7 +174,7 @@ class ColumnsTest extends TestCase
         $this->assertStringContainsString('public $incrementing = false;', $model);
         $this->assertStringNotContainsString('protected $keyType;', $model);
         $this->assertStringContainsString("\$table->uuid('foo');", $migration);
-        $this->assertStringContainsString("'foo' => \$faker->uuid,", $factory);
+        $this->assertStringContainsString("'foo' => \$this->faker->uuid,", $factory);
     }
 
     public function test_passes_through_column_declaration()
@@ -193,7 +194,7 @@ class ColumnsTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
         $factory = $this->filesystem->get(
@@ -223,7 +224,7 @@ class ColumnsTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -252,7 +253,7 @@ class ColumnsTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $model = $this->filesystem->get(
-            $this->app->path('User.php'));
+            $this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -280,7 +281,7 @@ class ColumnsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
@@ -306,7 +307,7 @@ class ColumnsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
         $this->assertStringContainsString('@property null|string $name', $model);
     }

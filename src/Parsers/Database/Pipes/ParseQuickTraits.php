@@ -3,13 +3,12 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
-use Illuminate\Support\Str;
+use Illuminate\Contracts\Foundation\Application;
 use Larawiz\Larawiz\Helpers;
-use Larawiz\Larawiz\Scaffold;
 use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Lexing\Database\QuickTrait;
-use Illuminate\Contracts\Foundation\Application;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParseQuickTraits
 {
@@ -84,7 +83,7 @@ class ParseQuickTraits
     {
         $instance = new QuickTrait;
 
-        [$instance->namespace, $instance->class] = Helpers::namespaceAndClass($trait, $this->namespace);
+        [$instance->namespace, $instance->class] = Helpers::namespaceAndClass($trait, $this->namespace . '\\' . 'Models');
 
         // If the trait already exists we will create a trait reference and mark it as
         // "external". Otherwise, we will get the application base namespace and use

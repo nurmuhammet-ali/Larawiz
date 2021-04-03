@@ -2,12 +2,13 @@
 
 namespace Tests\Model;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class ColumnTimestampsTest extends TestCase
@@ -30,7 +31,7 @@ class ColumnTimestampsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS .'User.php'));
 
         $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
         $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
@@ -56,7 +57,7 @@ class ColumnTimestampsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
         $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
         $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
@@ -83,7 +84,7 @@ class ColumnTimestampsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
         $this->assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
         $this->assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
@@ -115,7 +116,7 @@ class ColumnTimestampsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
         $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $creation_date', $model);
         $this->assertStringContainsString("public const CREATED_AT = 'creation_date';", $model);

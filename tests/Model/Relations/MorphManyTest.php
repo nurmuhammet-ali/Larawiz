@@ -2,12 +2,13 @@
 
 namespace Tests\Model\Relations;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class MorphManyTest extends TestCase
@@ -36,8 +37,8 @@ class MorphManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $photoModel = $this->filesystem->get($this->app->path('Photo.php'));
-        $videoModel = $this->filesystem->get($this->app->path('Video.php'));
+        $photoModel = $this->filesystem->get($this->app->path('Models' . DS . 'Photo.php'));
+        $videoModel = $this->filesystem->get($this->app->path('Models' . DS . 'Video.php'));
         $photoMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_photos_table.php')
         );
@@ -46,16 +47,16 @@ class MorphManyTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Tag[] $tags', $photoModel);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags', $photoModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Tag', $photoModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $photoModel);
         $this->assertStringContainsString('public function tags()', $photoModel);
         $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $photoModel);
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Tag[] $tags', $videoModel);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags', $videoModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Tag', $videoModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $videoModel);
         $this->assertStringContainsString('public function tags()', $videoModel);
         $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $videoModel);
 
@@ -83,8 +84,8 @@ class MorphManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $photoModel = $this->filesystem->get($this->app->path('Photo.php'));
-        $videoModel = $this->filesystem->get($this->app->path('Video.php'));
+        $photoModel = $this->filesystem->get($this->app->path('Models' . DS . 'Photo.php'));
+        $videoModel = $this->filesystem->get($this->app->path('Models' . DS . 'Video.php'));
         $photoMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_photos_table.php')
         );
@@ -93,16 +94,16 @@ class MorphManyTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Tag[] $foo', $photoModel);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $foo', $photoModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Tag', $photoModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $photoModel);
         $this->assertStringContainsString('public function foo()', $photoModel);
         $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $photoModel);
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Tag[] $bar', $videoModel);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $bar', $videoModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Tag', $videoModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $videoModel);
         $this->assertStringContainsString('public function bar()', $videoModel);
         $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $videoModel);
 
@@ -220,8 +221,8 @@ class MorphManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $photoModel = $this->filesystem->get($this->app->path('Photo.php'));
-        $videoModel = $this->filesystem->get($this->app->path('Video.php'));
+        $photoModel = $this->filesystem->get($this->app->path('Models' . DS . 'Photo.php'));
+        $videoModel = $this->filesystem->get($this->app->path('Models' . DS . 'Video.php'));
         $photoMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_photos_table.php')
         );
@@ -230,16 +231,16 @@ class MorphManyTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Tag[] $foo', $photoModel);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $foo', $photoModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Tag', $photoModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $photoModel);
         $this->assertStringContainsString('public function foo()', $photoModel);
         $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $photoModel);
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Tag[] $bar', $videoModel);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $bar', $videoModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Tag', $videoModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $videoModel);
         $this->assertStringContainsString('public function bar()', $videoModel);
         $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $videoModel);
 

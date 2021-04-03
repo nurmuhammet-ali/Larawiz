@@ -2,11 +2,12 @@
 
 namespace Tests\Commands;
 
-use Tests\RegistersPackage;
+use Illuminate\Support\Facades\File;
 use Larawiz\Larawiz\Larawiz;
 use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\File;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class ClearBackupsTest extends TestCase
@@ -23,7 +24,7 @@ class ClearBackupsTest extends TestCase
         $this->artisan('larawiz:clear-backups')
             ->expectsConfirmation('Are you sure to delete ALL your project backups?', 'yes');
 
-        $this->assertDirectoryNotExists($directory);
+        $this->assertDirectoryDoesNotExist($directory);
     }
 
     public function test_does_nothing_when_no_backups_exists()
@@ -40,7 +41,7 @@ class ClearBackupsTest extends TestCase
 
         $this->artisan('larawiz:clear-backups --force');
 
-        $this->assertDirectoryNotExists($directory);
+        $this->assertDirectoryDoesNotExist($directory);
     }
 
     public function test_doesnt_deletes_backups_when_doesnt_confirm()

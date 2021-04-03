@@ -2,12 +2,13 @@
 
 namespace Tests\Model\Relations;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class HasManyTest extends TestCase
@@ -79,14 +80,14 @@ class HasManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Post[] $posts', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Post', $model);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts', $model);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Models\Post', $model);
         $this->assertStringContainsString('public function posts()', $model);
         $this->assertStringContainsString('return $this->hasMany(Post::class);', $model);
 
@@ -134,14 +135,14 @@ class HasManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Post[] $publications', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Post', $model);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $publications', $model);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Models\Post', $model);
         $this->assertStringContainsString('public function publications()', $model);
         $this->assertStringContainsString('return $this->hasMany(Post::class);', $model);
 
@@ -189,14 +190,14 @@ class HasManyTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Post[] $publications', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Post', $model);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $publications', $model);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Models\Post', $model);
         $this->assertStringContainsString('public function publications()', $model);
         $this->assertStringContainsString("return \$this->hasMany(Post::class, 'title', 'name');", $model);
 

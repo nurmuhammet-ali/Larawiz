@@ -4,6 +4,7 @@ namespace Tests;
 
 use LogicException;
 use Orchestra\Testbench\TestCase;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class ModelTest extends TestCase
@@ -85,23 +86,22 @@ class ModelTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExistsInFilesystem($this->app->path('Foo.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Foo.php'));
         $this->assertStringContainsString(
-            'namespace App;',
-            $this->filesystem->get($this->app->path('Foo.php'))
+            'namespace App\Models;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'))
         );
 
-        $this->assertFileExistsInFilesystem($this->app->path('Qux' . DS . 'Quz.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Qux' . DS . 'Quz.php'));
         $this->assertStringContainsString(
-            'namespace App\Qux;',
-            $this->filesystem->get($this->app->path('Qux' . DS . 'Quz.php'))
+            'namespace App\Models\Qux;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'Qux' . DS . 'Quz.php'))
         );
     }
 
     public function test_creates_model_in_custom_namespace()
     {
         $this->mockDatabaseFile([
-            'namespace' => 'Foo',
             'models'    => [
                 'Foo'     => [
                     'name' => 'name',
@@ -114,16 +114,16 @@ class ModelTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileExistsInFilesystem($this->app->path('Foo' . DS . 'Foo.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Foo.php'));
         $this->assertStringContainsString(
-            'namespace App\Foo;',
-            $this->filesystem->get($this->app->path('Foo' . DS . 'Foo.php'))
+            'namespace App\Models;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'))
         );
 
-        $this->assertFileExistsInFilesystem($this->app->path('Foo' . DS . 'Qux' . DS . 'Quz.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Qux' . DS . 'Quz.php'));
         $this->assertStringContainsString(
-            'namespace App\Foo\Qux;',
-            $this->filesystem->get($this->app->path('Foo' . DS . 'Qux' . DS . 'Quz.php'))
+            'namespace App\Models\Qux;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'Qux' . DS . 'Quz.php'))
         );
     }
 

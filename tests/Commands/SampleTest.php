@@ -2,11 +2,12 @@
 
 namespace Tests\Commands;
 
-use Tests\RegistersPackage;
+use Illuminate\Support\Facades\File;
 use Larawiz\Larawiz\Larawiz;
 use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\File;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class SampleTest extends TestCase
@@ -36,7 +37,7 @@ class SampleTest extends TestCase
         $this->artisan('larawiz:sample')
             ->expectsConfirmation('Scaffold files already exists! Do you want to overwrite them?', 'yes');
         $this->assertFileEquals(
-            $this->app->basePath('larawiz/database.yml'),
+            $this->app->basePath('larawiz' . DS . 'database.yml'),
             Larawiz::samplePath() . DS . 'database.yml'
         );
     }

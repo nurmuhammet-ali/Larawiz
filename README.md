@@ -5,15 +5,16 @@
  [![](https://github.com/Larawiz/larawiz/workflows/PHP%20Composer/badge.svg)](https://github.com/Larawiz/Larawiz/actions)
 [![Coverage Status](https://coveralls.io/repos/github/Larawiz/Larawiz/badge.svg?branch=master)](https://coveralls.io/github/Larawiz/Larawiz?branch=master)
 
-# Larawiz  
+# Larawiz
 
-The Laravel scaffolder you wanted but never got, until now!
+The Laravel 8 scaffolder you wanted but never got, until now!
 
 Use a single YAML file to create models, migrations, factories, seeders, pivot tables... everything with **braindead easy syntax**.
 
 ## Requirements:
 
-* Laravel 7.2+
+* PHP 7.3, or PHP 8
+* Laravel 8.x
 
 ## Install:
 
@@ -25,7 +26,7 @@ composer require larawiz/larawiz --dev
 
 ## Usage
 
-If it's your first time, publish the sample YAML files into the `larawiz/` directory:
+If is your first time using Larawiz, publish the sample YAML files into the `larawiz/` directory:
 
     php artisan larawiz:sample
 
@@ -39,11 +40,11 @@ Larawiz will automatically create the files needed to set up your project like m
 
 Larawiz will automatically copy your `app` and some of your `database` directories as backups every time you scaffold. It only deletes the `migrations` folder.
 
-You can find it in your application default storage path under the `storage/larawiz/backups` directory, and copy them over your project directory if you need.
+You can find it in your application default storage path under the `storage/larawiz/backups` directory, and copy them over your project directory if you need to "backtrack" on something.
 
 ## Generating your app
 
-Larawiz uses braindead easy syntax, so [you shouldn't need to read the docs](https://larawiz.github.io/docs/):
+Larawiz uses _braindead_ easy syntax, so [you shouldn't need to read the docs](https://larawiz.github.io/docs/):
 
 ```yaml
 models:
@@ -59,10 +60,10 @@ models:
     author: belongsTo
 ```
 
-...but if want more customization, go ahead, it explains everything: table names, fillable properties, pivot models, primary keys, timestamps, soft-deletes, factories, etc.
+...but if want more customization, go ahead to the documentation since it explains everything: table names, fillable properties, pivot models, primary keys, timestamps, soft-deletes, factories, etc.
 
 ## License
 
 This package is open-sourced software licensed under the [MIT license](LICENSE.md).
 
-Laravel is a Trademark of Taylor Otwell. Copyright © 2011-2020 Laravel LLC.
+Laravel is a Trademark of Taylor Otwell. Copyright © 2011-2021 Laravel LLC.

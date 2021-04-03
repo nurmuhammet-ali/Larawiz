@@ -2,10 +2,12 @@
 
 namespace Tests\Model;
 
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
+use const DIRECTORY_SEPARATOR as DS;
 
 class PerPageTest extends TestCase
 {
@@ -27,7 +29,7 @@ class PerPageTest extends TestCase
 
         $this->assertStringNotContainsString(
             'protected $perPage = 15;',
-            $this->filesystem->get($this->app->path('User.php'))
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
     }
 
@@ -47,7 +49,7 @@ class PerPageTest extends TestCase
 
         $this->assertStringNotContainsString(
             'protected $perPage = 15;',
-            $this->filesystem->get($this->app->path('User.php'))
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
     }
 
@@ -68,7 +70,7 @@ class PerPageTest extends TestCase
 
         $this->assertStringContainsString(
             'protected $perPage = 30;',
-            $this->filesystem->get($this->app->path('User.php'))
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
     }
 

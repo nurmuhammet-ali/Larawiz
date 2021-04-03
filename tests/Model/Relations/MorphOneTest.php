@@ -2,12 +2,13 @@
 
 namespace Tests\Model\Relations;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class MorphOneTest extends TestCase
@@ -36,8 +37,8 @@ class MorphOneTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $studentModel = $this->filesystem->get($this->app->path('Student.php'));
-        $teacherModel = $this->filesystem->get($this->app->path('Teacher.php'));
+        $studentModel = $this->filesystem->get($this->app->path('Models' . DS . 'Student.php'));
+        $teacherModel = $this->filesystem->get($this->app->path('Models' . DS . 'Teacher.php'));
         $studentMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_students_table.php')
         );
@@ -45,15 +46,15 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Classroom $classroom', $studentModel);
+        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $classroom', $studentModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $studentModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $studentModel);
         $this->assertStringContainsString('public function classroom()', $studentModel);
         $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
 
-        $this->assertStringContainsString('@property-read null|\App\Classroom $classroom', $teacherModel);
+        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $classroom', $teacherModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $teacherModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $teacherModel);
         $this->assertStringContainsString('public function classroom()', $teacherModel);
         $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
 
@@ -81,8 +82,8 @@ class MorphOneTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $studentModel = $this->filesystem->get($this->app->path('Student.php'));
-        $teacherModel = $this->filesystem->get($this->app->path('Teacher.php'));
+        $studentModel = $this->filesystem->get($this->app->path('Models' . DS . 'Student.php'));
+        $teacherModel = $this->filesystem->get($this->app->path('Models' . DS . 'Teacher.php'));
         $studentMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_students_table.php')
         );
@@ -90,15 +91,15 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Classroom $foo', $studentModel);
+        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $foo', $studentModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $studentModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $studentModel);
         $this->assertStringContainsString('public function foo()', $studentModel);
         $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
 
-        $this->assertStringContainsString('@property-read null|\App\Classroom $bar', $teacherModel);
+        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $bar', $teacherModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $teacherModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $teacherModel);
         $this->assertStringContainsString('public function bar()', $teacherModel);
         $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
 
@@ -238,8 +239,8 @@ class MorphOneTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $studentModel = $this->filesystem->get($this->app->path('Student.php'));
-        $teacherModel = $this->filesystem->get($this->app->path('Teacher.php'));
+        $studentModel = $this->filesystem->get($this->app->path('Models' . DS . 'Student.php'));
+        $teacherModel = $this->filesystem->get($this->app->path('Models' . DS . 'Teacher.php'));
         $studentMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_students_table.php')
         );
@@ -247,15 +248,15 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Classroom $foo', $studentModel);
+        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $foo', $studentModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $studentModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $studentModel);
         $this->assertStringContainsString('public function foo()', $studentModel);
         $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
 
-        $this->assertStringContainsString('@property-read null|\App\Classroom $bar', $teacherModel);
+        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $bar', $teacherModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $teacherModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $teacherModel);
         $this->assertStringContainsString('public function bar()', $teacherModel);
         $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
 
@@ -328,8 +329,8 @@ class MorphOneTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $studentModel = $this->filesystem->get($this->app->path('Student.php'));
-        $teacherModel = $this->filesystem->get($this->app->path('Teacher.php'));
+        $studentModel = $this->filesystem->get($this->app->path('Models' . DS . 'Student.php'));
+        $teacherModel = $this->filesystem->get($this->app->path('Models' . DS . 'Teacher.php'));
         $studentMigration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_students_table.php')
         );
@@ -337,16 +338,16 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Classroom $classroom', $studentModel);
+        $this->assertStringContainsString('@property-read \App\Models\Classroom $classroom', $studentModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $studentModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $studentModel);
         $this->assertStringContainsString('public function classroom()', $studentModel);
         $this->assertStringContainsString(
             "return \$this->morphOne(Classroom::class, 'assistable')->withDefault();", $studentModel);
 
-        $this->assertStringContainsString('@property-read null|\App\Classroom $classroom', $teacherModel);
+        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $classroom', $teacherModel);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Classroom', $teacherModel);
+            '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $teacherModel);
         $this->assertStringContainsString('public function classroom()', $teacherModel);
         $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
 

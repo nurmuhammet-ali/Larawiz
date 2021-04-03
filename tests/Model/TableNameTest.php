@@ -2,12 +2,13 @@
 
 namespace Tests\Model;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class TableNameTest extends TestCase
@@ -31,7 +32,7 @@ class TableNameTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $migration = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php');
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DS . 'User.php');
 
         $this->assertFileExistsInFilesystem($migration);
         $this->assertFileExistsInFilesystem($model);
@@ -60,7 +61,7 @@ class TableNameTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $migration = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php');
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DS . 'User.php');
 
         $this->assertFileExistsInFilesystem(
             $file = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
@@ -93,7 +94,7 @@ class TableNameTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $migration = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php');
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DS . 'User.php');
 
         $this->assertFileExistsInFilesystem($migration);
         $this->assertFileExistsInFilesystem($model);
@@ -125,7 +126,7 @@ class TableNameTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $migration = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_app_users_table.php');
-        $model = $this->app->path('User.php');
+        $model = $this->app->path('Models' . DS . 'User.php');
 
         $this->assertFileExistsInFilesystem($migration);
         $this->assertFileExistsInFilesystem($model);

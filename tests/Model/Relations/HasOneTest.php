@@ -2,12 +2,13 @@
 
 namespace Tests\Model\Relations;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class HasOneTest extends TestCase
@@ -78,13 +79,13 @@ class HasOneTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Post $post', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Post', $model);
+        $this->assertStringContainsString('@property-read null|\App\Models\Post $post', $model);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Models\Post', $model);
         $this->assertStringContainsString('public function post()', $model);
         $this->assertStringContainsString('return $this->hasOne(Post::class);', $model);
 
@@ -131,13 +132,13 @@ class HasOneTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Post $publication', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Post', $model);
+        $this->assertStringContainsString('@property-read null|\App\Models\Post $publication', $model);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Models\Post', $model);
         $this->assertStringContainsString('public function publication()', $model);
         $this->assertStringContainsString('return $this->hasOne(Post::class);', $model);
 
@@ -184,13 +185,13 @@ class HasOneTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Post $publication', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Post', $model);
+        $this->assertStringContainsString('@property-read null|\App\Models\Post $publication', $model);
+        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Models\Post', $model);
         $this->assertStringContainsString('public function publication()', $model);
         $this->assertStringContainsString("return \$this->hasOne(Post::class, 'title', 'name');", $model);
 
@@ -216,7 +217,7 @@ class HasOneTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('User.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
         $this->assertStringContainsString('return $this->hasOne(Post::class)->withDefault();', $model);
     }

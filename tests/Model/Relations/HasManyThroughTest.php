@@ -2,12 +2,13 @@
 
 namespace Tests\Model\Relations;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class HasManyThroughTest extends TestCase
@@ -39,15 +40,15 @@ class HasManyThroughTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Country.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Country.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_countries_table.php')
         );
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Post[] $userPosts', $model);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $userPosts', $model);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\HasManyThrough|\App\Post', $model);
+            '@return \Illuminate\Database\Eloquent\Relations\HasManyThrough|\App\Models\Post', $model);
         $this->assertStringContainsString('public function userPosts()', $model);
         $this->assertStringContainsString('return $this->hasManyThrough(Post::class, User::class);', $model);
 
@@ -152,15 +153,15 @@ class HasManyThroughTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Country.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Country.php'));
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_countries_table.php')
         );
 
         $this->assertStringContainsString(
-            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Post[] $posts', $model);
+            '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts', $model);
         $this->assertStringContainsString(
-            '@return \Illuminate\Database\Eloquent\Relations\HasManyThrough|\App\Post', $model);
+            '@return \Illuminate\Database\Eloquent\Relations\HasManyThrough|\App\Models\Post', $model);
         $this->assertStringContainsString('public function posts()', $model);
         $this->assertStringContainsString('return $this->hasManyThrough(Post::class, User::class);', $model);
 
