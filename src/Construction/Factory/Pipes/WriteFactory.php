@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Larawiz\Larawiz\Construction\Factory\FactoryConstruction;
-use LogicException;
 use Nette\PhpGenerator\PsrPrinter;
 
 class WriteFactory
@@ -59,12 +58,6 @@ class WriteFactory
         $this->filesystem->ensureDirectoryExists($this->app->databasePath('factories'), true);
 
         $path = $this->app->databasePath('factories') . DIRECTORY_SEPARATOR . $construction->class->getName() . '.php';
-
-        if ($this->filesystem->exists($path)) {
-            throw new LogicException(
-                "The factory file for {$construction->model->class} already exists."
-            );
-        }
 
         $this->filesystem->put($path, $this->printer->printFile($construction->file));
 
