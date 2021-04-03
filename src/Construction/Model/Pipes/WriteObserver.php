@@ -3,11 +3,12 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Console\Kernel;
-use Larawiz\Larawiz\Lexing\Database\Model;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
+use Larawiz\Larawiz\Lexing\Database\Model;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class WriteObserver
@@ -60,7 +61,7 @@ class WriteObserver
 
             $this->console->call('make:observer', [
                 'name' => $construction->model->class . 'Observer',
-                '--model' => $construction->model->relativeNamespace
+                '--model' => $construction->model->getRelativeNamespaceWithoutModel()
             ]);
         }
 
