@@ -52,5 +52,6 @@ jobs:
           COVERALLS_SERVICE_NAME: github
         run: |
           sudo chown -R $(id -u):$(id -g) ./build
+          sudo rm -rf composer.* vendor/
           composer require php-coveralls/php-coveralls
           vendor/bin/php-coveralls
