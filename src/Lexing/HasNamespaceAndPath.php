@@ -51,4 +51,14 @@ trait HasNamespaceAndPath
     {
         return $this->fullRootNamespace() . '[]';
     }
+
+    /**
+     * Returns the relative namespace without the proceeding "Model" namespace.
+     *
+     * @return string
+     */
+    public function getRelativeNamespaceWithoutModel()
+    {
+        return Str::after($this->relativeNamespace, 'Models\\');
+    }
 }
