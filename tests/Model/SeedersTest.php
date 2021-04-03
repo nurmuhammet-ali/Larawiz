@@ -101,7 +101,7 @@ class UserSeeder extends Seeder
     {
         // Bail out if we can't resolve the factory name, as it may not exist.
         if (! class_exists($name = Factory::resolveFactoryName(User::class))) {
-            throw new LogicException('The [User] model has no factory: $name.');
+            throw new LogicException("The [User] model has no factory: $name.");
         }
     }
 
