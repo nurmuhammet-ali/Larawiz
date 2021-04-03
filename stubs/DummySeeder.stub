@@ -17,7 +17,7 @@ class {DummySeeder} extends Seeder
     {
         // Bail out if we can't resolve the factory name, as it may not exist.
         if (! class_exists($name = Factory::resolveFactoryName({DummyModel}::class))) {
-            throw new LogicException('The [{DummyModel}] model has no factory: $name.');
+            throw new LogicException("The [{DummyModel}] model has no factory: $name.");
         }
     }
 
