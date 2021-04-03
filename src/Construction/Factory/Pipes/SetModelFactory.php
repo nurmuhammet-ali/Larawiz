@@ -91,7 +91,7 @@ class SetModelFactory
         $construction->class->setExtends(Factory::class);
 
         $construction->class
-            ->addProperty('model', $construction->model->class . '::class')
+            ->addProperty('model', $construction->model->fullNamespace())
             ->setProtected()
             ->addComment("The name of the factory's corresponding model.")
             ->addComment('')
