@@ -90,11 +90,11 @@ class ScaffoldTest extends TestCase
 
         File::ensureDirectoryExists($this->app->databasePath('migrations'), null, true);
         File::ensureDirectoryExists($this->app->databasePath('factories'), null, true);
-        File::ensureDirectoryExists($this->app->databasePath('seeds'), null, true);
+        File::ensureDirectoryExists($this->app->databasePath('seeders'), null, true);
 
         File::put($this->app->databasePath('migrations' . DS . 'Bar.php'), 'test');
         File::put($this->app->databasePath('factories' . DS . 'Quz.php'), 'test');
-        File::put($this->app->databasePath('seeds' . DS . 'Qux.php'), 'test');
+        File::put($this->app->databasePath('seeders' . DS . 'Qux.php'), 'test');
 
         $scaffold = Scaffold::make();
         $scaffold->rawDatabase->set('models', [
@@ -119,7 +119,7 @@ class ScaffoldTest extends TestCase
         $this->assertFileExists(storage_path($path . DS . $appDir . DS . 'Foo.php'));
         $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'migrations' . DS . 'Bar.php'));
         $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'factories' . DS . 'Quz.php'));
-        $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'seeds' . DS . 'Qux.php'));
+        $this->assertFileExists(storage_path($path . DS . $databaseDir . DS . 'seeders' . DS . 'Qux.php'));
     }
 
     public function test_accepts_no_backups_flag_and_doesnt_backups()
@@ -128,12 +128,12 @@ class ScaffoldTest extends TestCase
 
         File::makeDirectory($this->app->databasePath('migrations'), null, null, true);
         File::makeDirectory($this->app->databasePath('factories'), null, null, true);
-        File::makeDirectory($this->app->databasePath('seeds'), null, null, true);
+        File::makeDirectory($this->app->databasePath('seeders'), null, null, true);
 
         File::put($this->app->path('Foo.php'), 'test');
         File::put($this->app->databasePath('migrations' . DS . 'Bar.php'), 'test');
         File::put($this->app->databasePath('factories' . DS . 'Quz.php'), 'test');
-        File::put($this->app->databasePath('seeds' . DS . 'Qux.php'), 'test');
+        File::put($this->app->databasePath('seeders' . DS . 'Qux.php'), 'test');
 
         $this->artisan('larawiz:scaffold --no-backup');
 
@@ -146,7 +146,7 @@ class ScaffoldTest extends TestCase
         $this->assertFileExists($this->app->path('Foo.php'));
         $this->assertFileExists($this->app->databasePath('migrations' . DS . 'Bar.php'));
         $this->assertFileExists($this->app->databasePath('factories' . DS . 'Quz.php'));
-        $this->assertFileExists($this->app->databasePath('seeds' . DS . 'Qux.php'));
+        $this->assertFileExists($this->app->databasePath('seeders' . DS . 'Qux.php'));
     }
 
     protected function tearDown() : void

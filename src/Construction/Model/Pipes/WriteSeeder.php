@@ -3,12 +3,13 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Illuminate\Support\Str;
-use Larawiz\Larawiz\Larawiz;
-use Illuminate\Filesystem\Filesystem;
-use Larawiz\Larawiz\Lexing\Database\Model;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
+use Larawiz\Larawiz\Larawiz;
+use Larawiz\Larawiz\Lexing\Database\Model;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class WriteSeeder
@@ -66,7 +67,7 @@ class WriteSeeder
      */
     protected function getPath(Model $model)
     {
-        return $this->app->databasePath('seeds' . DS . $model->class . 'Seeder.php');
+        return $this->app->databasePath('seeders' . DS . $model->class . 'Seeder.php');
     }
 
     /**
@@ -78,7 +79,7 @@ class WriteSeeder
      */
     protected function writeSeeder(Model $model, string $path)
     {
-        $this->filesystem->ensureDirectoryExists($this->app->databasePath('seeds'));
+        $this->filesystem->ensureDirectoryExists($this->app->databasePath('seeders'));
         $this->filesystem->put($path, $this->getReplacedStubContents($model));
     }
 

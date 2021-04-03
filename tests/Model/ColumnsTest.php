@@ -33,7 +33,7 @@ class ColumnsTest extends TestCase
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'User.php'));
         $this->assertFileExistsInFilesystem($this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
         $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'UserFactory.php'));
-        $this->assertFileExistsInFilesystem($this->app->databasePath('seeds' . DS . 'UserSeeder.php'));
+        $this->assertFileExistsInFilesystem($this->app->databasePath('seeders' . DS . 'UserSeeder.php'));
     }
 
     public function test_custom_model_creates_id()
