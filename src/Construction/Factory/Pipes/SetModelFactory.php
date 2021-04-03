@@ -65,7 +65,7 @@ class SetModelFactory
      */
     protected function registerFactory(LarawizFactory $factory)
     {
-        $this->app->instance(Factory::class, $factory);
+        $this->app->instance(LarawizFactory::class, $factory);
 
         return $factory;
     }
@@ -86,7 +86,7 @@ class SetModelFactory
 
         $construction->file->addUse(Factory::class);
         $construction->file->addUse($construction->model->fullNamespace());
-        $construction->class = $construction->file->addClass(Str::finish($construction->class->getName(), 'Factory'));
+        $construction->class = $construction->file->addClass(Str::finish($construction->model->class, 'Factory'));
 
         $construction->class->setExtends(Factory::class);
 
@@ -118,19 +118,19 @@ class SetModelFactory
      */
     protected function setDefinitionBody(Model $model)
     {
-        $string = '';
+        $string = "\nreturn [";
 
         $fillable = $this->getAllFillableColumns($model->columns);
 
         if ($fillable->isEmpty()) {
-            $string .= "\n        // ...";
+            $string .= "\n    // ...";
         } else {
             foreach ($fillable as $name => $column) {
                 $string .= $this->getPropertyString($column);
             }
         }
 
-        $string .= "\n        ];";
+        $string .= "\n];";
 
         return $string;
     }
@@ -163,7 +163,7 @@ class SetModelFactory
     protected function getPropertyString(Column $column)
     {
         if ($this->columnShouldBeFilledInFactory($column)) {
-            return "\n            '{$column->name}' => " . $this->factory->guess($column->name, $column->type) . ',';
+            return "\n    '{$column->name}' => " . $this->factory->guess($column->name, $column->type) . ',';
         }
     }
 

@@ -31,15 +31,22 @@ class SetConfigure
         return $next($construction);
     }
 
+    /**
+     * Sets the configuration method body.
+     *
+     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
+     *
+     * @return string
+     */
     protected function setConfigureBody(Model $model): string
     {
         $modelArguments = $model->class . ' $' . Str::camel($model->class);
 
         return
-            "\n        return \$this->afterMaking(function ($modelArguments) {" .
-            "\n            // TODO: Add after making configuration." .
-            "\n        })->afterCreating($modelArguments) {" .
-            "\n            // TODO: Add after creating configuration." .
-            "\n        });";
+            "\n// return \$this->afterMaking(function ($modelArguments) {" .
+            "\n//    // TODO: Add after making configuration." .
+            "\n//})->afterCreating($modelArguments) {" .
+            "\n//    // TODO: Add after creating configuration." .
+            "\n//});";
     }
 }

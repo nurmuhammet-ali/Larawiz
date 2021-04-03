@@ -41,11 +41,11 @@ class SetStates
             ->addComment('')
             ->addComment('@return \Illuminate\Database\Eloquent\Factories\Factory')
             ->addBody(
-                "\n        return \$this->state(function (array \$attributes) {" .
-                "\n            return [" .
-                "\n                // TODO: Add attributes for the {$model->key} \"{$state}\" state." .
-                "\n            ];" .
-                "\n        });"
+                "\nreturn \$this->state(function (array \$attributes) {" .
+                "\n    return [" .
+                "\n        // TODO: Add attributes for the {$model->key} \"{$state}\" state." .
+                "\n    ];" .
+                "\n});"
             );
     }
 }
