@@ -43,10 +43,10 @@ class SetConfigure
         $modelArguments = $model->class . ' $' . Str::camel($model->class);
 
         return
-            "\n// return \$this->afterMaking(function ($modelArguments) {" .
-            "\n//    // TODO: Add after making configuration." .
-            "\n//})->afterCreating($modelArguments) {" .
-            "\n//    // TODO: Add after creating configuration." .
-            "\n//});";
+            "\nreturn \$this->afterMaking(function ($modelArguments) {" .
+            "\n    // TODO: Add after making configuration." .
+            "\n})->afterCreating($modelArguments) {" .
+            "\n    // TODO: Add after creating configuration." .
+            "\n});";
     }
 }

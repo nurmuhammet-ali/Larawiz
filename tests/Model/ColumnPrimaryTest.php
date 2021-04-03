@@ -460,13 +460,13 @@ class ColumnPrimaryTest extends TestCase
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Thing' . DS .'User.php'));
 
-        $this->assertStringContainsString("use App\HasUuidPrimaryKey;", $model);
+        $this->assertStringContainsString("use App\Models\HasUuidPrimaryKey;", $model);
         $this->assertStringContainsString("    use HasUuidPrimaryKey;", $model);
 
-        $this->assertFileExistsInFilesystem($this->app->path('HasUuidPrimaryKey.php'));
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'HasUuidPrimaryKey.php'));
 
-        $this->assertStringContainsString('namespace App;',
-            $this->filesystem->get($this->app->path('HasUuidPrimaryKey.php'))
+        $this->assertStringContainsString('namespace App\Models;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'HasUuidPrimaryKey.php'))
         );
     }
 

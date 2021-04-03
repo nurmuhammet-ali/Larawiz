@@ -3,14 +3,14 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
-use Larawiz\Larawiz\Larawiz;
-use Nette\PhpGenerator\PhpFile;
-use Nette\PhpGenerator\ClassType;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
+use Larawiz\Larawiz\Larawiz;
+use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\PhpFile;
 
 class WriteUuidTrait
 {
@@ -65,7 +65,10 @@ class WriteUuidTrait
      */
     protected function copyUuidTrait()
     {
-        $this->filesystem->put($this->app->path('HasUuidPrimaryKey.php'), $this->getTraitContents());
+        $this->filesystem->put(
+            $this->app->path('Models'. DIRECTORY_SEPARATOR . 'HasUuidPrimaryKey.php'),
+            $this->getTraitContents()
+        );
     }
 
     /**
@@ -78,7 +81,7 @@ class WriteUuidTrait
     {
         $contents = $this->filesystem->get(Larawiz::getDummyPath('HasUuidPrimaryKey.stub'));
 
-        return str_replace('{DummyNamespace}', trim($this->app->getNamespace(), '\\'), $contents);
+        return str_replace('{DummyNamespace}', $this->app->getNamespace() . 'Models', $contents);
     }
 
     /**
@@ -89,7 +92,7 @@ class WriteUuidTrait
      */
     protected function addTraitToModel(PhpFile $file, ClassType $class)
     {
-        $namespace = Str::of($this->app->getNamespace())->finish('\\')->append('HasUuidPrimaryKey');
+        $namespace = Str::of($this->app->getNamespace())->finish('Models\\')->append('HasUuidPrimaryKey');
 
         Arr::first($file->getNamespaces())->addUse($namespace);
 
