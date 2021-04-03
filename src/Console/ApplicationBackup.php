@@ -48,9 +48,7 @@ class ApplicationBackup
 
         $this->makeBackupDirectory($backupDir);
 
-        $this->copyProjectFiles($backupDir);
-
-        $this->cleanMigrationDirectory();
+        $this->moveCurrentProjectFiles($backupDir);
     }
 
     /**
@@ -82,14 +80,24 @@ class ApplicationBackup
     }
 
     /**
-     * Copy the project files into the backup directory.
+     * Moves the project files into the backup directory.
      *
      * @param  string  $backupDir
      */
-    protected function copyProjectFiles(string $backupDir)
+    protected function moveCurrentProjectFiles(string $backupDir)
     {
         foreach ($this->getDirectoriesToBackup() as $dir) {
-            $this->filesystem->copyDirectory($dir, $this->backupDirectory($backupDir, $dir));
+            $moved = $this->filesystem->moveDirectory($dir, $this->backupDirectory($backupDir, $dir));
+
+            // Windows doesn't like to rename directories, so if we fail, we'll
+            // do it the old way: copy the directory and delete the source dir
+            // while keeping that directory. If not, we can ensure it exists.
+            if (!$moved) {
+                $this->filesystem->copyDirectory($dir, $this->backupDirectory($backupDir, $dir));
+                $this->filesystem->deleteDirectory($dir, true);
+            } else {
+                $this->filesystem->ensureDirectoryExists($dir, 0755, true);
+            }
         }
     }
 
@@ -120,17 +128,5 @@ class ApplicationBackup
         return Str::of(rtrim($path, DIRECTORY_SEPARATOR))
             ->replace($this->app->basePath(), $backupDir)
             ->__toString();
-    }
-
-    /**
-     * Clear the migrations directory.
-     *
-     * This will avoid running old scaffolded migrations.
-     *
-     * @return void
-     */
-    protected function cleanMigrationDirectory()
-    {
-        $this->filesystem->deleteDirectory($this->app->databasePath('migrations'), true);
     }
 }
