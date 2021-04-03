@@ -24,7 +24,7 @@ class TraitsTest extends TestCase
                     'name' => 'string',
                     'traits' => [
                         'Foo',
-                        'Bar\Quz'
+                        'Bar\Quz',
                     ]
                 ],
                 'Post' => [
@@ -40,6 +40,24 @@ class TraitsTest extends TestCase
         $this->shouldMockTraitFile(false);
 
         $this->artisan('larawiz:scaffold');
+
+        $this->assertStringContainsString(
+            'use Foo;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
+        );
+        $this->assertStringContainsString(
+            'use Quz;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
+        );
+
+        $this->assertStringContainsString(
+            'use Bar;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'Post.php'))
+        );
+        $this->assertStringContainsString(
+            'use Qux;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'Post.php'))
+        );
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Foo.php'));
         $this->assertStringContainsString('trait Foo',
@@ -86,6 +104,19 @@ class TraitsTest extends TestCase
         $this->shouldMockTraitFile(false);
 
         $this->artisan('larawiz:scaffold');
+
+        $this->assertStringContainsString(
+            'use Quz;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
+        );
+        $this->assertStringContainsString(
+            'use Quz;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'Post.php'))
+        );
+        $this->assertStringContainsString(
+            'use Quz;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'Comment.php'))
+        );
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php'));
         $this->assertStringContainsString('trait Quz',
@@ -158,6 +189,11 @@ class TraitsTest extends TestCase
 
         $this->assertFileNotExistsInFilesystem(
             $this->app->path('Illuminate' . DS . 'Foundation' . DS . 'Validation' . DS . 'ValidatesRequests.php')
+        );
+
+        $this->assertStringContainsString(
+            'use ValidatesRequests;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Foo.php'));
