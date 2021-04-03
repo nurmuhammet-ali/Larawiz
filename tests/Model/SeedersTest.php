@@ -84,6 +84,8 @@ class SeedersTest extends TestCase
         $this->assertEquals(<<<'CONTENT'
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
