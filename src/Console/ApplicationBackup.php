@@ -96,7 +96,7 @@ class ApplicationBackup
                 $this->filesystem->copyDirectory($dir, $this->backupDirectory($backupDir, $dir));
                 $this->filesystem->deleteDirectory($dir, true);
             } else {
-                $this->filesystem->ensureDirectoryExists($dir, true);
+                $this->filesystem->ensureDirectoryExists($dir, 0755, true);
             }
         }
     }
