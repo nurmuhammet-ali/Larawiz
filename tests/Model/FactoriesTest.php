@@ -35,6 +35,28 @@ class FactoriesTest extends TestCase
         $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
     }
 
+    public function test_sets_model_property()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'  => [
+                    'name' => 'string',
+                ],
+                'Foo\Bar' => [
+                    'name' => 'string',
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $user = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+        $bar = $this->filesystem->get($this->app->databasePath('factories' . DS . 'BarFactory.php'));
+
+        static::assertStringContainsString('protected $model = User::class;', $user);
+        static::assertStringContainsString('protected $model = Bar::class;', $bar);
+    }
+
     public function test_doesnt_fill_id_or_autoincrement()
     {
         $increments = [

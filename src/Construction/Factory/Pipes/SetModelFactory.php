@@ -12,6 +12,7 @@ use Larawiz\Larawiz\Construction\Factory\FactoryConstruction;
 use Larawiz\Larawiz\Lexing\Database\Column;
 use Larawiz\Larawiz\Lexing\Database\Factory as LarawizFactory;
 use Larawiz\Larawiz\Lexing\Database\Model;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 
 class SetModelFactory
@@ -91,7 +92,7 @@ class SetModelFactory
         $construction->class->setExtends(Factory::class);
 
         $construction->class
-            ->addProperty('model', $construction->model->fullNamespace())
+            ->addProperty('model', new Literal($construction->model->class . '::class'))
             ->setProtected()
             ->addComment("The name of the factory's corresponding model.")
             ->addComment('')
