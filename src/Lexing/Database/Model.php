@@ -2,11 +2,11 @@
 
 namespace Larawiz\Larawiz\Lexing\Database;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Fluent;
-use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Fluent;
+use Illuminate\Support\Str;
+use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
 
 /**
  * Class Model
@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\Relations\MorphPivot;
  * @property null|string $routeBinding  Column that should be bound by default, it any.
  * @property bool $useFactory  If a factory should be created for it.
  * @property \Illuminate\Support\Collection|string[] $factoryStates  States for the factory.
+ *
+ * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\QuickCast[] $quickCasts
  *
  * @property \Illuminate\Support\Collection|string[] $globalScopes
  * @property bool $observer
@@ -207,6 +209,7 @@ class Model extends Fluent
             'seeder'        => true,
             'globalScopes'  => collect(),
             'quickTraits'   => collect(),
+            'quickCasts'   => collect(),
         ], $attributes));
     }
 }

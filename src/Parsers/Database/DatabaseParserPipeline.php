@@ -14,6 +14,7 @@ class DatabaseParserPipeline extends Pipeline
     protected $pipes = [
         Pipes\PrepareModels::class,                             // Creates a "Model" class for each model.
         Pipes\ParseQuickTraits::class,                          // Adds the traits to the model.
+        Pipes\ParseQuickCasts::class,                           // Adds custom casts to the model.
         Pipes\ParseQuickModelData::class,                       // Complete the information from a Quick Model.
         Pipes\ParseModelTableName::class,                       // Gets the table name for each model.
         Pipes\ParseModelType::class,                            // Set the type of Model (User, pivot, etc)

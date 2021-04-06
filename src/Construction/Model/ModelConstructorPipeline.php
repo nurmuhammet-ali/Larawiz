@@ -34,5 +34,6 @@ class ModelConstructorPipeline extends Pipeline
         Pipes\WriteGlobalScopes::class,
         Pipes\WriteSeeder::class,
         Pipes\WriteTraits::class,
+        Pipes\WriteCasts::class,
     ];
 }

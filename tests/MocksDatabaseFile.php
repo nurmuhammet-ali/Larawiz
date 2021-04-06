@@ -2,11 +2,12 @@
 
 namespace Tests;
 
+use Illuminate\Filesystem\Filesystem;
+use Larawiz\Larawiz\Console\ApplicationBackup;
 use Larawiz\Larawiz\Larawiz;
 use Symfony\Component\Yaml\Parser;
 use Tests\Mockery\ArrayFilesystem;
-use Illuminate\Filesystem\Filesystem;
-use Larawiz\Larawiz\Console\ApplicationBackup;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 trait MocksDatabaseFile
@@ -60,6 +61,13 @@ trait MocksDatabaseFile
     protected function shouldMockScopeFile($should = true)
     {
         $path = Larawiz::getDummyPath('DummyScope.stub');
+
+        $this->filesystem->put($path, $should ? '' : file_get_contents($path));
+    }
+
+    protected function shouldMockCastFile($should = true)
+    {
+        $path = Larawiz::getDummyPath('DummyCast.stub');
 
         $this->filesystem->put($path, $should ? '' : file_get_contents($path));
     }
