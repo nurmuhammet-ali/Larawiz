@@ -87,7 +87,12 @@ class SetModelFactory
 
         $construction->file->addUse(Factory::class);
         $construction->file->addUse($construction->model->fullNamespace());
+        $namespace = $construction->file->addNamespace('Database\Factories');
+
+
         $construction->class = $construction->file->addClass(Str::finish($construction->model->class, 'Factory'));
+
+        $namespace->addClass($construction->class);
 
         $construction->class->setExtends(Factory::class);
 
