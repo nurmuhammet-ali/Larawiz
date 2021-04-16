@@ -11,6 +11,7 @@ use Illuminate\Support\Fluent;
  *
  * @property \Nette\PhpGenerator\ClassType $class
  * @property \Nette\PhpGenerator\PhpFile $file
+ * @property \Nette\PhpGenerator\PhpNamespace $namespace
  * @property \Larawiz\Larawiz\Lexing\Database\Model $model
  */
 class FactoryConstruction extends Fluent

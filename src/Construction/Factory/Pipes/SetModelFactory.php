@@ -84,15 +84,12 @@ class SetModelFactory
     public function handle(FactoryConstruction $construction, Closure $next)
     {
         $construction->file = new PhpFile();
+        $construction->namespace = $construction->file->addNamespace('Database\Factories');
 
-        $construction->file->addUse(Factory::class);
-        $construction->file->addUse($construction->model->fullNamespace());
-        $namespace = $construction->file->addNamespace('Database\Factories');
+        $construction->namespace->addUse(Factory::class);
+        $construction->namespace->addUse($construction->model->fullNamespace());
 
-
-        $construction->class = $construction->file->addClass(Str::finish($construction->model->class, 'Factory'));
-
-        $namespace->addClass($construction->class);
+        $construction->class = $construction->namespace->addClass(Str::finish($construction->model->class, 'Factory'));
 
         $construction->class->setExtends(Factory::class);
 
