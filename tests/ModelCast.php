@@ -4,11 +4,48 @@ namespace Tests;
 
 use Orchestra\Testbench\TestCase;
 
+use const DIRECTORY_SEPARATOR as DS;
+
 class ModelCast extends TestCase
 {
     use RegistersPackage;
     use CleansProjectFromScaffoldData;
     use MocksDatabaseFile;
+
+    public function test_model_doesnt_deprecated_casts_dates()
+    {
+        $this->mockDatabaseFile(
+            [
+                'models'    => [
+                    'Foo'     => [
+                        'bar' => 'date',
+                        'baz' => 'dateTime',
+                        'quz' => 'dateTimeTz',
+                        'qux' => 'timestamp',
+                        'quuz' => 'timestampTz'
+                    ],
+                ],
+            ]
+        );
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
+
+        static::assertStringNotContainsString("public \$dates", $model);
+        static::assertStringContainsString(<<<'CONTENT'
+    protected $casts = [
+        'bar' => 'date',
+        'baz' => 'datetime',
+        'quz' => 'datetime',
+        'qux' => 'datetime',
+        'quuz' => 'datetime',
+    ];
+CONTENT
+            ,
+            $model
+        );
+    }
 
     public function test_model_doesnt_casts_primary_key()
     {

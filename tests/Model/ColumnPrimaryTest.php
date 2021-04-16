@@ -449,6 +449,10 @@ class ColumnPrimaryTest extends TestCase
                     'uuid' => null,
                     'foo'  => 'bar',
                 ],
+                'Bar' => [
+                    'uuid' => null,
+                    'foo'  => 'bar',
+                ],
             ],
         ]);
 
@@ -458,16 +462,21 @@ class ColumnPrimaryTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
+        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'HasUuidPrimaryKey.php'));
+
+        $this->assertStringContainsString('namespace App\Models;',
+                                          $this->filesystem->get($this->app->path('Models' . DS . 'HasUuidPrimaryKey.php'))
+        );
+
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Thing' . DS .'User.php'));
 
         $this->assertStringContainsString("use App\Models\HasUuidPrimaryKey;", $model);
         $this->assertStringContainsString("    use HasUuidPrimaryKey;", $model);
 
-        $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'HasUuidPrimaryKey.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Bar.php'));
 
-        $this->assertStringContainsString('namespace App\Models;',
-            $this->filesystem->get($this->app->path('Models' . DS . 'HasUuidPrimaryKey.php'))
-        );
+        $this->assertStringNotContainsString("use App\Models\HasUuidPrimaryKey;", $model);
+        $this->assertStringContainsString("    use HasUuidPrimaryKey;", $model);
     }
 
     protected function tearDown() : void

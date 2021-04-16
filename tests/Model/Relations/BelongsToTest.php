@@ -17,6 +17,33 @@ class BelongsToTest extends TestCase
     use CleansProjectFromScaffoldData;
     use MocksDatabaseFile;
 
+    public function test_error_when_incorrect_belongs_to()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The [label] relation in [Tag] points to a non-existent [Label] model.');
+
+        $this->mockDatabaseFile(
+            [
+                'models' => [
+                    'Post' => [
+                        'name' => 'string',
+                        'tags' => 'belongsToMany'
+                    ],
+                    'Labels' => [
+                        'name' => 'string',
+                        'permissions' => 'json'
+                    ],
+                    'Tag' => [
+                        'post' => 'belongsTo',
+                        'label' => 'belongsTo:Label'
+                    ]
+                ]
+            ]
+        );
+
+        $this->artisan('larawiz:scaffold');
+    }
+
     public function test_error_when_model_does_not_exists()
     {
         $this->expectException(LogicException::class);

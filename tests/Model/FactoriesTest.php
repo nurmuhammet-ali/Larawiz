@@ -33,6 +33,78 @@ class FactoriesTest extends TestCase
 
         $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'UserFactory.php'));
         $this->assertFileExistsInFilesystem($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
+
+
+        static::assertEquals(<<<'CONTENT'
+<?php
+
+namespace Database\Factories;
+
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class UserFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = User::class;
+
+    /**
+     * Define the model's default state
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->userName,
+        ];
+    }
+
+    /**
+     * Configure the model factory
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (User $user) {
+            // TODO: Add after making configuration.
+        })->afterCreating(function (User $user) {
+            // TODO: Add after creating configuration.
+        });
+    }
+}
+
+CONTENT
+            ,
+            $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'))
+        );
+    }
+
+    public function test_sets_model_property()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User'  => [
+                    'name' => 'string',
+                ],
+                'Foo\Bar' => [
+                    'name' => 'string',
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $user = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
+        $bar = $this->filesystem->get($this->app->databasePath('factories' . DS . 'BarFactory.php'));
+
+        static::assertStringContainsString('protected $model = User::class;', $user);
+        static::assertStringContainsString('protected $model = Bar::class;', $bar);
     }
 
     public function test_doesnt_fill_id_or_autoincrement()

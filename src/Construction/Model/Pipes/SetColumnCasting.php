@@ -3,8 +3,8 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Larawiz\Larawiz\Lexing\Database\Column;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
+use Larawiz\Larawiz\Lexing\Database\Column;
 
 class SetColumnCasting
 {
@@ -48,7 +48,6 @@ class SetColumnCasting
             && ! $column->relation
             && ! $column->isPrimary()
             && ! $column->isTimestamps()
-            && ! $column->isSoftDeletes()
-            && ! $column->shouldCastToDate();
+            && ! $column->isSoftDeletes();
     }
 }
