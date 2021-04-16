@@ -16,7 +16,6 @@ class ModelConstructorPipeline extends Pipeline
         Pipes\SetTableName::class,
         Pipes\SetPerPage::class,
         Pipes\SetColumnCasting::class,
-        Pipes\SetDateCasting::class,
         Pipes\SetFillable::class,
         Pipes\SetHidden::class,
         Pipes\SetRelations::class,

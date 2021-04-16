@@ -2,12 +2,12 @@
 
 namespace Larawiz\Larawiz\Lexing\Database;
 
-use LogicException;
-use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Lexing\Code\Method;
 use Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation;
+use LogicException;
 
 /**
  * Class Column
@@ -124,7 +124,6 @@ class Column extends Fluent
             'jsonb'
         ],
         'datetime' => [
-            'date',
             'dateTime',
             'dateTimeTz',
             'time',
@@ -132,6 +131,9 @@ class Column extends Fluent
             'timestamp',
             'timestampTz',
             'year',
+        ],
+        'date' => [
+            'date',
         ]
     ];
 
@@ -378,7 +380,7 @@ class Column extends Fluent
     public function castType()
     {
         if ($this->shouldCastToDate()) {
-            return 'datetime';
+            return $this->type === 'date' ? 'date' : 'datetime';
         }
 
         foreach (self::BLUEPRINT_TO_CAST as $type => $columnType) {
