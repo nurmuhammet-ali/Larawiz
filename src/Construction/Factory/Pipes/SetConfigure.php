@@ -45,7 +45,7 @@ class SetConfigure
         return
             "\nreturn \$this->afterMaking(function ($modelArguments) {" .
             "\n    // TODO: Add after making configuration." .
-            "\n})->afterCreating($modelArguments) {" .
+            "\n})->afterCreating(function ($modelArguments) {" .
             "\n    // TODO: Add after creating configuration." .
             "\n});";
     }
