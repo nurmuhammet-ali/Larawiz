@@ -78,7 +78,7 @@ class SetAppend
             return '\Illuminate\Support\Collection';
         }
 
-        if (in_array($type, ['date', 'datetime'])) {
+        if (in_array($type, ['date', 'datetime', 'datetimeTz', 'dateTime', 'dateTimeTz', 'timestamp', 'timestampTz'])) {
             return '\Illuminate\Support\Carbon';
         }
 

@@ -242,6 +242,128 @@ CONTENT
         );
     }
 
+    public function test_appends_corrects_date_primitive()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'columns' => [
+                        'name' => 'string',
+                    ],
+                    'append' => [
+                        'foo' => 'date',
+                        'bar' => 'datetime',
+                        'baz' => 'datetimeTz',
+                        'quz' => 'dateTime',
+                        'qux' => 'dateTimeTz',
+                        'quux' => 'timestamp',
+                        'corge' => 'timestampTz',
+                    ]
+                ],
+            ],
+        ]);
+
+        $this->artisan('larawiz:scaffold');
+
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
+
+        static::assertStringContainsString(<<<'CONTENT'
+ * @property-read \Illuminate\Support\Carbon $foo
+ * @property-read \Illuminate\Support\Carbon $bar
+ * @property-read \Illuminate\Support\Carbon $baz
+ * @property-read \Illuminate\Support\Carbon $quz
+ * @property-read \Illuminate\Support\Carbon $qux
+ * @property-read \Illuminate\Support\Carbon $quux
+ * @property-read \Illuminate\Support\Carbon $corge
+CONTENT
+            ,
+            $model
+        );
+
+        static::assertStringContainsString(<<<'CONTENT'
+    protected $append = ['foo', 'bar', 'baz', 'quz', 'qux', 'quux', 'corge'];
+CONTENT
+            ,
+            $model
+        );
+
+        static::assertStringContainsString(<<<'CONTENT'
+    /**
+     * Returns the 'foo' attribute.
+     *
+     * @return \Illuminate\Support\Carbon
+     */
+    protected function getFooAttribute()
+    {
+        // TODO: Code the 'foo' getter.
+    }
+
+    /**
+     * Returns the 'bar' attribute.
+     *
+     * @return \Illuminate\Support\Carbon
+     */
+    protected function getBarAttribute()
+    {
+        // TODO: Code the 'bar' getter.
+    }
+
+    /**
+     * Returns the 'baz' attribute.
+     *
+     * @return \Illuminate\Support\Carbon
+     */
+    protected function getBazAttribute()
+    {
+        // TODO: Code the 'baz' getter.
+    }
+
+    /**
+     * Returns the 'quz' attribute.
+     *
+     * @return \Illuminate\Support\Carbon
+     */
+    protected function getQuzAttribute()
+    {
+        // TODO: Code the 'quz' getter.
+    }
+
+    /**
+     * Returns the 'qux' attribute.
+     *
+     * @return \Illuminate\Support\Carbon
+     */
+    protected function getQuxAttribute()
+    {
+        // TODO: Code the 'qux' getter.
+    }
+
+    /**
+     * Returns the 'quux' attribute.
+     *
+     * @return \Illuminate\Support\Carbon
+     */
+    protected function getQuuxAttribute()
+    {
+        // TODO: Code the 'quux' getter.
+    }
+
+    /**
+     * Returns the 'corge' attribute.
+     *
+     * @return \Illuminate\Support\Carbon
+     */
+    protected function getCorgeAttribute()
+    {
+        // TODO: Code the 'corge' getter.
+    }
+}
+CONTENT
+            ,
+            $model
+        );
+    }
+
     public function test_appends_accepts_class()
     {
         $this->mockDatabaseFile([
