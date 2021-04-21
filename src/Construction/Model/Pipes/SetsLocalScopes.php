@@ -23,22 +23,23 @@ class SetsLocalScopes
         if (null !== $scopes && !empty($scopes)) {
             $construction->namespace->addUse(Builder::class);
 
-            foreach (array_unique($construction->model->localScopes) as $scope) {
+            foreach ($construction->model->localScopes->unique() as $scope) {
+                $name = lcfirst(ltrim($scope, 'scope'));
+
                 $construction->class
-                    ->addMethod($name = Str::of($scope)->camel()->ucfirst()->start('scope'))
+                    ->addMethod($scope)
                     ->setProtected()
-                    ->addComment("Query scope for $scope.")
+                    ->addComment('Query scope for ' . Str::of($name)->snake(' ') . '.')
                     ->addComment('')
                     ->addComment('@param  \Illuminate\Database\Eloquent\Builder  $query')
                     ->addComment('@return void')
-                    ->addBody('// $query')
+                    ->addBody("// TODO: Filter the query by the '$name' scope.")
                     ->addParameter('query')
                     ->setType(Builder::class);
 
                 $construction->class
                     ->addComment(
-                        "@method \Illuminate\Database\Eloquent\Builder " .
-                        $name->ltrim('scope')->camel() . '()'
+                        "@method \Illuminate\Database\Eloquent\Builder $name()"
                     );
             }
         }

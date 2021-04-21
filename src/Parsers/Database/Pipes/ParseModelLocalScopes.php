@@ -3,6 +3,7 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Scaffold;
 
 class ParseModelLocalScopes
@@ -17,7 +18,13 @@ class ParseModelLocalScopes
     public function handle(Scaffold $scaffold, Closure $next)
     {
         foreach ($scaffold->database->models as $key => $model) {
-            $model->localScopes = $scaffold->rawDatabase->get("models.{$key}.localScopes");
+            $scopes = $scaffold->rawDatabase->get("models.{$key}.scopes", []);
+
+            foreach ($scopes as $localScope) {
+                if (ctype_lower($localScope[0])) {
+                    $model->localScopes->push(Str::of($localScope)->ltrim('scope')->ucfirst()->start('scope'));
+                }
+            }
         }
 
         return $next($scaffold);
