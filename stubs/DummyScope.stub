@@ -17,7 +17,7 @@ class {DummyScope} implements Scope
      */
     public function apply(Builder $builder, {DummyModel} ${dummyModel})
     {
-        // $builder->where('active', true);
+        // TODO: Filter the query for the {DummyModel} in the {DummyScope}.
     }
 
     /**

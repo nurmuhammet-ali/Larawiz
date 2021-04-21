@@ -4,10 +4,9 @@ namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
 use Illuminate\Support\Str;
-use Larawiz\Larawiz\Lexing\Database\GlobalScope;
 use Larawiz\Larawiz\Scaffold;
 
-class ParseGlobalScopes
+class ParseModelAppend
 {
     /**
      * Handle the parsing of the Database scaffold.
@@ -19,12 +18,8 @@ class ParseGlobalScopes
     public function handle(Scaffold $scaffold, Closure $next)
     {
         foreach ($scaffold->database->models as $key => $model) {
-            $scopes = $scaffold->rawDatabase->get("models.{$key}.scopes", []);
-
-            foreach ($scopes as $globalScope) {
-                if (ctype_upper($globalScope[0])) {
-                    $model->globalScopes->push(Str::finish($globalScope, 'Scope'));
-                }
+            foreach ($scaffold->rawDatabase->get("models.{$key}.append", []) as $name => $type) {
+                $model->append->put(Str::snake($name), $type);
             }
         }
 

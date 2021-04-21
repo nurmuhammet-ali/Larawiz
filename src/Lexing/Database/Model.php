@@ -2,11 +2,11 @@
 
 namespace Larawiz\Larawiz\Lexing\Database;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Fluent;
-use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Fluent;
+use Illuminate\Support\Str;
+use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
 
 /**
  * Class Model
@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\MorphPivot;
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Column[] $columns
  * @property \Illuminate\Support\Collection|string[] $fillable
  * @property \Illuminate\Support\Collection|string[] $hidden
+ * @property \Illuminate\Support\Collection|string[] $append
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation[] $relations
  *
  * @property \Larawiz\Larawiz\Lexing\Database\Primary $primary  Primary column information
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\MorphPivot;
  * @property \Illuminate\Support\Collection|string[] $factoryStates  States for the factory.
  *
  * @property \Illuminate\Support\Collection|string[] $globalScopes
+ * @property \Illuminate\Support\Collection|string[] $localScopes
  * @property bool $observer
  *
  * @property \Larawiz\Larawiz\Lexing\Database\Migration $migration
@@ -196,6 +198,7 @@ class Model extends Fluent
             'columns'       => collect(),
             'fillable'      => collect(),
             'hidden'        => collect(),
+            'append'        => collect(),
             'relations'     => collect(),
             'primary'       => new Primary,
             'timestamps'    => new Timestamps,
@@ -206,6 +209,7 @@ class Model extends Fluent
             'factoryStates' => collect(),
             'seeder'        => true,
             'globalScopes'  => collect(),
+            'localScopes'   => collect(),
             'quickTraits'   => collect(),
         ], $attributes));
     }

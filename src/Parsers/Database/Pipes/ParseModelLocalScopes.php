@@ -4,10 +4,9 @@ namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
 use Illuminate\Support\Str;
-use Larawiz\Larawiz\Lexing\Database\GlobalScope;
 use Larawiz\Larawiz\Scaffold;
 
-class ParseGlobalScopes
+class ParseModelLocalScopes
 {
     /**
      * Handle the parsing of the Database scaffold.
@@ -21,9 +20,9 @@ class ParseGlobalScopes
         foreach ($scaffold->database->models as $key => $model) {
             $scopes = $scaffold->rawDatabase->get("models.{$key}.scopes", []);
 
-            foreach ($scopes as $globalScope) {
-                if (ctype_upper($globalScope[0])) {
-                    $model->globalScopes->push(Str::finish($globalScope, 'Scope'));
+            foreach ($scopes as $localScope) {
+                if (ctype_lower($localScope[0])) {
+                    $model->localScopes->push(Str::of($localScope)->ltrim('scope')->ucfirst()->start('scope'));
                 }
             }
         }
