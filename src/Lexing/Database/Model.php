@@ -23,6 +23,7 @@ use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Column[] $columns
  * @property \Illuminate\Support\Collection|string[] $fillable
  * @property \Illuminate\Support\Collection|string[] $hidden
+ * @property \Illuminate\Support\Collection|string[] $append
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation[] $relations
  *
  * @property \Larawiz\Larawiz\Lexing\Database\Primary $primary  Primary column information
@@ -197,6 +198,7 @@ class Model extends Fluent
             'columns'       => collect(),
             'fillable'      => collect(),
             'hidden'        => collect(),
+            'append'        => collect(),
             'relations'     => collect(),
             'primary'       => new Primary,
             'timestamps'    => new Timestamps,

@@ -18,6 +18,7 @@ class DatabaseParserPipeline extends Pipeline
         Pipes\ParseModelTableName::class,                       // Gets the table name for each model.
         Pipes\ParseModelType::class,                            // Set the type of Model (User, pivot, etc)
         Pipes\ParseModelColumns::class,
+        Pipes\ParseModelAppend::class,
         Pipes\ParseModelPrimaryKey::class,
         Pipes\ParseModelSoftDeletesColumns::class,
         Pipes\ParseModelTimestampsColumns::class,

@@ -18,6 +18,7 @@ class ModelConstructorPipeline extends Pipeline
         Pipes\SetColumnCasting::class,
         Pipes\SetFillable::class,
         Pipes\SetHidden::class,
+        Pipes\SetAppend::class,
         Pipes\SetRelations::class,
         Pipes\SetPrimaryKey::class,
         Pipes\SetRouteBinding::class,
