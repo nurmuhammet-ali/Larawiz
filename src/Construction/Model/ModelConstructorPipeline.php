@@ -27,6 +27,7 @@ class ModelConstructorPipeline extends Pipeline
         Pipes\SetPasswordMutator::class,
         Pipes\SetTraits::class,
         Pipes\SetsFactoryTrait::class,
+        Pipes\SetsLocalScopes::class,
         Pipes\WriteUuidTrait::class,
         Pipes\WriteModel::class,
         Pipes\WriteObserver::class,
