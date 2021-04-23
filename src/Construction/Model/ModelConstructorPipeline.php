@@ -20,6 +20,7 @@ class ModelConstructorPipeline extends Pipeline
         Pipes\SetHidden::class,
         Pipes\SetAppend::class,
         Pipes\SetRelations::class,
+        Pipes\SetEagerLoads::class,
         Pipes\SetPrimaryKey::class,
         Pipes\SetRouteBinding::class,
         Pipes\SetColumnComments::class,
