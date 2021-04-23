@@ -49,8 +49,7 @@ class ParseModelEagerLoad
         if ($relations->isNotEmpty()) {
             /** @var \Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation $relation */
             if ($relation = $model->relations->get($relations->first())) {
-                $relations->shift();
-                return $this->recursivelyCheckModelRelation($relation->model, $relations);
+                return $this->recursivelyCheckModelRelation($relation->model, tap($relations)->shift());
             }
 
             return $relations->first();
