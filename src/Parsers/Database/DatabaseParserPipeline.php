@@ -44,6 +44,8 @@ class DatabaseParserPipeline extends Pipeline
 
         Pipes\ParsePivotModelsMigrations::class,                // Cleans Pivot models migrations.
 
+        Pipes\ParseModelEagerLoad::class,                       // Adds eager loads to models.
+
         Pipes\ParseMigrationFromModel::class,                   // Creates a migration for each model.
         Pipes\ParseModelIndexesForMigration::class,             // Adds additional indexes declared for the model.
         Pipes\ParseModelFillable::class,                        // Set each model fillable properties.

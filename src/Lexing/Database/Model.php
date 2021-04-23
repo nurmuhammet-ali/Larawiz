@@ -26,6 +26,8 @@ use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
  * @property \Illuminate\Support\Collection|string[] $append
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation[] $relations
  *
+ * @property \Illuminate\Support\Collection|string[] $eager  Eager Loads.
+ *
  * @property \Larawiz\Larawiz\Lexing\Database\Primary $primary  Primary column information
  * @property \Larawiz\Larawiz\Lexing\Database\Timestamps $timestamps  Timestamps information.
  * @property \Larawiz\Larawiz\Lexing\Database\SoftDelete $softDelete  Soft Deleting information.
@@ -200,6 +202,7 @@ class Model extends Fluent
             'hidden'        => collect(),
             'append'        => collect(),
             'relations'     => collect(),
+            'eager'         => collect(),
             'primary'       => new Primary,
             'timestamps'    => new Timestamps,
             'softDelete'    => new SoftDelete,
