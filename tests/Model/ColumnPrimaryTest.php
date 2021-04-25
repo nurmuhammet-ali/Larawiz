@@ -479,6 +479,39 @@ class ColumnPrimaryTest extends TestCase
         $this->assertStringContainsString("    use HasUuidPrimaryKey;", $model);
     }
 
+    public function test_no_free_traits_doesnt_adds_uuid_free_trait()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'Thing\User' => [
+                    'uuid' => null,
+                    'foo'  => 'bar',
+                ],
+                'Bar' => [
+                    'uuid' => null,
+                    'foo'  => 'bar',
+                ],
+            ],
+        ]);
+
+        $this->shouldMockUuidTraitFile(true);
+
+        $this->artisan('larawiz:scaffold', [
+            '--no-free-traits' => true,
+        ]);
+
+        $this->assertFileNotExistsInFilesystem($this->app->path('Models' . DS . 'HasUuidPrimaryKey.php'));
+
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Thing' . DS .'User.php'));
+
+        $this->assertStringNotContainsString("use App\Models\HasUuidPrimaryKey;", $model);
+        $this->assertStringNotContainsString("    use HasUuidPrimaryKey;", $model);
+
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Bar.php'));
+
+        $this->assertStringNotContainsString("    use HasUuidPrimaryKey;", $model);
+    }
+
     protected function tearDown() : void
     {
         $this->cleanProject();

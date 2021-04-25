@@ -2,11 +2,11 @@
 
 namespace Larawiz\Larawiz\Console;
 
-use Larawiz\Larawiz\Scaffold;
 use Illuminate\Filesystem\Filesystem;
-use Larawiz\Larawiz\Writer\WriterPipeline;
-use Larawiz\Larawiz\Scaffolding\ScaffoldParserPipeline;
+use Larawiz\Larawiz\Scaffold;
 use Larawiz\Larawiz\Scaffolding\Pipes\ParseDatabaseData;
+use Larawiz\Larawiz\Scaffolding\ScaffoldParserPipeline;
+use Larawiz\Larawiz\Writer\WriterPipeline;
 
 class ScaffoldCommand extends BaseLarawizCommand
 {
@@ -33,6 +33,7 @@ class ScaffoldCommand extends BaseLarawizCommand
      */
     protected $signature = 'larawiz:scaffold
                             {--db= : Database YAML file to parse}
+                            {--no-free-traits : Disables adding free traits like [HasUuidPrimaryKey]}
                             {--no-backup : Runs without creating project backups}';
 
     /**

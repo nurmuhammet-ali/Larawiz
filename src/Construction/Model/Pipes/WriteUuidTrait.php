@@ -7,6 +7,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Larawiz\Larawiz\Console\ScaffoldCommand;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
 use Larawiz\Larawiz\Larawiz;
 use Nette\PhpGenerator\ClassType;
@@ -29,15 +30,23 @@ class WriteUuidTrait
     protected $app;
 
     /**
+     * Current Scaffold command instance.
+     *
+     * @var \Larawiz\Larawiz\Console\ScaffoldCommand
+     */
+    protected $command;
+
+    /**
      * WriteTraits constructor.
      *
      * @param  \Illuminate\Contracts\Foundation\Application  $application
      * @param  \Illuminate\Filesystem\Filesystem  $filesystem
      */
-    public function __construct(Application $application, Filesystem $filesystem)
+    public function __construct(Application $application, Filesystem $filesystem, ScaffoldCommand $command)
     {
         $this->app = $application;
         $this->filesystem = $filesystem;
+        $this->command = $command;
     }
 
     /**
@@ -50,7 +59,7 @@ class WriteUuidTrait
      */
     public function handle(ModelConstruction $construction, Closure $next)
     {
-        if ($construction->model->hasUuidPrimaryKey()) {
+        if (! $this->command->hasOption('no-free-traits') && $construction->model->hasUuidPrimaryKey()) {
             $this->copyUuidTrait();
             $this->addTraitToModel($construction->file, $construction->class);
         }
