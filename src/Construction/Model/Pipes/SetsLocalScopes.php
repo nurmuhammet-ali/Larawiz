@@ -21,6 +21,8 @@ class SetsLocalScopes
         $scopes = $construction->model->localScopes;
 
         if (null !== $scopes && !empty($scopes)) {
+            $construction->class->addComment('');
+
             $construction->namespace->addUse(Builder::class);
 
             foreach ($construction->model->localScopes->unique() as $scope) {
