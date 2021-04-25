@@ -59,7 +59,7 @@ class WriteUuidTrait
      */
     public function handle(ModelConstruction $construction, Closure $next)
     {
-        if (! $this->command->hasOption('no-free-traits') && $construction->model->hasUuidPrimaryKey()) {
+        if (! $this->command->option('no-free-traits') && $construction->model->hasUuidPrimaryKey()) {
             $this->copyUuidTrait();
             $this->addTraitToModel($construction->file, $construction->class);
         }
