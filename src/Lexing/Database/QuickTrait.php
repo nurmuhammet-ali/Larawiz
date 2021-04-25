@@ -6,7 +6,7 @@ use Illuminate\Support\Fluent;
 use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
 
 /**
- * @property boolean $internal
+ * @property boolean $external
  */
 class QuickTrait extends Fluent
 {

@@ -83,12 +83,13 @@ class ParseQuickTraits
     {
         $instance = new QuickTrait;
 
-        [$instance->namespace, $instance->class] = Helpers::namespaceAndClass($trait, $this->namespace . '\\' . 'Models');
+        // If the trait already exists we will create a reference and mark it as "external".
+        $instance->external = $this->traitExists($trait);
+        $instance->namespace = trim($trait, '\\');
 
-        // If the trait already exists we will create a trait reference and mark it as
-        // "external". Otherwise, we will get the application base namespace and use
-        // that as the base to create the trait that will be included in the model.
-        if ($instance->internal = $this->traitDoesntExists($trait)) {
+        // If it's not external, we will set the proper namespace and path.
+        if (! $instance->external) {
+            [$instance->namespace, $instance->class] = Helpers::namespaceAndClass($trait, $this->namespace . '\\' . 'Models');
             $instance->path = Helpers::pathFromNamespace($instance->fullNamespace(), $this->path, $this->namespace);
         }
 
@@ -120,16 +121,14 @@ class ParseQuickTraits
      * @param  string  $trait
      * @return bool
      */
-    protected function traitDoesntExists(string $trait)
+    protected function traitExists(string $trait): bool
     {
-        $traitDoesntExists = ! trait_exists($trait);
-
         // We will bail out if the trait is a class or interface.
-        if ($traitDoesntExists && (class_exists($trait) || interface_exists($trait))) {
+        if (class_exists($trait) || interface_exists($trait)) {
             throw new LogicException("The [{$trait}] exists but is not a trait, but a class or interface.");
         }
 
-        return $traitDoesntExists;
+        return trait_exists($trait);
     }
 
 }
