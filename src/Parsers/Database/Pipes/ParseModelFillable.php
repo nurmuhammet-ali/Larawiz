@@ -28,13 +28,11 @@ class ParseModelFillable
             }
 
             // If the developer issued "false", then we won't add any column to the fillable list.
-            // If otherwise didn't issued anything, we will take all the columns and reject those
-            // that aren't fillable. If a list is present, we will cross-check with the columns.
             if ($fillable === false) {
                 continue;
             }
 
-            // If there is no "fillable" key, or its `null` then we will go manual.
+            // If there is no "fillable" key, or its `null`, then we will go full auto.
             if ($fillable === null) {
                 $fillable = $this->fillable($model->columns);
             }
