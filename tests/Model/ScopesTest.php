@@ -159,10 +159,10 @@ CONTENT,
         $this->assertStringContainsString('namespace App\Scopes\User;', $this->filesystem->get($fooScope));
         $this->assertStringContainsString('class FooScope', $this->filesystem->get($fooScope));
         $this->assertStringContainsString(
-            '@param  \Illuminate\Database\Eloquent\Model|\App\Models\User', $this->filesystem->get($fooScope)
+            '@param  \App\Models\User', $this->filesystem->get($fooScope)
         );
         $this->assertStringContainsString(
-            'public function apply(Builder $builder, User $user)', $this->filesystem->get($fooScope)
+            'public function apply(Builder $builder, Model $user)', $this->filesystem->get($fooScope)
         );
     }
 
