@@ -36,6 +36,8 @@ use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
  * @property bool $useFactory  If a factory should be created for it.
  * @property \Illuminate\Support\Collection|string[] $factoryStates  States for the factory.
  *
+ * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\QuickCast[] $quickCasts
+ *
  * @property \Illuminate\Support\Collection|string[] $globalScopes
  * @property \Illuminate\Support\Collection|string[] $localScopes
  * @property bool $observer
@@ -214,6 +216,7 @@ class Model extends Fluent
             'globalScopes'  => collect(),
             'localScopes'   => collect(),
             'quickTraits'   => collect(),
+            'quickCasts'   => collect(),
         ], $attributes));
     }
 }

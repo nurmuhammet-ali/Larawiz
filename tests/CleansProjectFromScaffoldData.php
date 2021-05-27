@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Support\Facades\File;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 trait CleansProjectFromScaffoldData
@@ -17,7 +18,8 @@ trait CleansProjectFromScaffoldData
             File::delete($this->app->basePath('custom.yml'));
         }
 
-        File::deleteDirectory($this->app->path(), true);
+        File::deleteDirectory($this->app->path('Models'), true);
+        File::deleteDirectory($this->app->path('Casts'), true);
         File::deleteDirectory($this->app->storagePath() . DS . 'larawiz');
         File::deleteDirectory($this->app->databasePath() . DS . 'migrations', true);
         File::deleteDirectory($this->app->databasePath() . DS . 'factories', true);

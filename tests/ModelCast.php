@@ -59,7 +59,7 @@ CONTENT
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Foo.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
         $this->assertStringNotContainsString("'id' => 'integer'", $model);
     }
@@ -76,7 +76,7 @@ CONTENT
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Foo.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
         $this->assertStringNotContainsString("'created_at' => 'datetime'", $model);
         $this->assertStringNotContainsString("'updated_at' => 'datetime'", $model);
@@ -95,7 +95,7 @@ CONTENT
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Foo.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
         $this->assertStringNotContainsString("'softDeletes' => 'datetime'", $model);
     }
@@ -116,7 +116,7 @@ CONTENT
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Foo.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
         $this->assertStringNotContainsString("'bar_id' => 'integer'", $model);
     }
@@ -137,7 +137,7 @@ CONTENT
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Foo.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
         $this->assertStringNotContainsString('protected $casts = [', $model);
     }
@@ -154,32 +154,7 @@ CONTENT
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Foo.php'));
-
-        $this->assertStringNotContainsString('protected $casts = [', $model);
-    }
-
-    public function test_model_doesnt_casts_dates()
-    {
-        $this->mockDatabaseFile([
-            'models'    => [
-                'Foo'     => [
-                    'name' => 'string',
-                    'foo' => 'date',
-                    'bar' => 'dateTime',
-                    'quz' => 'dateTimeTz',
-                    'qux' => 'time',
-                    'quuz' => 'timeTz',
-                    'quux' => 'timestamp',
-                    'corge' => 'timestampTz',
-                    'grault' => 'year',
-                ],
-            ],
-        ]);
-
-        $this->artisan('larawiz:scaffold');
-
-        $model = $this->filesystem->get($this->app->path('Foo.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
         $this->assertStringNotContainsString('protected $casts = [', $model);
     }
@@ -205,8 +180,26 @@ CONTENT
 
         $this->artisan('larawiz:scaffold');
 
-        $model = $this->filesystem->get($this->app->path('Foo.php'));
+        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
-        $this->assertStringContainsString("public \$dates = ['foo', 'bar', 'quz', 'qux', 'quuz', 'quux', 'corge', 'grault'];", $model);
+        $this->assertStringContainsString(<<<'CONTENT'
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'foo' => 'date',
+        'bar' => 'datetime',
+        'quz' => 'datetime',
+        'qux' => 'datetime',
+        'quuz' => 'datetime',
+        'quux' => 'datetime',
+        'corge' => 'datetime',
+        'grault' => 'datetime',
+    ];
+CONTENT,
+            $model
+        );
     }
 }
