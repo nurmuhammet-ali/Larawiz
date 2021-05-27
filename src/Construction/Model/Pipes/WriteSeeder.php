@@ -14,7 +14,6 @@ use const DIRECTORY_SEPARATOR as DS;
 
 class WriteSeeder
 {
-
     /**
      * Application instance.
      *
