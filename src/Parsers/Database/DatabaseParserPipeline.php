@@ -19,6 +19,7 @@ class DatabaseParserPipeline extends Pipeline
         Pipes\ParseModelTableName::class,                       // Gets the table name for each model.
         Pipes\ParseModelType::class,                            // Set the type of Model (User, pivot, etc)
         Pipes\ParseModelColumns::class,
+        Pipes\ParseModelAppend::class,
         Pipes\ParseModelPrimaryKey::class,
         Pipes\ParseModelSoftDeletesColumns::class,
         Pipes\ParseModelTimestampsColumns::class,
@@ -44,10 +45,13 @@ class DatabaseParserPipeline extends Pipeline
 
         Pipes\ParsePivotModelsMigrations::class,                // Cleans Pivot models migrations.
 
+        Pipes\ParseModelEagerLoad::class,                       // Adds eager loads to models.
+
         Pipes\ParseMigrationFromModel::class,                   // Creates a migration for each model.
         Pipes\ParseModelIndexesForMigration::class,             // Adds additional indexes declared for the model.
         Pipes\ParseModelFillable::class,                        // Set each model fillable properties.
         Pipes\ParseModelHidden::class,                          // Adds hidden columns to the list.
+        Pipes\ParseModelLocalScopes::class,                     // Sets the model Local Scopes functions.
         Pipes\ParseModelObserver::class,                        // Set model eloquent events.
         Pipes\ParseModelRouteBinding::class,                    // Set model column to use as route binding.
         Pipes\ParseModelFactory::class,                         // Set the factory states.

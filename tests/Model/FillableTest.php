@@ -2,7 +2,6 @@
 
 namespace Tests\Model;
 
-use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
 use Tests\MocksDatabaseFile;
@@ -183,14 +182,11 @@ class FillableTest extends TestCase
 
         $model = $this->app->path('Models' . DS . 'User.php');
 
-        $this->assertStringNotContainsString("protected \$fillable = ['name', 'age'];", $this->filesystem->get($model));
+        $this->assertStringContainsString("protected \$fillable = ['name', 'age'];", $this->filesystem->get($model));
     }
 
-    public function test_error_when_fillable_column_doesnt_exists()
+    public function test_no_error_when_fillable_column_doesnt_exists()
     {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The fillable columns contains non-existant columns: [doesnt_exists]');
-
         $this->mockDatabaseFile([
             'models' => [
                 'User' => [
@@ -208,6 +204,12 @@ class FillableTest extends TestCase
         ]);
 
         $this->artisan('larawiz:scaffold');
+
+        $model = $this->app->path('Models' . DS . 'User.php');
+
+        $this->assertStringContainsString(
+            "protected \$fillable = ['doesnt_exists', 'age'];", $this->filesystem->get($model)
+        );
     }
 
     protected function tearDown() : void

@@ -23,7 +23,10 @@ use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Column[] $columns
  * @property \Illuminate\Support\Collection|string[] $fillable
  * @property \Illuminate\Support\Collection|string[] $hidden
+ * @property \Illuminate\Support\Collection|string[] $append
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation[] $relations
+ *
+ * @property \Illuminate\Support\Collection|string[] $eager  Eager Loads.
  *
  * @property \Larawiz\Larawiz\Lexing\Database\Primary $primary  Primary column information
  * @property \Larawiz\Larawiz\Lexing\Database\Timestamps $timestamps  Timestamps information.
@@ -36,6 +39,7 @@ use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\QuickCast[] $quickCasts
  *
  * @property \Illuminate\Support\Collection|string[] $globalScopes
+ * @property \Illuminate\Support\Collection|string[] $localScopes
  * @property bool $observer
  *
  * @property \Larawiz\Larawiz\Lexing\Database\Migration $migration
@@ -198,7 +202,9 @@ class Model extends Fluent
             'columns'       => collect(),
             'fillable'      => collect(),
             'hidden'        => collect(),
+            'append'        => collect(),
             'relations'     => collect(),
+            'eager'         => collect(),
             'primary'       => new Primary,
             'timestamps'    => new Timestamps,
             'softDelete'    => new SoftDelete,
@@ -208,6 +214,7 @@ class Model extends Fluent
             'factoryStates' => collect(),
             'seeder'        => true,
             'globalScopes'  => collect(),
+            'localScopes'   => collect(),
             'quickTraits'   => collect(),
             'quickCasts'   => collect(),
         ], $attributes));

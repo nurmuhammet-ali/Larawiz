@@ -3,6 +3,7 @@
 namespace Larawiz\Larawiz;
 
 use Illuminate\Support\ServiceProvider;
+use Larawiz\Larawiz\Console\ScaffoldCommand;
 
 class LarawizServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,8 @@ class LarawizServiceProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->runningInConsole()) {
+            $this->app->singleton(ScaffoldCommand::class);
+
             $this->commands([
                 Console\SampleCommand::class,
                 Console\ScaffoldCommand::class,

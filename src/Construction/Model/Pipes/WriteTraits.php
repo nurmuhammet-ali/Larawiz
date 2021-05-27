@@ -3,12 +3,11 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Illuminate\Support\Str;
-use Larawiz\Larawiz\Larawiz;
-use Illuminate\Filesystem\Filesystem;
-use Larawiz\Larawiz\Lexing\Database\QuickTrait;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
+use Larawiz\Larawiz\Larawiz;
+use Larawiz\Larawiz\Lexing\Database\QuickTrait;
 
 class WriteTraits
 {
@@ -48,7 +47,7 @@ class WriteTraits
      */
     public function handle(ModelConstruction $construction, Closure $next)
     {
-        foreach ($construction->model->quickTraits->filter->internal as $trait) {
+        foreach ($construction->model->quickTraits->reject->external as $trait) {
 
             if ($this->filesystem->exists($trait->path)) {
                 continue;

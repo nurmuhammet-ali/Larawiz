@@ -63,7 +63,6 @@ class SetColumnCasting
             && ! $column->relation
             && ! $column->isPrimary()
             && ! $column->isTimestamps()
-            && ! $column->isSoftDeletes()
-            && ! $column->shouldCastToDate();
+            && ! $column->isSoftDeletes();
     }
 }

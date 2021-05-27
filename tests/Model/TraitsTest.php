@@ -106,12 +106,24 @@ class TraitsTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $this->assertStringContainsString(
-            'use Quz;',
+            'use App\Models\Bar\Quz;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
         $this->assertStringContainsString(
             'use Quz;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
+        );
+        $this->assertStringContainsString(
+            'use App\Models\Bar\Quz;',
             $this->filesystem->get($this->app->path('Models' . DS . 'Post.php'))
+        );
+        $this->assertStringContainsString(
+            'use Quz;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'Post.php'))
+        );
+        $this->assertStringContainsString(
+            'use App\Models\Bar\Quz;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'Comment.php'))
         );
         $this->assertStringContainsString(
             'use Quz;',
@@ -187,8 +199,16 @@ class TraitsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertFileNotExistsInFilesystem(
-            $this->app->path('Illuminate' . DS . 'Foundation' . DS . 'Validation' . DS . 'ValidatesRequests.php')
+        $this->assertFileNotExistsInFilesystem($this->app->path(
+            'Illuminate' . DS . 'Foundation' . DS . 'Validation' . DS . 'ValidatesRequests.php'
+        ));
+        $this->assertFileNotExistsInFilesystem($this->app->path(
+            'Models' . DS . 'Illuminate' . DS . 'Foundation' . DS . 'Validation' . DS . 'ValidatesRequests.php'
+        ));
+
+        $this->assertStringContainsString(
+            'use Illuminate\Foundation\Validation\ValidatesRequests;',
+            $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
 
         $this->assertStringContainsString(

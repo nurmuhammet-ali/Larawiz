@@ -3,14 +3,14 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Larawiz\Larawiz\Helpers;
-use Larawiz\Larawiz\Scaffold;
-use Illuminate\Support\Collection;
 use Larawiz\Larawiz\Lexing\Code\Method;
 use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Lexing\Database\Relations\BelongsTo;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParsePreliminaryBelongsToData
 {
@@ -26,8 +26,10 @@ class ParsePreliminaryBelongsToData
         foreach ($scaffold->database->models as $key => $model) {
             foreach ($scaffold->rawDatabase->get("models.{$key}.columns") as $name => $line) {
                 if ($this->isBelongsTo($line)) {
-                    $relation = $this->createRelation($scaffold->database->models, $model, $name, $line);
-                    $model->relations->put($name, $relation);
+                    $model->relations->put(
+                        $name,
+                        $this->createRelation($scaffold->database->models, $model, $name, $line)
+                    );
                 }
             }
         }
@@ -60,11 +62,17 @@ class ParsePreliminaryBelongsToData
         // Now we have everything sorted, we can create a new BelongsTo relation.
         $methods = Method::parseManyMethods($this->normalizeLine($models, $model, $name, $line));
 
+        if (!$targetModel = $models->get($methods->first()->arguments->first()->value)) {
+            throw new LogicException(
+                "The [$name] relation in [$model->class] points to a non-existent [{$methods->first()->arguments->first()->value}] model."
+            );
+        }
+
         return new BelongsTo([
             'name'      => $name,
             'columnKey' => optional($methods->first()->arguments->get(1))->value,
             'methods'   => $methods,
-            'model'     => $models->get($methods->first()->arguments->first()->value),
+            'model'     => $targetModel,
         ]);
     }
 

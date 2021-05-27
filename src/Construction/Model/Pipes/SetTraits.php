@@ -20,9 +20,11 @@ class SetTraits
         if ($construction->model->quickTraits->isNotEmpty()) {
             foreach ($construction->model->quickTraits as $trait) {
 
-                Arr::first($construction->file->getNamespaces())->addUse($trait->fullNamespace());
+                $namespace = $trait->external ? $trait->namespace : $trait->fullNamespace();
 
-                $construction->class->addTrait($trait->fullNamespace());
+                Arr::first($construction->file->getNamespaces())->addUse($namespace);
+
+                $construction->class->addTrait($namespace);
             }
         }
 

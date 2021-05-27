@@ -5,6 +5,7 @@ namespace {DummyNamespace};
 use {DummyModelNamespace};
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class {DummyScope} implements Scope
 {
@@ -12,12 +13,12 @@ class {DummyScope} implements Scope
      * Apply the scope to a given Eloquent query builder.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $builder
-     * @param  \Illuminate\Database\Eloquent\Model|\{DummyModelNamespace}  ${dummyModel}
+     * @param  \{DummyModelNamespace}  ${dummyModel}
      * @return void
      */
-    public function apply(Builder $builder, {DummyModel} ${dummyModel})
+    public function apply(Builder $builder, Model ${dummyModel})
     {
-        // $builder->where('active', true);
+        // TODO: Filter the query for the {DummyModel} in the {DummyScope}.
     }
 
     /**
