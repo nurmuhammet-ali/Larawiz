@@ -159,31 +159,6 @@ CONTENT
         $this->assertStringNotContainsString('protected $casts = [', $model);
     }
 
-    public function test_model_doesnt_casts_dates()
-    {
-        $this->mockDatabaseFile([
-            'models'    => [
-                'Foo'     => [
-                    'name' => 'string',
-                    'foo' => 'date',
-                    'bar' => 'dateTime',
-                    'quz' => 'dateTimeTz',
-                    'qux' => 'time',
-                    'quuz' => 'timeTz',
-                    'quux' => 'timestamp',
-                    'corge' => 'timestampTz',
-                    'grault' => 'year',
-                ],
-            ],
-        ]);
-
-        $this->artisan('larawiz:scaffold');
-
-        $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
-
-        $this->assertStringNotContainsString('protected $casts = [', $model);
-    }
-
     public function test_adds_dates_to_dates_array_except_touch_timestamps_and_soft_deletes()
     {
         $this->mockDatabaseFile([
