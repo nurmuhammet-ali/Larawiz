@@ -44,7 +44,6 @@ use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
  *
  * @property \Larawiz\Larawiz\Lexing\Database\Migration $migration
  *
- * @property bool $is_cast_enabled
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\QuickTrait[] $quickTraits
  */
 class Model extends Fluent
@@ -217,7 +216,6 @@ class Model extends Fluent
             'globalScopes'    => collect(),
             'localScopes'     => collect(),
             'quickTraits'     => collect(),
-            'is_cast_enabled' => true,
             'quickCasts'      => collect(),
         ], $attributes));
     }
