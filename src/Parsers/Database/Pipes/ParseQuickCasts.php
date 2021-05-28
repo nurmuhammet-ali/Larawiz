@@ -82,7 +82,7 @@ class ParseQuickCasts
 
         // First, check if the cast is just a PHP type. If it is, just mark the type and bail.
         if (ctype_lower($cast[0])) {
-            return $instance->cast($cast);
+            return $instance->type($cast);
         }
 
         // Well, it IS a class then.

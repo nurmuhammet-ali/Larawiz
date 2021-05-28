@@ -33,10 +33,10 @@ class SetAppend
 
             foreach ($construction->model->append as $name => $type) {
                 try {
-                    $realType = Helpers::castTypeToPhpType($type);
+                    $realType = Helpers::castTypeToPhpTypeOrFail($type);
                 } catch (LogicException $exception) {
                     throw new LogicException(
-                        "The $type class doesn't exists for the appended [$name] of [$construction->model->class]"
+                        "The $type class doesn't exists for the appended [$name] of [{$construction->model->key}]."
                     );
                 }
 

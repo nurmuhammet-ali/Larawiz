@@ -130,7 +130,7 @@ CONTENT
         $content = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
         static::assertStringContainsString(<<<'CONTENT'
- * @property \App\Casts\MyCustomCast $foo
+ * @property string $foo
 CONTENT
             ,
             $content);

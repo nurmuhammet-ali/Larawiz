@@ -5,12 +5,11 @@
 
 namespace Larawiz\Larawiz;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Fluent;
 use Illuminate\Config\Repository;
-use Larawiz\Larawiz\Lexing\ScaffoldHttp;
+use Illuminate\Support\Fluent;
 use Larawiz\Larawiz\Lexing\ScaffoldAuth;
 use Larawiz\Larawiz\Lexing\ScaffoldDatabase;
+use Larawiz\Larawiz\Lexing\ScaffoldHttp;
 
 /**
  * Class Scaffold
