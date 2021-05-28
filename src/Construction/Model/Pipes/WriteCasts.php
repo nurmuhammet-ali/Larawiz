@@ -5,6 +5,7 @@ namespace Larawiz\Larawiz\Construction\Model\Pipes;
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Collection;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
 use Larawiz\Larawiz\Larawiz;
 use Larawiz\Larawiz\Lexing\Database\QuickCast;
@@ -47,7 +48,7 @@ class WriteCasts
      */
     public function handle(ModelConstruction $construction, Closure $next)
     {
-        foreach ($construction->model->quickCasts as $cast) {
+        foreach ($this->getCastToWrite($construction->model->quickCasts) as $cast) {
             if ($this->filesystem->exists($cast->path)) {
                 continue;
             }
@@ -56,6 +57,20 @@ class WriteCasts
         }
 
         return $next($construction);
+    }
+
+    /**
+     * Returns the casts that should be written to the app folder.
+     *
+     * @param  \Illuminate\Support\Collection  $casts
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    protected function getCastToWrite(Collection $casts): Collection
+    {
+        return $casts->filter(static function (QuickCast $cast): bool {
+            return $cast->is_class && ! $cast->external;
+        });
     }
 
     /**
