@@ -22,16 +22,9 @@ class SetColumnComments
     {
         $columns = $this->commentableColumns($construction->model->columns, $construction->model->timestamps);
 
-        if (! $construction->model->is_cast_enabled) {
-            foreach ($columns as $column) {
-                $construction->class->addComment($this->generateGenericComment($column));
-            }
-        } else {
-            foreach ($columns as $column) {
-                $construction->class->addComment($this->generateComment($construction, $column));
-            }
+        foreach ($columns as $column) {
+            $construction->class->addComment($this->generateComment($construction, $column));
         }
-
 
         $construction->class->addComment('');
 
@@ -53,18 +46,6 @@ class SetColumnComments
     }
 
     /**
-     * Generates a string for columns "uncasted".
-     *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Column  $column
-     *
-     * @return string
-     */
-    protected function generateGenericComment(Column $column): string
-    {
-        return static::generateCommentStart($column) . 'mixed $' . $column->name;
-    }
-
-    /**
      * Generates a string for a column based on their real type.
      *
      * @param  \Larawiz\Larawiz\Construction\Model\ModelConstruction  $construction
@@ -74,7 +55,7 @@ class SetColumnComments
      */
     protected function generateComment(ModelConstruction $construction, Column $column): string
     {
-        $start = static::generateCommentStart($column);
+        $comment = $column->phpType();
 
         // If the class has a cast, we will get the cast type.
         /** @var \Larawiz\Larawiz\Lexing\Database\QuickCast|null $cast */
@@ -82,15 +63,13 @@ class SetColumnComments
 
         if ($cast && $cast->overridesType()) {
             if (ctype_lower($cast->getCommentType()[0])) {
-                $start .= $cast->getCommentType();
+                $comment = $cast->getCommentType();
             } else {
-                $start .= Str::start($cast->getCommentType(), '\\');
+                $comment = Str::start($cast->getCommentType(), '\\');
             }
-        } else {
-            $start .= $column->phpType();
         }
 
-        return  $start . ' $' . $column->name;
+        return static::generateCommentStart($column) . $comment . ' $' . $column->name;
     }
 
     /**

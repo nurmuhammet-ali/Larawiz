@@ -110,6 +110,7 @@ class ApplicationBackup
     {
         return [
             $this->app->path('Models'),
+            $this->app->path('Casts'),
             $this->app->databasePath('migrations'),
             $this->app->databasePath('factories'),
             $this->app->databasePath('seeders'),
