@@ -5,7 +5,7 @@ namespace Larawiz\Larawiz\Construction\Model\Pipes;
 use Closure;
 use Illuminate\Support\Str;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
-use Larawiz\Larawiz\Lexing\Database\Model;
+use Larawiz\Larawiz\Helpers;
 use LogicException;
 
 class SetAppend
@@ -32,7 +32,13 @@ class SetAppend
                 ->addComment('@var array');
 
             foreach ($construction->model->append as $name => $type) {
-                $realType = $this->realType($type, $name, $construction->model);
+                try {
+                    $realType = Helpers::castTypeToPhpTypeOrFail($type);
+                } catch (LogicException $exception) {
+                    throw new LogicException(
+                        "The $type class doesn't exists for the appended [$name] of [{$construction->model->key}]."
+                    );
+                }
 
                 // If the model already has set the column, don't append it.
                 if (! $keys->has($name)) {
@@ -51,49 +57,5 @@ class SetAppend
         }
 
         return $next($construction);
-    }
-
-    /**
-     * Normalizes the type of the appended property.
-     *
-     * @param  string  $type
-     * @param  string  $name
-     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
-     *
-     * @return string
-     */
-    protected function realType(string $type, string $name, Model $model)
-    {
-        $type = trim($type, '\\');
-
-        if (ctype_upper($type[0])) {
-            if (!class_exists($type)) {
-                throw new LogicException("The $type class doesn't exists for the appended [$name] of [$model->class]");
-            }
-
-            return Str::start($type, '\\');
-        }
-
-        if ($type === 'collection') {
-            return '\Illuminate\Support\Collection';
-        }
-
-        if (in_array($type, ['date', 'datetime', 'datetimeTz', 'dateTime', 'dateTimeTz', 'timestamp', 'timestampTz'])) {
-            return '\Illuminate\Support\Carbon';
-        }
-
-        if (in_array($type, ['int', 'integer'])) {
-            return 'int';
-        }
-
-        if (in_array($type, ['float', 'decimal', 'point'])) {
-            return 'float';
-        }
-
-        if (in_array($type, ['bool', 'boolean'])) {
-            return 'bool';
-        }
-
-        return $type;
     }
 }

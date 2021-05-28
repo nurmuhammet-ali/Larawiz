@@ -2,10 +2,11 @@
 
 namespace Larawiz\Larawiz;
 
-use LogicException;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Lexing\Database\Model;
+use LogicException;
+
 use const DIRECTORY_SEPARATOR;
 
 class Helpers
@@ -60,6 +61,17 @@ class Helpers
         return $models->map->key->reverse()->implode(',');
     }
 
+    /**
+     * Parses the namespace and class of a full namespaced class.
+     *
+     * @param $fullNamespace
+     *
+     * @return array
+     */
+    public static function parseNamespaceAndClass($fullNamespace): array
+    {
+        return [Str::beforeLast($fullNamespace, '\\'), Str::afterLast($fullNamespace, '\\')];
+    }
 
     /**
      * Returns an array with the class namespace and the class name.
@@ -108,5 +120,64 @@ class Helpers
     public static function directoryFromPath(string $path)
     {
         return Str::beforeLast($path, DIRECTORY_SEPARATOR);
+    }
+
+    public static function castTypeToPhpTypeOrFail(string $type): string
+    {
+        $type = self::castTypeToPhpType($type);
+
+        if (ctype_upper(trim($type, '\\')[0])) {
+            if (!class_exists($type) && !interface_exists($type)) {
+                throw new LogicException("The [$type] class or interface doesn't exists.");
+            }
+        }
+
+        return $type;
+    }
+
+    /**
+     * Normalizes the type of a property.
+     *
+     * @param  string  $type
+     *
+     * @return string
+     */
+    public static function castTypeToPhpType(string $type): string
+    {
+        $type = trim($type, '\\');
+
+        if (ctype_upper($type[0])) {
+            return Str::start($type, '\\');
+        }
+
+        if (in_array($type, ['collection', 'encrypted:collection'])) {
+            return '\Illuminate\Support\Collection';
+        }
+
+        if (in_array($type, ['date', 'datetime', 'datetimeTz', 'dateTime', 'dateTimeTz', 'timestamp', 'timestampTz'])) {
+            return '\Illuminate\Support\Carbon';
+        }
+
+        if (in_array($type, ['int', 'integer'])) {
+            return 'int';
+        }
+
+        if (in_array($type, ['float', 'decimal', 'point'])) {
+            return 'float';
+        }
+
+        if (in_array($type, ['bool', 'boolean'])) {
+            return 'bool';
+        }
+
+        if ($type === 'encrypted:array') {
+            return 'array';
+        }
+
+        if ($type === 'encrypted:object') {
+            return 'object';
+        }
+
+        return $type;
     }
 }

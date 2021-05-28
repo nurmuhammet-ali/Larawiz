@@ -8,9 +8,9 @@
 namespace Larawiz\Larawiz;
 
 use Closure;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Pipeline\Pipeline;
 use Larawiz\Larawiz\Console\ScaffoldCommand;
-use Illuminate\Contracts\Container\Container;
 
 abstract class ConsoleAwarePipeline extends Pipeline
 {

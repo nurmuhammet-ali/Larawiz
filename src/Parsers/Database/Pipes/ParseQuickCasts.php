@@ -78,39 +78,62 @@ class ParseQuickCasts
      */
     protected function createCast(string $column, string $cast): QuickCast
     {
-        $instance = new QuickCast();
+        $instance = new QuickCast(['column' => $column]);
 
-        [$instance->namespace, $instance->class] = Helpers::namespaceAndClass($cast, $this->namespace . '\\' . 'Casts');
+        // First, check if the cast is just a PHP type. If it is, just mark the type and bail.
+        if (ctype_lower($cast[0])) {
+            return $instance->type($cast);
+        }
 
-        $instance->column = $column;
+        // Well, it IS a class then.
+        $instance->is_class = true;
 
-        // If the cast already exists, we will create a cast reference and mark it as
-        // "external". Otherwise, we will get the application base namespace and use
-        // that as the base to create the cast that will be included in the model.
-        if ($instance->internal = $this->castDoesntExists($cast)) {
+        // Get the Cast class and the type, if any.
+        [$cast, $instance->type] = array_pad(explode(' ', $cast), 2, null);
+
+        // If the cast class exists we will create a cast reference and mark it as
+        // "external". Otherwise we'll get the application base namespace and use
+        // that as basis to create the cast that will be included in this model.
+        if ($instance->external = $this->castExists($cast)) {
+            [$instance->namespace, $instance->class] = Helpers::parseNamespaceAndClass($cast);
+        } else {
+            [$instance->namespace, $instance->class] = Helpers::namespaceAndClass($cast, $this->namespace . '\\' . 'Casts');
             $instance->path = Helpers::pathFromNamespace($instance->fullNamespace(), $this->path, $this->namespace);
         }
 
         return $instance;
     }
 
-
     /**
-     * Check if the cast doesnt exists.
+     * Check if the cast exists.
      *
      * @param  string  $cast
      *
      * @return bool
      */
-    protected function castDoesntExists(string $cast): bool
+    protected function castExists(string $cast): bool
     {
-        $castDoesntExists = ! class_exists($cast);
-
         // We will bail out if the cast is a trait or interface.
-        if ($castDoesntExists && (trait_exists($cast) || interface_exists($cast))) {
-            throw new LogicException("The [{$cast}] exists but is not a class, but a trait or interface.");
+        if (class_exists($cast)) {
+            if (trait_exists($cast) || interface_exists($cast)) {
+                throw new LogicException("The [{$cast}] exists but is not a class, but a trait or interface.");
+            }
+
+            return true;
         }
 
-        return $castDoesntExists;
+        return false;
+    }
+
+    /**
+     * Checks if the cast is a is lowercase (considered internal).
+     *
+     * @param  string  $cast
+     *
+     * @return bool
+     */
+    protected static function isInternal(string $cast): bool
+    {
+        return ctype_lower($cast[0]);
     }
 }
