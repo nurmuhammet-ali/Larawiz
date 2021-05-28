@@ -35,8 +35,12 @@ class SetColumnCasting
             // namespace, and change the value as a Literal so it can be used.
             foreach ($castedValues as $column => $cast) {
                 if ($cast instanceof QuickCast) {
-                    $construction->namespace->addUse($cast->fullRootNamespace());
-                    $castedValues[$column] = new Literal($cast->class . '::class');
+                    if ($cast->is_class) {
+                        $construction->namespace->addUse($cast->fullRootNamespace());
+                        $castedValues[$column] = new Literal($cast->class . '::class');
+                    } elseif ($cast->overridesType()) {
+                        $castedValues[$column] = $cast->getCommentType();
+                    }
                 }
             }
 

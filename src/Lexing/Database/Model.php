@@ -44,6 +44,7 @@ use Larawiz\Larawiz\Lexing\HasNamespaceAndPath;
  *
  * @property \Larawiz\Larawiz\Lexing\Database\Migration $migration
  *
+ * @property bool $is_cast_enabled
  * @property \Illuminate\Support\Collection|\Larawiz\Larawiz\Lexing\Database\QuickTrait[] $quickTraits
  */
 class Model extends Fluent
@@ -197,26 +198,27 @@ class Model extends Fluent
     public static function make(array $attributes = [])
     {
         return new static(array_merge([
-            'modelType'     => static::MODEL_TYPE_MAP['model'],
-            'perPage'       => static::MODEL_PER_PAGE,
-            'columns'       => collect(),
-            'fillable'      => collect(),
-            'hidden'        => collect(),
-            'append'        => collect(),
-            'relations'     => collect(),
-            'eager'         => collect(),
-            'primary'       => new Primary,
-            'timestamps'    => new Timestamps,
-            'softDelete'    => new SoftDelete,
-            'observer'      => false,
-            'routeBinding'  => null,
-            'useFactory'    => true,
-            'factoryStates' => collect(),
-            'seeder'        => true,
-            'globalScopes'  => collect(),
-            'localScopes'   => collect(),
-            'quickTraits'   => collect(),
-            'quickCasts'   => collect(),
+            'modelType'       => static::MODEL_TYPE_MAP['model'],
+            'perPage'         => static::MODEL_PER_PAGE,
+            'columns'         => collect(),
+            'fillable'        => collect(),
+            'hidden'          => collect(),
+            'append'          => collect(),
+            'relations'       => collect(),
+            'eager'           => collect(),
+            'primary'         => new Primary,
+            'timestamps'      => new Timestamps,
+            'softDelete'      => new SoftDelete,
+            'observer'        => false,
+            'routeBinding'    => null,
+            'useFactory'      => true,
+            'factoryStates'   => collect(),
+            'seeder'          => true,
+            'globalScopes'    => collect(),
+            'localScopes'     => collect(),
+            'quickTraits'     => collect(),
+            'is_cast_enabled' => true,
+            'quickCasts'      => collect(),
         ], $attributes));
     }
 }
