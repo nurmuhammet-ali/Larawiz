@@ -114,6 +114,50 @@ CONTENT
         , $migration);
     }
 
+    public function test_creates_index_over_belongs_to_column()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'Car'  => [
+                    'columns' => [
+                        'foo' => 'string',
+                        'owner' => 'belongsTo',
+                        'user' => 'belongsTo:Owner',
+                    ],
+                    'indexes' => [
+                        'foo owner name:custom_index_name',
+                        'owner',
+                        'owner name:custom_owner_name',
+                        'user name:custom_user_name'
+                    ]
+                ],
+                'Owner'  => [
+                    'columns' => [
+                        'id' => null,
+                        'car' => 'hasOne',
+                    ],
+                ],
+            ],
+        ]);
+
+        Carbon::setTestNow(Carbon::parse('2020-01-01 16:30:00'));
+
+        $this->artisan('larawiz:scaffold');
+
+        $migration = $this->filesystem->get(
+            $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_cars_table.php'));
+
+        static::assertStringContainsString(<<<'CONTENT'
+        Schema::table('cars', function (Blueprint $table) {
+            $table->index(['foo', 'owner_id'], 'custom_index_name');
+            $table->index(['owner_id']);
+            $table->index(['owner_id'], 'custom_owner_name');
+            $table->index(['owner_id'], 'custom_user_name');
+        });
+CONTENT
+            , $migration);
+    }
+
     public function test_error_when_index_list_contains_non_existent_columns()
     {
         $this->expectException(LogicException::class);

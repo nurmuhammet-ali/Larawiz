@@ -49,11 +49,13 @@ class ParseModelIndexesForMigration
                 } elseif (Str::startsWith($expression, 'name:')) {
                     $index->name = Str::afterLast($expression, ':');
                 } else {
-                    if (! $model->columns->has($expression)) {
+                    /** @var \Larawiz\Larawiz\Lexing\Database\Column $column */
+                    if (! $column = $model->columns->get($expression)) {
                         $this->throwColumnIndexNotFound($model, $expression);
                     }
 
-                    $index->columns->push($expression);
+                    // If the column is a relation column, get the column real name.
+                    $index->columns->push($column->getName());
                 }
             }
 
