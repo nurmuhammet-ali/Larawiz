@@ -3,13 +3,13 @@
 namespace Larawiz\Larawiz\Scaffolding\Pipes;
 
 use Closure;
-use LogicException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Larawiz\Larawiz\Larawiz;
 use Larawiz\Larawiz\Scaffold;
+use LogicException;
 use Symfony\Component\Yaml\Parser;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Contracts\Foundation\Application;
 
 abstract class BaseParserPipe
 {

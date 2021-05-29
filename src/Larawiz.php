@@ -2,8 +2,9 @@
 
 namespace Larawiz\Larawiz;
 
-use Illuminate\Support\Collection;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Collection;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class Larawiz

@@ -2,8 +2,8 @@
 
 namespace Larawiz\Larawiz\Lexing\Database;
 
-use Illuminate\Support\Fluent;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Fluent;
 
 /**
  * Class Timestamps

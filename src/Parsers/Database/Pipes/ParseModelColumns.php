@@ -3,14 +3,14 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
 use Illuminate\Support\Str;
-use Larawiz\Larawiz\Scaffold;
-use Larawiz\Larawiz\Lexing\Code\Method;
 use Larawiz\Larawiz\Lexing\Code\Argument;
-use Larawiz\Larawiz\Lexing\Database\Model;
+use Larawiz\Larawiz\Lexing\Code\Method;
 use Larawiz\Larawiz\Lexing\Database\Column;
+use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParseModelColumns
 {
@@ -37,7 +37,7 @@ class ParseModelColumns
                     }
                     continue;
                 }
-                elseif ($this->columnIsPrimary($name)) {
+                elseif ($this->columnIsPrimary($line, $name)) {
                     $column = $this->createPrimaryKey($name, $line);
                 }
                 elseif ($this->columnIsUuid($name)) {
@@ -107,12 +107,14 @@ class ParseModelColumns
     /**
      * Checks if the column is a primary column.
      *
+     * @param  string  $line
      * @param  string  $name
+     *
      * @return bool
      */
-    protected function columnIsPrimary(string $name)
+    protected function columnIsPrimary(?string $line, string $name)
     {
-        return $name === 'id';
+        return $name === 'id' || Str::contains($line, ' primary ') || Str::endsWith($line, ' primary');
     }
 
     /**
@@ -128,7 +130,12 @@ class ParseModelColumns
 
         $column->name = $this->firstArgumentOrName($name, $line);
         $column->type = $name;
-        $column->methods = Method::parseManyMethods($name . ($line ? ':' . $line : ''));
+
+        // Remove the "primary" key method, if it exists. We will add it later.
+        $column->methods = Method::parseManyMethods($name . ($line ? ':' . $line : ''))
+            ->reject(function (Method $method) {
+                return $method->name === 'primary';
+            });
 
         return $column;
     }

@@ -593,7 +593,7 @@ class BelongsToManyTest extends TestCase
         static::assertStringContainsString("protected \$keyType = 'string';", $pivotModel);
         static::assertStringNotContainsString('public $incrementing = false;', $pivotModel);
 
-        static::assertStringContainsString("\$table->uuid('thing');", $pivotMigration);
+        static::assertStringContainsString("\$table->uuid('thing')->primary();", $pivotMigration);
     }
 
     protected function tearDown() : void

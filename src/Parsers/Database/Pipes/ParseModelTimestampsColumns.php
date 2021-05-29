@@ -3,10 +3,10 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
 use Illuminate\Support\Arr;
-use Larawiz\Larawiz\Scaffold;
 use Larawiz\Larawiz\Lexing\Database\Model;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParseModelTimestampsColumns
 {

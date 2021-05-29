@@ -2,8 +2,9 @@
 
 namespace Larawiz\Larawiz\Console;
 
-use Larawiz\Larawiz\Larawiz;
 use Illuminate\Filesystem\Filesystem;
+use Larawiz\Larawiz\Larawiz;
+
 use const DIRECTORY_SEPARATOR;
 
 class ClearBackupsCommand extends BaseLarawizCommand

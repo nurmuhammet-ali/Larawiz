@@ -2,9 +2,9 @@
 
 namespace Tests\Mockery;
 
-use Illuminate\Support\Str;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 
 class ArrayFilesystem extends Filesystem
 {

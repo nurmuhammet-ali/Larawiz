@@ -3,7 +3,6 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use Illuminate\Support\Arr;
 use Larawiz\Larawiz\Scaffold;
 
 class ParseModelObserver

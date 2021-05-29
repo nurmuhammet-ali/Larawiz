@@ -4,9 +4,9 @@ namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
 use Illuminate\Support\Str;
-use Larawiz\Larawiz\Scaffold;
 use Larawiz\Larawiz\Lexing\Code\Method;
 use Larawiz\Larawiz\Lexing\Database\Relations\MorphTo;
+use Larawiz\Larawiz\Scaffold;
 
 class ParsePreliminaryMorphToData
 {

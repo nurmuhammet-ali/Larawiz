@@ -3,12 +3,11 @@
 namespace Larawiz\Larawiz\Construction\Migration\Pipes;
 
 use Closure;
-use Illuminate\Support\Str;
-use Nette\PhpGenerator\PsrPrinter;
-use Illuminate\Filesystem\Filesystem;
-use Larawiz\Larawiz\Lexing\Database\Migration;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
 use Larawiz\Larawiz\Construction\Migration\MigrationConstruction;
+use Larawiz\Larawiz\Lexing\Database\Migration;
+use Nette\PhpGenerator\PsrPrinter;
 
 class WriteMigration
 {

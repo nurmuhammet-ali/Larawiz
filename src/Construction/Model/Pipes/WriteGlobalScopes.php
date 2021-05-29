@@ -3,13 +3,14 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use LogicException;
-use Illuminate\Support\Str;
-use Larawiz\Larawiz\Larawiz;
-use Illuminate\Filesystem\Filesystem;
-use Larawiz\Larawiz\Lexing\Database\Model;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
+use Larawiz\Larawiz\Larawiz;
+use Larawiz\Larawiz\Lexing\Database\Model;
+use LogicException;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class WriteGlobalScopes

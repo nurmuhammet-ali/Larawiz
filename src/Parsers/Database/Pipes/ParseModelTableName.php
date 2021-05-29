@@ -3,10 +3,9 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
-use Illuminate\Support\Str;
-use Larawiz\Larawiz\Scaffold;
 use Illuminate\Support\Collection;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParseModelTableName
 {

@@ -3,8 +3,8 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
 use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParseModelRouteBinding
 {
