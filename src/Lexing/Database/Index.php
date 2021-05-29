@@ -2,7 +2,6 @@
 
 namespace Larawiz\Larawiz\Lexing\Database;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
 
 /**

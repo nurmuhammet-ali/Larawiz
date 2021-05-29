@@ -3,12 +3,12 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
-use Larawiz\Larawiz\Scaffold;
 use Illuminate\Support\Collection;
-use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Lexing\Database\Column;
+use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Lexing\Database\Relations\MorphTo;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParseModelMorphToColumnRelation
 {

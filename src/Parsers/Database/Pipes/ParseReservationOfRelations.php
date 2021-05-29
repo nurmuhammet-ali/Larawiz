@@ -4,8 +4,8 @@ namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
 use Illuminate\Support\Str;
-use Larawiz\Larawiz\Scaffold;
 use Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation;
+use Larawiz\Larawiz\Scaffold;
 
 class ParseReservationOfRelations
 {

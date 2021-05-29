@@ -3,8 +3,8 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use Larawiz\Larawiz\Scaffold;
 use Larawiz\Larawiz\Lexing\Database\Migration;
+use Larawiz\Larawiz\Scaffold;
 
 class ParseMigrationFromModel
 {

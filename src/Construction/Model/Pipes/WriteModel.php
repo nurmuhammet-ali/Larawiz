@@ -3,10 +3,10 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Nette\PhpGenerator\PsrPrinter;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\Filesystem;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
+use Nette\PhpGenerator\PsrPrinter;
 
 class WriteModel
 {

@@ -3,13 +3,13 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Nette\PhpGenerator\PhpFile;
-use Nette\PhpGenerator\ClassType;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notifiable;
-use Larawiz\Larawiz\Lexing\Database\Model;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
+use Larawiz\Larawiz\Lexing\Database\Model;
+use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\PhpFile;
 
 class CreateModelInstance
 {

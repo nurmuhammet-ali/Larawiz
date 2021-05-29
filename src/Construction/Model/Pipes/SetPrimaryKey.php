@@ -3,9 +3,9 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
-use Nette\PhpGenerator\ClassType;
-use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
+use Larawiz\Larawiz\Lexing\Database\Model;
+use Nette\PhpGenerator\ClassType;
 
 class SetPrimaryKey
 {

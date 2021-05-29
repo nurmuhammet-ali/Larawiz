@@ -2,8 +2,8 @@
 
 namespace Larawiz\Larawiz\Lexing\Database;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Fluent;
+use Illuminate\Support\Str;
 
 /**
  * Class Migration

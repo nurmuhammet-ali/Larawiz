@@ -3,10 +3,9 @@
 namespace Larawiz\Larawiz\Scaffolding\Pipes;
 
 use Closure;
-use Illuminate\Support\Str;
-use Larawiz\Larawiz\Scaffold;
 use Illuminate\Contracts\Container\Container;
 use Larawiz\Larawiz\Parsing\Http\HttpParserPipeline;
+use Larawiz\Larawiz\Scaffold;
 
 abstract class BaseLexPipe
 {

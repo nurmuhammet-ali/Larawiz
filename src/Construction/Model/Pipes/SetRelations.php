@@ -3,13 +3,13 @@
 namespace Larawiz\Larawiz\Construction\Model\Pipes;
 
 use Closure;
+use Larawiz\Larawiz\Construction\Model\ModelConstruction;
+use Larawiz\Larawiz\Lexing\Code\Method;
+use Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation;
+use Larawiz\Larawiz\Lexing\Database\Relations\BelongsTo;
+use Larawiz\Larawiz\Lexing\Database\Relations\MorphTo;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
-use Larawiz\Larawiz\Lexing\Code\Method;
-use Larawiz\Larawiz\Lexing\Database\Relations\MorphTo;
-use Larawiz\Larawiz\Lexing\Database\Relations\BelongsTo;
-use Larawiz\Larawiz\Construction\Model\ModelConstruction;
-use Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation;
 
 class SetRelations
 {

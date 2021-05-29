@@ -3,9 +3,9 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use Larawiz\Larawiz\Scaffold;
 use Illuminate\Support\Collection;
 use Larawiz\Larawiz\Lexing\Database\Column;
+use Larawiz\Larawiz\Scaffold;
 
 class ParseModelHidden
 {

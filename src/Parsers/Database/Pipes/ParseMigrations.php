@@ -3,11 +3,10 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
-use Illuminate\Support\Str;
-use Larawiz\Larawiz\Scaffold;
 use Larawiz\Larawiz\Lexing\Database\Column;
 use Larawiz\Larawiz\Lexing\Database\Migration;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParseMigrations
 {

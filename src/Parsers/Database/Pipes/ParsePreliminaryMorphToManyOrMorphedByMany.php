@@ -3,14 +3,14 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
-use Illuminate\Support\Str;
-use Larawiz\Larawiz\Scaffold;
+use Illuminate\Database\Eloquent\Relations\MorphPivot;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Lexing\Code\Method;
 use Larawiz\Larawiz\Lexing\Database\Model;
-use Illuminate\Database\Eloquent\Relations\MorphPivot;
 use Larawiz\Larawiz\Lexing\Database\Relations\MorphToManyOrMorphedByMany;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParsePreliminaryMorphToManyOrMorphedByMany
 {

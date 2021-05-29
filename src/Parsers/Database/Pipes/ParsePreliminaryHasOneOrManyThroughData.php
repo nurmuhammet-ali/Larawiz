@@ -3,13 +3,13 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Larawiz\Larawiz\Helpers;
-use Larawiz\Larawiz\Scaffold;
-use Illuminate\Support\Collection;
 use Larawiz\Larawiz\Lexing\Code\Method;
 use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Lexing\Database\Relations\HasOneOrManyThrough;
+use Larawiz\Larawiz\Scaffold;
 
 class ParsePreliminaryHasOneOrManyThroughData
 {

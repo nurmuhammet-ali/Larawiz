@@ -3,15 +3,15 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Larawiz\Larawiz\Helpers;
-use Larawiz\Larawiz\Scaffold;
-use Illuminate\Support\Collection;
 use Larawiz\Larawiz\Lexing\Code\Method;
 use Larawiz\Larawiz\Lexing\Database\Model;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Larawiz\Larawiz\Lexing\Database\Relations\BelongsToMany;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParsePreliminaryBelongsToManyData
 {

@@ -2,9 +2,10 @@
 
 namespace Larawiz\Larawiz\Console;
 
-use SplFileInfo;
-use Larawiz\Larawiz\Larawiz;
 use Illuminate\Filesystem\Filesystem;
+use Larawiz\Larawiz\Larawiz;
+use SplFileInfo;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class SampleCommand extends BaseLarawizCommand

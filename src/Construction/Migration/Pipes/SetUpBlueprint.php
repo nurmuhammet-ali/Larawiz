@@ -3,12 +3,8 @@
 namespace Larawiz\Larawiz\Construction\Migration\Pipes;
 
 use Closure;
-use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
-use Nette\PhpGenerator\ClassType;
-use Illuminate\Database\Migrations\Migration;
-use Larawiz\Larawiz\Lexing\Database\Migration as MigrationLexing;
 use Larawiz\Larawiz\Construction\Migration\MigrationConstruction;
+use Larawiz\Larawiz\Lexing\Database\Migration as MigrationLexing;
 
 class SetUpBlueprint
 {

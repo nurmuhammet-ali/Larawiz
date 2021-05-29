@@ -3,13 +3,11 @@
 namespace Larawiz\Larawiz\Construction\Migration\Pipes;
 
 use Closure;
-use Nette\PhpGenerator\PhpFile;
-use Nette\PhpGenerator\ClassType;
-use Nette\PhpGenerator\PhpNamespace;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Larawiz\Larawiz\Construction\Migration\MigrationConstruction;
+use Nette\PhpGenerator\PhpFile;
 
 class CreateMigrationInstance
 {

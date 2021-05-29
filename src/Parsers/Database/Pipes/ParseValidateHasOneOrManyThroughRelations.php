@@ -3,12 +3,12 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use LogicException;
-use Larawiz\Larawiz\Scaffold;
 use Illuminate\Support\Collection;
 use Larawiz\Larawiz\Lexing\Database\Model;
 use Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation;
 use Larawiz\Larawiz\Lexing\Database\Relations\HasOneOrManyThrough;
+use Larawiz\Larawiz\Scaffold;
+use LogicException;
 
 class ParseValidateHasOneOrManyThroughRelations
 {

@@ -3,15 +3,15 @@
 namespace Larawiz\Larawiz\Parsers\Database\Pipes;
 
 use Closure;
-use Illuminate\Support\Str;
-use Larawiz\Larawiz\Scaffold;
 use Illuminate\Config\Repository;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Larawiz\Larawiz\Lexing\Code\Argument;
 use Larawiz\Larawiz\Lexing\Database\Model;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Larawiz\Larawiz\Lexing\Database\Relations\BaseRelation;
 use Larawiz\Larawiz\Lexing\Database\Relations\BelongsToMany;
+use Larawiz\Larawiz\Scaffold;
 
 class ParsePivotModelsMigrations
 {
