@@ -42,7 +42,6 @@ class SetUpBlueprint
 
         return $start .
             $this->createColumns($migration) .
-            $this->createPrimary($migration) .
             $this->createIndexes($migration) .
             "\n});";
     }
@@ -66,21 +65,6 @@ class SetUpBlueprint
         }
 
         return $string;
-    }
-
-    /**
-     * Creates a Primary key.
-     *
-     * @param  \Larawiz\Larawiz\Lexing\Database\Migration  $migration
-     * @return string
-     */
-    protected function createPrimary(MigrationLexing $migration)
-    {
-        if ($migration->primary) {
-            $string = "\n\n    \$table->primary('{$migration->primary}');";
-        }
-
-        return $string ?? '';
     }
 
     /**

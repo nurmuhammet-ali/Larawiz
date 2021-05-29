@@ -91,8 +91,8 @@ class ColumnPrimaryTest extends TestCase
         static::assertStringContainsString('@property string $uuid', $model);
         static::assertStringContainsString("protected \$primaryKey = 'uuid';", $model);
 
-        static::assertStringContainsString("\$table->uuid('uuid');", $migration);
-        static::assertStringContainsString("\$table->primary('uuid');", $migration);
+        static::assertStringContainsString("\$table->uuid('uuid')->primary();", $migration);
+        static::assertStringNotContainsString("\$table->primary('uuid');", $migration);
         static::assertStringNotContainsString('$table->id();', $migration);
     }
 
@@ -118,7 +118,8 @@ class ColumnPrimaryTest extends TestCase
 
         static::assertStringContainsString('@property string $quz', $model);
         static::assertStringContainsString("protected \$primaryKey = 'quz';", $model);
-        static::assertStringContainsString("\$table->uuid('quz');", $migration);
+        static::assertStringContainsString("\$table->uuid('quz')->primary();", $migration);
+        static::assertStringNotContainsString("\$table->primary('quz');", $migration);
         static::assertStringNotContainsString('$table->id();', $migration);
     }
 
@@ -144,8 +145,9 @@ class ColumnPrimaryTest extends TestCase
 
         static::assertStringContainsString('@property string $id', $model);
         static::assertStringNotContainsString("protected \$primaryKey = 'id';", $model);
-        static::assertStringContainsString("\$table->uuid('id');", $migration);
+        static::assertStringContainsString("\$table->uuid('id')->primary();", $migration);
         static::assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString("\$table->primary('id');", $migration);
     }
 
     public function test_error_when_quick_model_has_more_than_one_incrementing_key()
@@ -195,6 +197,7 @@ class ColumnPrimaryTest extends TestCase
         static::assertStringContainsString('protected $primaryKey = null;', $model);
         static::assertStringContainsString('public $incrementing = false;', $model);
         static::assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('$table->primary(', $migration);
     }
 
     public function test_model_receives_primary_id()
@@ -220,6 +223,7 @@ class ColumnPrimaryTest extends TestCase
 
         static::assertStringContainsString('@property int $id', $model);
         static::assertStringContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('$table->primary(\'id\');', $migration);
     }
 
     public function test_model_receives_primary_id_with_name()
@@ -246,6 +250,7 @@ class ColumnPrimaryTest extends TestCase
         static::assertStringContainsString('@property int $foo', $model);
         static::assertStringContainsString("protected \$primaryKey = 'foo';", $model);
         static::assertStringContainsString("\$table->id('foo');", $migration);
+        static::assertStringNotContainsString('$table->primary(\'id\');', $migration);
     }
 
     public function test_model_doesnt_receives_uuid_as_primary()
@@ -272,6 +277,8 @@ class ColumnPrimaryTest extends TestCase
 
         static::assertStringContainsString('@property int $id', $model);
         static::assertStringContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('$table->uuid()->primary();', $migration);
+        static::assertStringNotContainsString('$table->primary(\'uuid\');', $migration);
     }
 
     public function test_model_primary_set_to_string_column()
@@ -300,7 +307,9 @@ class ColumnPrimaryTest extends TestCase
         static::assertStringContainsString("protected \$primaryKey = 'name';", $model);
         static::assertStringContainsString('public $incrementing = false;', $model);
         static::assertStringContainsString("protected \$keyType = 'string';", $model);
+        static::assertStringContainsString('$table->string(\'name\')->primary();', $migration);
         static::assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('$table->primary(', $migration);
     }
 
     public function test_model_primary_set_to_integer_column()
@@ -329,7 +338,10 @@ class ColumnPrimaryTest extends TestCase
         static::assertStringContainsString("protected \$primaryKey = 'name';", $model);
         static::assertStringContainsString('public $incrementing = false;', $model);
         static::assertStringNotContainsString("protected \$keyType = 'int';", $model);
+
+        static::assertStringContainsString('$table->integer(\'name\')->primary();', $migration);
         static::assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('$table->primary(\'name\');', $migration);
     }
 
     public function test_model_primary_set_to_timestamp_column()
@@ -358,7 +370,9 @@ class ColumnPrimaryTest extends TestCase
         static::assertStringContainsString("protected \$primaryKey = 'name';", $model);
         static::assertStringContainsString('public $incrementing = false;', $model);
         static::assertStringContainsString("protected \$keyType = 'datetime';", $model);
+        static::assertStringContainsString('$table->timestamp(\'name\')->primary();', $migration);
         static::assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('$table->primary(\'name\');', $migration);
     }
 
     public function test_model_primary_set_to_custom_properties_casts_to_string()
@@ -388,7 +402,9 @@ class ColumnPrimaryTest extends TestCase
         static::assertStringContainsString("protected \$primaryKey = 'foo';", $model);
         static::assertStringContainsString('public $incrementing = false;', $model);
         static::assertStringContainsString("protected \$keyType = 'string';", $model);
+        static::assertStringContainsString('$table->bar(\'foo\')->primary();', $migration);
         static::assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('$table->primary(\'foo\');', $migration);
     }
 
     public function test_can_have_incrementing_key_and_set_different_primary()

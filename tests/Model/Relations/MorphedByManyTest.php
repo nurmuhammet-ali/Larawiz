@@ -388,7 +388,7 @@ class MorphedByManyTest extends TestCase
         static::assertStringNotContainsString('public $incrementing = false;', $vegetableModel);
         static::assertStringContainsString("protected \$keyType = 'string';", $vegetableModel);
 
-        static::assertStringContainsString("\$table->uuid('thing');", $vegetableMigration);
+        static::assertStringContainsString("\$table->uuid('thing')->primary();", $vegetableMigration);
     }
 
     public function test_error_when_using_model_doesnt_exists()
