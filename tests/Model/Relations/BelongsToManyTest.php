@@ -53,24 +53,24 @@ class BelongsToManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_role_user_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles', $userModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\App\Models\Role', $userModel);
-        $this->assertStringContainsString('public function roles()', $userModel);
-        $this->assertStringContainsString('return $this->belongsToMany(Role::class);', $userModel);
+        static::assertStringContainsString('public function roles()', $userModel);
+        static::assertStringContainsString('return $this->belongsToMany(Role::class);', $userModel);
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users', $roleModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\App\Models\User', $roleModel);
-        $this->assertStringContainsString('public function users()', $roleModel);
-        $this->assertStringContainsString('return $this->belongsToMany(User::class);', $roleModel);
+        static::assertStringContainsString('public function users()', $roleModel);
+        static::assertStringContainsString('return $this->belongsToMany(User::class);', $roleModel);
 
-        $this->assertStringNotContainsString('roles', $userMigration);
-        $this->assertStringNotContainsString('users', $roleMigration);
+        static::assertStringNotContainsString('roles', $userMigration);
+        static::assertStringNotContainsString('users', $roleMigration);
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "\$table->unsignedBigInteger('role_id');\n            \$table->unsignedBigInteger('user_id');",
             $pivotMigration
         );
@@ -206,44 +206,44 @@ class BelongsToManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_role_user_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles', $userModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\App\Models\Role', $userModel);
-        $this->assertStringContainsString('public function roles()', $userModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('public function roles()', $userModel);
+        static::assertStringContainsString(
             'return $this->belongsToMany(Role::class)->using(RoleUser::class);', $userModel);
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users', $roleModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\App\Models\User', $roleModel);
-        $this->assertStringContainsString('public function users()', $roleModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('public function users()', $roleModel);
+        static::assertStringContainsString(
             'return $this->belongsToMany(User::class)->using(RoleUser::class);', $roleModel);
 
-        $this->assertStringContainsString('class RoleUser extends Pivot', $pivotModel);
-        $this->assertStringContainsString('@property-read \App\Models\User $user', $pivotModel);
-        $this->assertStringContainsString('@property-read \App\Models\Role $role', $pivotModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('class RoleUser extends Pivot', $pivotModel);
+        static::assertStringContainsString('@property-read \App\Models\User $user', $pivotModel);
+        static::assertStringContainsString('@property-read \App\Models\Role $role', $pivotModel);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Models\User', $pivotModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Models\Role', $pivotModel);
-        $this->assertStringContainsString('public function user()', $pivotModel);
-        $this->assertStringContainsString('public function role()', $pivotModel);
-        $this->assertStringContainsString('return $this->belongsTo(User::class);', $pivotModel);
-        $this->assertStringContainsString('return $this->belongsTo(Role::class);', $pivotModel);
+        static::assertStringContainsString('public function user()', $pivotModel);
+        static::assertStringContainsString('public function role()', $pivotModel);
+        static::assertStringContainsString('return $this->belongsTo(User::class);', $pivotModel);
+        static::assertStringContainsString('return $this->belongsTo(Role::class);', $pivotModel);
 
-        $this->assertStringNotContainsString('$table->id();', $pivotMigration);
-        $this->assertStringContainsString(
+        static::assertStringNotContainsString('$table->id();', $pivotMigration);
+        static::assertStringContainsString(
             "\$table->unsignedBigInteger('user_id'); // Created for [user] relation.", $pivotMigration
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "\$table->unsignedBigInteger('role_id'); // Created for [role] relation.\n", $pivotMigration
         );
 
-        $this->assertStringNotContainsString('roles', $userMigration);
-        $this->assertStringNotContainsString('users', $roleMigration);
+        static::assertStringNotContainsString('roles', $userMigration);
+        static::assertStringNotContainsString('users', $roleMigration);
     }
 
     public function test_allows_pivot_model_migration_override_with_different_name()
@@ -288,44 +288,44 @@ class BelongsToManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_permissions_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles', $userModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\App\Models\Role', $userModel);
-        $this->assertStringContainsString('public function roles()', $userModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('public function roles()', $userModel);
+        static::assertStringContainsString(
             'return $this->belongsToMany(Role::class, \'permissions\')->using(Permission::class);', $userModel);
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users', $roleModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\App\Models\User', $roleModel);
-        $this->assertStringContainsString('public function users()', $roleModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('public function users()', $roleModel);
+        static::assertStringContainsString(
             'return $this->belongsToMany(User::class, \'permissions\')->using(Permission::class);', $roleModel);
 
-        $this->assertStringContainsString('class Permission extends Pivot', $pivotModel);
-        $this->assertStringContainsString('@property-read \App\Models\User $user', $pivotModel);
-        $this->assertStringContainsString('@property-read \App\Models\Role $role', $pivotModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('class Permission extends Pivot', $pivotModel);
+        static::assertStringContainsString('@property-read \App\Models\User $user', $pivotModel);
+        static::assertStringContainsString('@property-read \App\Models\Role $role', $pivotModel);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Models\User', $pivotModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\BelongsTo|\App\Models\Role', $pivotModel);
-        $this->assertStringContainsString('public function user()', $pivotModel);
-        $this->assertStringContainsString('public function role()', $pivotModel);
-        $this->assertStringContainsString('return $this->belongsTo(User::class);', $pivotModel);
-        $this->assertStringContainsString('return $this->belongsTo(Role::class);', $pivotModel);
+        static::assertStringContainsString('public function user()', $pivotModel);
+        static::assertStringContainsString('public function role()', $pivotModel);
+        static::assertStringContainsString('return $this->belongsTo(User::class);', $pivotModel);
+        static::assertStringContainsString('return $this->belongsTo(Role::class);', $pivotModel);
 
-        $this->assertStringNotContainsString('$table->id();', $pivotMigration);
-        $this->assertStringContainsString(
+        static::assertStringNotContainsString('$table->id();', $pivotMigration);
+        static::assertStringContainsString(
             "\$table->unsignedBigInteger('user_id'); // Created for [user] relation.", $pivotMigration
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "\$table->unsignedBigInteger('role_id'); // Created for [role] relation.\n", $pivotMigration
         );
 
-        $this->assertStringNotContainsString('roles', $userMigration);
-        $this->assertStringNotContainsString('users', $roleMigration);
+        static::assertStringNotContainsString('roles', $userMigration);
+        static::assertStringNotContainsString('users', $roleMigration);
     }
 
     public function test_issues_table_name_for_pivot_doesnt_get_overwritten()
@@ -361,10 +361,10 @@ class BelongsToManyTest extends TestCase
         $userModel = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $roleModel = $this->filesystem->get($this->app->path('Models' . DS . 'Role.php'));
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'return $this->belongsToMany(Role::class, \'cadabra\')->using(Permission::class);', $userModel);
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'return $this->belongsToMany(User::class, \'cadabra\')->using(Permission::class);', $roleModel);
     }
 
@@ -405,13 +405,13 @@ class BelongsToManyTest extends TestCase
         $roleModel = $this->filesystem->get($this->app->path('Models' . DS . 'Role.php'));
         $pivot = $this->filesystem->get($this->app->path('Models' . DS . 'Permission.php'));
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'return $this->belongsToMany(Role::class, \'vegetables\')->using(Permission::class);', $userModel);
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'return $this->belongsToMany(User::class, \'vegetables\')->using(Permission::class);', $roleModel);
 
-        $this->assertStringContainsString("protected \$table = 'vegetables';", $pivot);
+        static::assertStringContainsString("protected \$table = 'vegetables';", $pivot);
     }
 
     public function test_error_when_using_pivot_doesnt_exists()
@@ -483,9 +483,9 @@ class BelongsToManyTest extends TestCase
         $userModel = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
         $roleModel = $this->filesystem->get($this->app->path('Models' . DS . 'Role.php'));
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "return \$this->belongsToMany(Role::class)->withPivot('foo', 'bar');", $userModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "return \$this->belongsToMany(User::class)->withPivot('foo', 'bar');", $roleModel);
     }
 
@@ -551,11 +551,11 @@ class BelongsToManyTest extends TestCase
         );
 
 
-        $this->assertStringNotContainsString("protected \$primaryKey = 'id';", $pivotModel);
-        $this->assertStringNotContainsString("protected \$keyType = 'int';", $pivotModel);
-        $this->assertStringContainsString('public $incrementing = true;', $pivotModel);
+        static::assertStringNotContainsString("protected \$primaryKey = 'id';", $pivotModel);
+        static::assertStringNotContainsString("protected \$keyType = 'int';", $pivotModel);
+        static::assertStringContainsString('public $incrementing = true;', $pivotModel);
 
-        $this->assertStringContainsString('$table->id();', $pivotMigration);
+        static::assertStringContainsString('$table->id();', $pivotMigration);
     }
 
     public function test_pivot_model_has_custom_primary_id()
@@ -589,11 +589,11 @@ class BelongsToManyTest extends TestCase
         );
 
 
-        $this->assertStringContainsString("protected \$primaryKey = 'thing';", $pivotModel);
-        $this->assertStringContainsString("protected \$keyType = 'string';", $pivotModel);
-        $this->assertStringNotContainsString('public $incrementing = false;', $pivotModel);
+        static::assertStringContainsString("protected \$primaryKey = 'thing';", $pivotModel);
+        static::assertStringContainsString("protected \$keyType = 'string';", $pivotModel);
+        static::assertStringNotContainsString('public $incrementing = false;', $pivotModel);
 
-        $this->assertStringContainsString("\$table->uuid('thing');", $pivotMigration);
+        static::assertStringContainsString("\$table->uuid('thing');", $pivotMigration);
     }
 
     protected function tearDown() : void

@@ -155,13 +155,13 @@ CONTENT,
         $this->assertFileExistsInFilesystem($fooScope);
         $this->assertFileExistsInFilesystem($quxScope);
 
-        $this->assertStringContainsString('use App\Models\User;', $this->filesystem->get($fooScope));
-        $this->assertStringContainsString('namespace App\Scopes\User;', $this->filesystem->get($fooScope));
-        $this->assertStringContainsString('class FooScope', $this->filesystem->get($fooScope));
-        $this->assertStringContainsString(
+        static::assertStringContainsString('use App\Models\User;', $this->filesystem->get($fooScope));
+        static::assertStringContainsString('namespace App\Scopes\User;', $this->filesystem->get($fooScope));
+        static::assertStringContainsString('class FooScope', $this->filesystem->get($fooScope));
+        static::assertStringContainsString(
             '@param  \App\Models\User', $this->filesystem->get($fooScope)
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'public function apply(Builder $builder, Model $user)', $this->filesystem->get($fooScope)
         );
     }

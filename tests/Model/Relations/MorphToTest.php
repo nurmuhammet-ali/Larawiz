@@ -42,13 +42,13 @@ class MorphToTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Models\Student|\App\Models\Teacher $assistable', $model);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read \App\Models\Student|\App\Models\Teacher $assistable', $model);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphTo|\App\Models\Student|\App\Models\Teacher', $model);
-        $this->assertStringContainsString('public function assistable()', $model);
-        $this->assertStringContainsString('return $this->morphTo();', $model);
+        static::assertStringContainsString('public function assistable()', $model);
+        static::assertStringContainsString('return $this->morphTo();', $model);
 
-        $this->assertStringContainsString("\$table->morphs('assistable');", $migration);
+        static::assertStringContainsString("\$table->morphs('assistable');", $migration);
     }
 
     public function test_morph_one_creates_column_using_source_model_id()
@@ -75,7 +75,7 @@ class MorphToTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
         );
 
-        $this->assertStringContainsString("\$table->morphs('assistable');", $migration);
+        static::assertStringContainsString("\$table->morphs('assistable');", $migration);
     }
 
     public function test_creates_column_using_parent_models_as_uuid()
@@ -103,7 +103,7 @@ class MorphToTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
         );
-        $this->assertStringContainsString("\$table->uuidMorphs('assistable');", $migration);
+        static::assertStringContainsString("\$table->uuidMorphs('assistable');", $migration);
     }
 
     public function test_error_when_parent_columns_use_both_id_and_uuid()
@@ -154,13 +154,13 @@ class MorphToTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Models\Student|\App\Models\Teacher $assistable', $model);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read \App\Models\Student|\App\Models\Teacher $assistable', $model);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphTo|\App\Models\Student|\App\Models\Teacher', $model);
-        $this->assertStringContainsString('public function assistable()', $model);
-        $this->assertStringContainsString("return \$this->morphTo('foobar');", $model);
+        static::assertStringContainsString('public function assistable()', $model);
+        static::assertStringContainsString("return \$this->morphTo('foobar');", $model);
 
-        $this->assertStringContainsString("\$table->morphs('foobar');", $migration);
+        static::assertStringContainsString("\$table->morphs('foobar');", $migration);
     }
 
     public function test_accepts_with_default()
@@ -188,13 +188,13 @@ class MorphToTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Models\Student|\App\Models\Teacher $assistable', $model);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read \App\Models\Student|\App\Models\Teacher $assistable', $model);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphTo|\App\Models\Student|\App\Models\Teacher', $model);
-        $this->assertStringContainsString('public function assistable()', $model);
-        $this->assertStringContainsString("return \$this->morphTo('foobar')->withDefault();", $model);
+        static::assertStringContainsString('public function assistable()', $model);
+        static::assertStringContainsString("return \$this->morphTo('foobar')->withDefault();", $model);
 
-        $this->assertStringContainsString("\$table->morphs('foobar');", $migration);
+        static::assertStringContainsString("\$table->morphs('foobar');", $migration);
     }
 
     public function test_accepts_nullable()
@@ -222,10 +222,10 @@ class MorphToTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_classrooms_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Student|\App\Models\Teacher $assistable', $model);
-        $this->assertStringContainsString("return \$this->morphTo('foobar')", $model);
+        static::assertStringContainsString('@property-read null|\App\Models\Student|\App\Models\Teacher $assistable', $model);
+        static::assertStringContainsString("return \$this->morphTo('foobar')", $model);
 
-        $this->assertStringContainsString("\$table->nullableMorphs('foobar');", $migration);
+        static::assertStringContainsString("\$table->nullableMorphs('foobar');", $migration);
     }
 
     protected function tearDown() : void

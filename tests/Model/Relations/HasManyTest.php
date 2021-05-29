@@ -85,13 +85,13 @@ class HasManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Models\Post', $model);
-        $this->assertStringContainsString('public function posts()', $model);
-        $this->assertStringContainsString('return $this->hasMany(Post::class);', $model);
+        static::assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Models\Post', $model);
+        static::assertStringContainsString('public function posts()', $model);
+        static::assertStringContainsString('return $this->hasMany(Post::class);', $model);
 
-        $this->assertStringNotContainsString("'posts'", $migration);
+        static::assertStringNotContainsString("'posts'", $migration);
     }
 
     public function test_error_when_cannot_guess_model()
@@ -140,14 +140,14 @@ class HasManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $publications', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Models\Post', $model);
-        $this->assertStringContainsString('public function publications()', $model);
-        $this->assertStringContainsString('return $this->hasMany(Post::class);', $model);
+        static::assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Models\Post', $model);
+        static::assertStringContainsString('public function publications()', $model);
+        static::assertStringContainsString('return $this->hasMany(Post::class);', $model);
 
-        $this->assertStringNotContainsString("'posts'", $migration);
-        $this->assertStringNotContainsString("'publications'", $migration);
+        static::assertStringNotContainsString("'posts'", $migration);
+        static::assertStringNotContainsString("'publications'", $migration);
     }
 
     public function test_error_when_model_does_not_exists()
@@ -195,14 +195,14 @@ class HasManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $publications', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Models\Post', $model);
-        $this->assertStringContainsString('public function publications()', $model);
-        $this->assertStringContainsString("return \$this->hasMany(Post::class, 'title', 'name');", $model);
+        static::assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasMany|\App\Models\Post', $model);
+        static::assertStringContainsString('public function publications()', $model);
+        static::assertStringContainsString("return \$this->hasMany(Post::class, 'title', 'name');", $model);
 
-        $this->assertStringNotContainsString("'posts'", $migration);
-        $this->assertStringNotContainsString("'publications'", $migration);
+        static::assertStringNotContainsString("'posts'", $migration);
+        static::assertStringNotContainsString("'publications'", $migration);
     }
 
     public function test_error_when_includes_with_default()

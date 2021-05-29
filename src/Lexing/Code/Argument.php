@@ -2,8 +2,8 @@
 
 namespace Larawiz\Larawiz\Lexing\Code;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Fluent;
+use Illuminate\Support\Str;
 
 /**
  * Class Argument
@@ -91,6 +91,15 @@ class Argument extends Fluent
         return $this->type === 'variable';
     }
 
+    /**
+     * Returns if the Argument is an empty string.
+     *
+     * @return bool
+     */
+    protected function isEmpty()
+    {
+        return $this->type === 'empty';
+    }
 
     /**
      * Returns if the Argument is a Class name.
@@ -102,6 +111,7 @@ class Argument extends Fluent
         return $this->type === 'null';
     }
 
+
     /**
      * Creates an Argument from a string
      *
@@ -110,7 +120,14 @@ class Argument extends Fluent
      */
     public static function from(string $argument)
     {
-        if ($argument === '' || in_array(strtolower($argument), ['~', 'null'])) {
+        if ($argument === '' || $argument === '~') {
+            return new static([
+                'value' => null,
+                'type' => 'empty'
+            ]);
+        }
+
+        if (strtolower($argument) === 'null') {
             return new static([
                 'value' => null,
                 'type' => 'null'
@@ -151,7 +168,6 @@ class Argument extends Fluent
         ]);
     }
 
-
     /**
      * Returns the Argument as a string.
      *
@@ -172,6 +188,10 @@ class Argument extends Fluent
         }
 
         if ($this->isNull()) {
+            return 'null';
+        }
+
+        if ($this->isEmpty()) {
             return '';
         }
 

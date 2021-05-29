@@ -46,22 +46,22 @@ class MorphManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_videos_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags', $photoModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $photoModel);
-        $this->assertStringContainsString('public function tags()', $photoModel);
-        $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $photoModel);
+        static::assertStringContainsString('public function tags()', $photoModel);
+        static::assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $photoModel);
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags', $videoModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $videoModel);
-        $this->assertStringContainsString('public function tags()', $videoModel);
-        $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $videoModel);
+        static::assertStringContainsString('public function tags()', $videoModel);
+        static::assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $videoModel);
 
-        $this->assertStringNotContainsString("'taggable'", $photoMigration);
-        $this->assertStringNotContainsString("'taggable'", $videoMigration);
+        static::assertStringNotContainsString("'taggable'", $photoMigration);
+        static::assertStringNotContainsString("'taggable'", $videoMigration);
     }
 
     public function test_issued_target_model_with_unique_morph_to_and_different_relation_name()
@@ -93,22 +93,22 @@ class MorphManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_videos_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $foo', $photoModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $photoModel);
-        $this->assertStringContainsString('public function foo()', $photoModel);
-        $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $photoModel);
+        static::assertStringContainsString('public function foo()', $photoModel);
+        static::assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $photoModel);
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $bar', $videoModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $videoModel);
-        $this->assertStringContainsString('public function bar()', $videoModel);
-        $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $videoModel);
+        static::assertStringContainsString('public function bar()', $videoModel);
+        static::assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $videoModel);
 
-        $this->assertStringNotContainsString("'taggable'", $photoMigration);
-        $this->assertStringNotContainsString("'taggable'", $videoMigration);
+        static::assertStringNotContainsString("'taggable'", $photoMigration);
+        static::assertStringNotContainsString("'taggable'", $videoMigration);
     }
 
     public function test_error_when_guessed_model_does_not_exists()
@@ -230,22 +230,22 @@ class MorphManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_videos_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $foo', $photoModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $photoModel);
-        $this->assertStringContainsString('public function foo()', $photoModel);
-        $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $photoModel);
+        static::assertStringContainsString('public function foo()', $photoModel);
+        static::assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $photoModel);
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $bar', $videoModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphMany|\App\Models\Tag', $videoModel);
-        $this->assertStringContainsString('public function bar()', $videoModel);
-        $this->assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $videoModel);
+        static::assertStringContainsString('public function bar()', $videoModel);
+        static::assertStringContainsString("return \$this->morphMany(Tag::class, 'taggable');", $videoModel);
 
-        $this->assertStringNotContainsString("'taggable'", $photoMigration);
-        $this->assertStringNotContainsString("'taggable'", $videoMigration);
+        static::assertStringNotContainsString("'taggable'", $photoMigration);
+        static::assertStringNotContainsString("'taggable'", $videoMigration);
     }
 
     public function test_error_when_morph_name_relation_does_not_exists_in_target_model()

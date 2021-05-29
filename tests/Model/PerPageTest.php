@@ -27,7 +27,7 @@ class PerPageTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringNotContainsString(
+        static::assertStringNotContainsString(
             'protected $perPage = 15;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
@@ -47,7 +47,7 @@ class PerPageTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringNotContainsString(
+        static::assertStringNotContainsString(
             'protected $perPage = 15;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
@@ -68,7 +68,7 @@ class PerPageTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'protected $perPage = 30;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );

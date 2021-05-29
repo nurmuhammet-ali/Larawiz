@@ -31,7 +31,7 @@ class RouteBindingTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringNotContainsString(
+        static::assertStringNotContainsString(
             '    /**\n
      * Get the route key for the model.\n
      *\n
@@ -60,7 +60,7 @@ class RouteBindingTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringNotContainsString(
+        static::assertStringNotContainsString(
             '    /**\n
      * Get the route key for the model.\n
      *\n

@@ -61,7 +61,7 @@ CONTENT
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
-        $this->assertStringNotContainsString("'id' => 'integer'", $model);
+        static::assertStringNotContainsString("'id' => 'integer'", $model);
     }
 
     public function test_model_doesnt_casts_touch_timestamps()
@@ -78,8 +78,8 @@ CONTENT
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
-        $this->assertStringNotContainsString("'created_at' => 'datetime'", $model);
-        $this->assertStringNotContainsString("'updated_at' => 'datetime'", $model);
+        static::assertStringNotContainsString("'created_at' => 'datetime'", $model);
+        static::assertStringNotContainsString("'updated_at' => 'datetime'", $model);
     }
 
     public function test_model_doesnt_casts_soft_deletes()
@@ -97,7 +97,7 @@ CONTENT
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
-        $this->assertStringNotContainsString("'softDeletes' => 'datetime'", $model);
+        static::assertStringNotContainsString("'softDeletes' => 'datetime'", $model);
     }
 
     public function test_model_doesnt_casts_belongs_to_column()
@@ -118,7 +118,7 @@ CONTENT
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
-        $this->assertStringNotContainsString("'bar_id' => 'integer'", $model);
+        static::assertStringNotContainsString("'bar_id' => 'integer'", $model);
     }
 
     public function test_model_doesnt_casts_morph_to_column()
@@ -139,7 +139,7 @@ CONTENT
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
-        $this->assertStringNotContainsString('protected $casts = [', $model);
+        static::assertStringNotContainsString('protected $casts = [', $model);
     }
 
     public function test_model_doesnt_casts_strings()
@@ -156,7 +156,7 @@ CONTENT
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
-        $this->assertStringNotContainsString('protected $casts = [', $model);
+        static::assertStringNotContainsString('protected $casts = [', $model);
     }
 
     public function test_adds_dates_to_dates_array_except_touch_timestamps_and_soft_deletes()
@@ -182,7 +182,7 @@ CONTENT
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php'));
 
-        $this->assertStringContainsString(<<<'CONTENT'
+        static::assertStringContainsString(<<<'CONTENT'
     /**
      * The attributes that should be cast.
      *

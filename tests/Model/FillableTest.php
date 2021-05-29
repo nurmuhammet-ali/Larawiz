@@ -29,7 +29,7 @@ class FillableTest extends TestCase
 
         $model = $this->app->path('Models' . DIRECTORY_SEPARATOR . 'User.php');
 
-        $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
+        static::assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
 
     public function test_model_does_not_fill_timestamps()
@@ -47,7 +47,7 @@ class FillableTest extends TestCase
 
         $model = $this->app->path('Models' . DS . 'User.php');
 
-        $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
+        static::assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
 
     public function test_model_does_not_fill_booleans()
@@ -65,7 +65,7 @@ class FillableTest extends TestCase
 
         $model = $this->app->path('Models' . DS . 'User.php');
 
-        $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
+        static::assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
 
     public function test_model_does_not_fill_relations_columns()
@@ -86,7 +86,7 @@ class FillableTest extends TestCase
 
         $model = $this->app->path('Models' . DS . 'User.php');
 
-        $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
+        static::assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
 
     public function test_model_does_not_fill_soft_deletes()
@@ -104,7 +104,7 @@ class FillableTest extends TestCase
 
         $model = $this->app->path('Models' . DS . 'User.php');
 
-        $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
+        static::assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
 
     public function test_model_does_not_fill_auto_incrementing_columns()
@@ -135,7 +135,7 @@ class FillableTest extends TestCase
 
             $model = $this->app->path('Models' . DS . 'User.php');
 
-            $this->assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
+            static::assertStringContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
         }
 
     }
@@ -157,7 +157,7 @@ class FillableTest extends TestCase
 
         $model = $this->app->path('Models' . DS . 'User.php');
 
-        $this->assertStringNotContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
+        static::assertStringNotContainsString("protected \$fillable = ['name'];", $this->filesystem->get($model));
     }
 
     public function test_model_overrides_fillable_list()
@@ -182,7 +182,7 @@ class FillableTest extends TestCase
 
         $model = $this->app->path('Models' . DS . 'User.php');
 
-        $this->assertStringContainsString("protected \$fillable = ['name', 'age'];", $this->filesystem->get($model));
+        static::assertStringContainsString("protected \$fillable = ['name', 'age'];", $this->filesystem->get($model));
     }
 
     public function test_no_error_when_fillable_column_doesnt_exists()
@@ -207,7 +207,7 @@ class FillableTest extends TestCase
 
         $model = $this->app->path('Models' . DS . 'User.php');
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "protected \$fillable = ['doesnt_exists', 'age'];", $this->filesystem->get($model)
         );
     }

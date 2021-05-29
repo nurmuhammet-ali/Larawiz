@@ -33,13 +33,13 @@ class ColumnTimestampsTest extends TestCase
 
         $model = $this->filesystem->get($this->app->path('Models' . DS .'User.php'));
 
-        $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
-        $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
-        $this->assertStringNotContainsString('public $timestamps', $model);
+        static::assertStringContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
+        static::assertStringContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
+        static::assertStringNotContainsString('public $timestamps', $model);
 
         $migration = $this->filesystem->get($this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('$table->timestamps();', $migration);
+        static::assertStringContainsString('$table->timestamps();', $migration);
     }
 
     public function test_quick_model_swaps_timestamps_for_timestamps_timezone()
@@ -59,13 +59,13 @@ class ColumnTimestampsTest extends TestCase
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
-        $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
-        $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
-        $this->assertStringNotContainsString('public $timestamps', $model);
+        static::assertStringContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
+        static::assertStringContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
+        static::assertStringNotContainsString('public $timestamps', $model);
 
         $migration = $this->filesystem->get($this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('$table->timestampsTz();', $migration);
+        static::assertStringContainsString('$table->timestampsTz();', $migration);
     }
 
     public function test_custom_model_does_not_include_timestamps()
@@ -86,14 +86,14 @@ class ColumnTimestampsTest extends TestCase
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
-        $this->assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
-        $this->assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
-        $this->assertStringContainsString('public $timestamps = false', $model);
+        static::assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
+        static::assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
+        static::assertStringContainsString('public $timestamps = false', $model);
 
         $migration = $this->filesystem->get($this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString('$table->timestamps();', $migration);
-        $this->assertStringNotContainsString('$table->timestampsTz();', $migration);
+        static::assertStringNotContainsString('$table->timestamps();', $migration);
+        static::assertStringNotContainsString('$table->timestampsTz();', $migration);
     }
 
     public function test_custom_model_points_custom_timestamps()
@@ -118,17 +118,17 @@ class ColumnTimestampsTest extends TestCase
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
-        $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $creation_date', $model);
-        $this->assertStringContainsString("public const CREATED_AT = 'creation_date';", $model);
-        $this->assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
-        $this->assertStringContainsString('public const UPDATED_AT = null;', $model);
-        $this->assertStringNotContainsString('public $timestamps = false', $model);
+        static::assertStringContainsString('@property-read \Illuminate\Support\Carbon $creation_date', $model);
+        static::assertStringContainsString("public const CREATED_AT = 'creation_date';", $model);
+        static::assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
+        static::assertStringContainsString('public const UPDATED_AT = null;', $model);
+        static::assertStringNotContainsString('public $timestamps = false', $model);
 
         $migration = $this->filesystem->get($this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString('$table->timestampsTz();', $migration);
-        $this->assertStringNotContainsString('$table->timestamp(null)->nullable();', $migration);
-        $this->assertStringContainsString("\$table->timestamp('creation_date')->nullable();", $migration);
+        static::assertStringNotContainsString('$table->timestampsTz();', $migration);
+        static::assertStringNotContainsString('$table->timestamp(null)->nullable();', $migration);
+        static::assertStringContainsString("\$table->timestamp('creation_date')->nullable();", $migration);
     }
 
     public function test_error_when_timestamp_column_doesnt_exists()
