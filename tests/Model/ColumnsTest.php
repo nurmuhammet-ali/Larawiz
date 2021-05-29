@@ -55,7 +55,7 @@ class ColumnsTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('$table->id();', $migration);
+        static::assertStringContainsString('$table->id();', $migration);
     }
 
     public function test_creates_id_with_name()
@@ -81,8 +81,8 @@ class ColumnsTest extends TestCase
         $factory = $this->filesystem->get(
             $this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString('protected $primaryKey = \'foo\';', $model);
-        $this->assertStringContainsString('$table->id(\'foo\');', $migration);
+        static::assertStringContainsString('protected $primaryKey = \'foo\';', $model);
+        static::assertStringContainsString('$table->id(\'foo\');', $migration);
     }
 
     public function test_chains_method_preceded_with_null()
@@ -94,6 +94,9 @@ class ColumnsTest extends TestCase
                         'id' => '~ foo bar:qux,quz',
                         'softDeletes' => '~ foo bar:qux,quz',
                         'foo' => 'bar:~,quz,qux',
+                        'something' => 'string:32',
+                        'something_with_args' => 'string:32 string:32 string',
+                        'two_args' => 'something:32,2,~,null,foo'
                     ]
                 ]
             ],
@@ -108,13 +111,19 @@ class ColumnsTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString('protected $primaryKey', $model);
-        $this->assertStringNotContainsString('protected $keyType', $model);
-        $this->assertStringNotContainsString('public $incrementing', $model);
+        static::assertStringNotContainsString('protected $primaryKey', $model);
+        static::assertStringNotContainsString('protected $keyType', $model);
+        static::assertStringNotContainsString('public $incrementing', $model);
 
-        $this->assertStringContainsString("\$table->id()->foo()->bar('qux', 'quz');", $migration);
-        $this->assertStringContainsString("\$table->softDeletes()->foo()->bar('qux', 'quz');", $migration);
-        $this->assertStringContainsString("\$table->bar('foo', null, 'quz', 'qux');", $migration);
+        static::assertStringContainsString(<<<'CONTENT'
+            $table->id()->foo()->bar('qux', 'quz');
+            $table->softDeletes()->foo()->bar('qux', 'quz');
+            $table->bar('foo', null, 'quz', 'qux');
+            $table->string('something', 32);
+            $table->string('something_with_args', 32)->string(32)->string();
+            $table->something('two_args', 32, 2, null, null, 'foo');
+CONTENT
+            ,$migration);
     }
 
     public function test_creates_uuid()
@@ -140,11 +149,11 @@ class ColumnsTest extends TestCase
         $factory = $this->filesystem->get(
             $this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString('protected $primaryKey = null;', $model);
-        $this->assertStringContainsString('public $incrementing = false;', $model);
-        $this->assertStringNotContainsString('protected $keyType;', $model);
-        $this->assertStringContainsString("\$table->uuid('uuid');", $migration);
-        $this->assertStringContainsString("'uuid' => \$this->faker->uuid,", $factory);
+        static::assertStringContainsString('protected $primaryKey = null;', $model);
+        static::assertStringContainsString('public $incrementing = false;', $model);
+        static::assertStringNotContainsString('protected $keyType;', $model);
+        static::assertStringContainsString("\$table->uuid('uuid');", $migration);
+        static::assertStringContainsString("'uuid' => \$this->faker->uuid,", $factory);
     }
 
     public function test_creates_uuid_with_name()
@@ -170,11 +179,11 @@ class ColumnsTest extends TestCase
         $factory = $this->filesystem->get(
             $this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString('protected $primaryKey = null;', $model);
-        $this->assertStringContainsString('public $incrementing = false;', $model);
-        $this->assertStringNotContainsString('protected $keyType;', $model);
-        $this->assertStringContainsString("\$table->uuid('foo');", $migration);
-        $this->assertStringContainsString("'foo' => \$this->faker->uuid,", $factory);
+        static::assertStringContainsString('protected $primaryKey = null;', $model);
+        static::assertStringContainsString('public $incrementing = false;', $model);
+        static::assertStringNotContainsString('protected $keyType;', $model);
+        static::assertStringContainsString("\$table->uuid('foo');", $migration);
+        static::assertStringContainsString("'foo' => \$this->faker->uuid,", $factory);
     }
 
     public function test_passes_through_column_declaration()
@@ -200,11 +209,11 @@ class ColumnsTest extends TestCase
         $factory = $this->filesystem->get(
             $this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString('protected $primaryKey = null;', $model);
-        $this->assertStringContainsString('public $incrementing = false;', $model);
-        $this->assertStringNotContainsString('protected $keyType;', $model);
-        $this->assertStringContainsString("\$table->bar('foo', 'quz', 'qux');", $migration);
-        $this->assertStringContainsString("'foo' => '', // TODO: Add a random generated value for the [foo (bar)] property,", $factory);
+        static::assertStringContainsString('protected $primaryKey = null;', $model);
+        static::assertStringContainsString('public $incrementing = false;', $model);
+        static::assertStringNotContainsString('protected $keyType;', $model);
+        static::assertStringContainsString("\$table->bar('foo', 'quz', 'qux');", $migration);
+        static::assertStringContainsString("'foo' => '', // TODO: Add a random generated value for the [foo (bar)] property,", $factory);
     }
 
     public function test_does_not_creates_timestamps()
@@ -228,12 +237,12 @@ class ColumnsTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
-        $this->assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
-        $this->assertStringContainsString('public $timestamps = false;', $model);
+        static::assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
+        static::assertStringNotContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
+        static::assertStringContainsString('public $timestamps = false;', $model);
 
-        $this->assertStringNotContainsString('$table->timestamps();', $migration);
-        $this->assertStringNotContainsString('$table->timestampsTz();', $migration);
+        static::assertStringNotContainsString('$table->timestamps();', $migration);
+        static::assertStringNotContainsString('$table->timestampsTz();', $migration);
     }
 
     public function test_creates_timestamps()
@@ -257,12 +266,12 @@ class ColumnsTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
-        $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
-        $this->assertStringNotContainsString('public $timestamps = false;', $model);
+        static::assertStringContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
+        static::assertStringContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
+        static::assertStringNotContainsString('public $timestamps = false;', $model);
 
-        $this->assertStringContainsString('$table->timestamps();', $migration);
-        $this->assertStringNotContainsString('$table->timestampsTz();', $migration);
+        static::assertStringContainsString('$table->timestamps();', $migration);
+        static::assertStringNotContainsString('$table->timestampsTz();', $migration);
     }
 
     public function test_swaps_timestamps_with_timestamps_timezone()
@@ -285,12 +294,12 @@ class ColumnsTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
-        $this->assertStringContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
-        $this->assertStringNotContainsString('public $timestamps', $model);
+        static::assertStringContainsString('@property-read \Illuminate\Support\Carbon $created_at', $model);
+        static::assertStringContainsString('@property-read \Illuminate\Support\Carbon $updated_at', $model);
+        static::assertStringNotContainsString('public $timestamps', $model);
 
-        $this->assertStringNotContainsString('$table->timestamps();', $migration);
-        $this->assertStringContainsString('$table->timestampsTz();', $migration);
+        static::assertStringNotContainsString('$table->timestamps();', $migration);
+        static::assertStringContainsString('$table->timestampsTz();', $migration);
     }
 
     public function test_comments_nullable_property_with_null()
@@ -309,7 +318,7 @@ class ColumnsTest extends TestCase
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
-        $this->assertStringContainsString('@property null|string $name', $model);
+        static::assertStringContainsString('@property null|string $name', $model);
     }
 
     protected function tearDown() : void

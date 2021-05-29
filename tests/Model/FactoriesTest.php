@@ -135,7 +135,7 @@ CONTENT
 
             $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-            $this->assertStringNotContainsString("$key => ", $factory);
+            static::assertStringNotContainsString("$key => ", $factory);
         }
     }
 
@@ -157,7 +157,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("    return [\n
+        static::assertStringNotContainsString("    return [\n
         // ...\n
     ];\n", $factory);
     }
@@ -174,7 +174,7 @@ CONTENT
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringContainsString("'is_admin' => \$this->faker->boolean,",
+        static::assertStringContainsString("'is_admin' => \$this->faker->boolean,",
             $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php')));
     }
 
@@ -191,10 +191,10 @@ CONTENT
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringContainsString("'uuid' => \$this->faker->uuid,",
+        static::assertStringContainsString("'uuid' => \$this->faker->uuid,",
             $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php')));
 
-        $this->assertStringContainsString("'public_uuid' => \$this->faker->uuid,",
+        static::assertStringContainsString("'public_uuid' => \$this->faker->uuid,",
             $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php')));
     }
 
@@ -217,12 +217,12 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$this->faker->date,", $factory);
-        $this->assertStringContainsString("'bar' => \$this->faker->dateTime,", $factory);
-        $this->assertStringContainsString("'quz' => \$this->faker->dateTime,", $factory);
-        $this->assertStringContainsString("'qux' => \$this->faker->time,", $factory);
-        $this->assertStringContainsString("'quux' => \$this->faker->time,", $factory);
-        $this->assertStringContainsString("'quuz' => \$this->faker->year,", $factory);
+        static::assertStringContainsString("'foo' => \$this->faker->date,", $factory);
+        static::assertStringContainsString("'bar' => \$this->faker->dateTime,", $factory);
+        static::assertStringContainsString("'quz' => \$this->faker->dateTime,", $factory);
+        static::assertStringContainsString("'qux' => \$this->faker->time,", $factory);
+        static::assertStringContainsString("'quux' => \$this->faker->time,", $factory);
+        static::assertStringContainsString("'quuz' => \$this->faker->year,", $factory);
 
     }
 
@@ -242,9 +242,9 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$this->faker->realText(),", $factory);
-        $this->assertStringContainsString("'bar' => \$this->faker->realText(),", $factory);
-        $this->assertStringContainsString("'quz' => \$this->faker->realText(),", $factory);
+        static::assertStringContainsString("'foo' => \$this->faker->realText(),", $factory);
+        static::assertStringContainsString("'bar' => \$this->faker->realText(),", $factory);
+        static::assertStringContainsString("'quz' => \$this->faker->realText(),", $factory);
     }
 
     public function test_detects_random_number()
@@ -266,12 +266,12 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$this->faker->randomNumber(),", $factory);
-        $this->assertStringContainsString("'bar' => \$this->faker->randomNumber(),", $factory);
-        $this->assertStringContainsString("'quz' => \$this->faker->randomNumber(),", $factory);
-        $this->assertStringContainsString("'qux' => \$this->faker->randomNumber(),", $factory);
-        $this->assertStringContainsString("'quux' => \$this->faker->randomNumber(),", $factory);
-        $this->assertStringContainsString("'quuz' => \$this->faker->randomNumber(),", $factory);
+        static::assertStringContainsString("'foo' => \$this->faker->randomNumber(),", $factory);
+        static::assertStringContainsString("'bar' => \$this->faker->randomNumber(),", $factory);
+        static::assertStringContainsString("'quz' => \$this->faker->randomNumber(),", $factory);
+        static::assertStringContainsString("'qux' => \$this->faker->randomNumber(),", $factory);
+        static::assertStringContainsString("'quux' => \$this->faker->randomNumber(),", $factory);
+        static::assertStringContainsString("'quuz' => \$this->faker->randomNumber(),", $factory);
     }
 
     public function test_detects_ipv4()
@@ -288,7 +288,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$this->faker->ipv4,", $factory);
+        static::assertStringContainsString("'foo' => \$this->faker->ipv4,", $factory);
     }
 
     public function test_detects_mac_address()
@@ -305,7 +305,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$this->faker->macAddress,", $factory);
+        static::assertStringContainsString("'foo' => \$this->faker->macAddress,", $factory);
     }
 
     public function test_detects_mac_random_float()
@@ -328,12 +328,12 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo' => \$this->faker->randomFloat(),", $factory);
-        $this->assertStringContainsString("'bar' => \$this->faker->randomFloat(),", $factory);
-        $this->assertStringContainsString("'quz' => \$this->faker->randomFloat(),", $factory);
-        $this->assertStringContainsString("'qux' => \$this->faker->randomFloat(),", $factory);
-        $this->assertStringContainsString("'quux' => \$this->faker->randomFloat(),", $factory);
-        $this->assertStringContainsString("'quuz' => \$this->faker->randomFloat(),", $factory);
+        static::assertStringContainsString("'foo' => \$this->faker->randomFloat(),", $factory);
+        static::assertStringContainsString("'bar' => \$this->faker->randomFloat(),", $factory);
+        static::assertStringContainsString("'quz' => \$this->faker->randomFloat(),", $factory);
+        static::assertStringContainsString("'qux' => \$this->faker->randomFloat(),", $factory);
+        static::assertStringContainsString("'quux' => \$this->faker->randomFloat(),", $factory);
+        static::assertStringContainsString("'quuz' => \$this->faker->randomFloat(),", $factory);
     }
 
     public function test_detects_password_and_hashes_it_statically()
@@ -362,8 +362,8 @@ CONTENT
         $userFactory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
         $adminFactory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'AdminFactory.php'));
 
-        $this->assertStringContainsString("'password' => '$hash'", $userFactory);
-        $this->assertStringContainsString("'password' => '$hash'", $adminFactory);
+        static::assertStringContainsString("'password' => '$hash'", $userFactory);
+        static::assertStringContainsString("'password' => '$hash'", $adminFactory);
     }
 
     public function test_disables_factory()
@@ -406,11 +406,11 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "public function foo()",
             $factory
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "public function bar()",
             $factory
         );
@@ -437,11 +437,11 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'public function foo()',
             $factory
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'public function deleted()',
             $factory
         );
@@ -463,7 +463,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'bar' => '', // TODO: Add a random generated value for the [bar (string)] property", $factory);
+        static::assertStringContainsString("'bar' => '', // TODO: Add a random generated value for the [bar (string)] property", $factory);
     }
 
     public function test_uses_factory_provider_formatter_from_column_name()
@@ -501,9 +501,9 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringContainsString("'foo_bar' => \$this->faker->fooBar,", $factory);
-        $this->assertStringContainsString("'quz_qux_quuz' => \$this->faker->quzQuxQuuz(),", $factory);
-        $this->assertStringContainsString("'bar' => '', // TODO: Add a random generated value for the [bar (string)] property", $factory);
+        static::assertStringContainsString("'foo_bar' => \$this->faker->fooBar,", $factory);
+        static::assertStringContainsString("'quz_qux_quuz' => \$this->faker->quzQuxQuuz(),", $factory);
+        static::assertStringContainsString("'bar' => '', // TODO: Add a random generated value for the [bar (string)] property", $factory);
     }
 
     public function test_doesnt_fills_auto_incrementing()
@@ -522,7 +522,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("'id' =>", $factory);
+        static::assertStringNotContainsString("'id' =>", $factory);
     }
 
     public function test_doesnt_fills_custom_auto_incrementing()
@@ -541,7 +541,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("'foo' =>", $factory);
+        static::assertStringNotContainsString("'foo' =>", $factory);
     }
 
     public function test_doesnt_fills_timestamps()
@@ -560,8 +560,8 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("'created_at' =>", $factory);
-        $this->assertStringNotContainsString("'updated_at' =>", $factory);
+        static::assertStringNotContainsString("'created_at' =>", $factory);
+        static::assertStringNotContainsString("'updated_at' =>", $factory);
     }
 
     public function test_doesnt_fills_custom_timestamps()
@@ -583,7 +583,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("'foo' =>", $factory);
+        static::assertStringNotContainsString("'foo' =>", $factory);
     }
 
     public function test_doesnt_fills_timestamp()
@@ -602,7 +602,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("'foo' =>", $factory);
+        static::assertStringNotContainsString("'foo' =>", $factory);
     }
 
     public function test_doesnt_fill_soft_deletes()
@@ -621,7 +621,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("\$factory->define(User::class, function (Faker \$faker) {\n    return [\n        'deleted_at'", $factory);
+        static::assertStringNotContainsString("\$factory->define(User::class, function (Faker \$faker) {\n    return [\n        'deleted_at'", $factory);
     }
 
     public function test_doesnt_fills_custom_soft_deletes()
@@ -640,7 +640,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("\$factory->define(User::class, function (Faker \$faker) {\n        return [\n        'deleted_at' =>", $factory);
+        static::assertStringNotContainsString("\$factory->define(User::class, function (Faker \$faker) {\n        return [\n        'deleted_at' =>", $factory);
     }
 
     public function test_doesnt_fills_belongs_to_relation()
@@ -660,7 +660,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("'team_id' =>", $factory);
+        static::assertStringNotContainsString("'team_id' =>", $factory);
     }
 
     public function test_doesnt_fills_morph_to_relation()
@@ -683,7 +683,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("'teamable' =>", $factory);
+        static::assertStringNotContainsString("'teamable' =>", $factory);
     }
 
     public function test_doesnt_fills_nullables()
@@ -700,7 +700,7 @@ CONTENT
 
         $factory = $this->filesystem->get($this->app->databasePath('factories' . DS . 'UserFactory.php'));
 
-        $this->assertStringNotContainsString("'foo' =>", $factory);
+        static::assertStringNotContainsString("'foo' =>", $factory);
     }
 
     protected function tearDown() : void

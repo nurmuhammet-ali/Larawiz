@@ -125,17 +125,17 @@ class MorphedByManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_taggables_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Photo[] $photos', $tagModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Video[] $videos', $tagModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphToMany|\App\Models\Photo', $tagModel);
-        $this->assertStringContainsString('public function photos()', $tagModel);
-        $this->assertStringContainsString("return \$this->morphedByMany(Photo::class, 'taggable');", $tagModel);
+        static::assertStringContainsString('public function photos()', $tagModel);
+        static::assertStringContainsString("return \$this->morphedByMany(Photo::class, 'taggable');", $tagModel);
 
-        $this->assertStringContainsString("\$table->unsignedBigInteger('tag_id');", $taggableMigration);
-        $this->assertStringContainsString("\$table->morphs('taggable');", $taggableMigration);
+        static::assertStringContainsString("\$table->unsignedBigInteger('tag_id');", $taggableMigration);
+        static::assertStringContainsString("\$table->morphs('taggable');", $taggableMigration);
     }
 
     public function test_error_when_all_parent_models_have_not_primary_uniformity()
@@ -188,8 +188,8 @@ class MorphedByManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_taggables_table.php')
         );
 
-        $this->assertStringContainsString("\$table->unsignedBigInteger('tag_id');", $taggableMigration);
-        $this->assertStringContainsString("\$table->uuidMorphs('taggable');", $taggableMigration);
+        static::assertStringContainsString("\$table->unsignedBigInteger('tag_id');", $taggableMigration);
+        static::assertStringContainsString("\$table->uuidMorphs('taggable');", $taggableMigration);
     }
 
     public function test_creates_pivot_migration_using_child_model_using_uuid()
@@ -219,8 +219,8 @@ class MorphedByManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_taggables_table.php')
         );
 
-        $this->assertStringContainsString("\$table->uuid('tag_uuid');", $taggableMigration);
-        $this->assertStringContainsString("\$table->morphs('taggable');", $taggableMigration);
+        static::assertStringContainsString("\$table->uuid('tag_uuid');", $taggableMigration);
+        static::assertStringContainsString("\$table->morphs('taggable');", $taggableMigration);
     }
 
     public function test_overrides_with_pivot_model_and_changes_model_type_to_morph_pivot()
@@ -262,16 +262,16 @@ class MorphedByManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "return \$this->morphedByMany(Photo::class, 'taggable')->using(Vegetable::class);", $tagModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "return \$this->morphedByMany(Video::class, 'taggable')->using(Vegetable::class);", $tagModel);
 
-        $this->assertStringContainsString('class Vegetable extends MorphPivot', $vegetableModel);
+        static::assertStringContainsString('class Vegetable extends MorphPivot', $vegetableModel);
 
-        $this->assertStringContainsString("\$table->unsignedBigInteger('tag_id');", $vegetableMigration);
-        $this->assertStringContainsString("\$table->morphs('taggable');", $vegetableMigration);
-        $this->assertStringNotContainsString('$table->id();', $vegetableMigration);
+        static::assertStringContainsString("\$table->unsignedBigInteger('tag_id');", $vegetableMigration);
+        static::assertStringContainsString("\$table->morphs('taggable');", $vegetableMigration);
+        static::assertStringNotContainsString('$table->id();', $vegetableMigration);
     }
 
     public function test_creates_pivot_model_if_one_parent_doesnt_uses_using()
@@ -344,10 +344,10 @@ class MorphedByManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')
         );
 
-        $this->assertStringNotContainsString("protected \$primaryKey = 'id';", $vegetableModel);
-        $this->assertStringContainsString('public $incrementing = true;', $vegetableModel);
+        static::assertStringNotContainsString("protected \$primaryKey = 'id';", $vegetableModel);
+        static::assertStringContainsString('public $incrementing = true;', $vegetableModel);
 
-        $this->assertStringContainsString('$table->id();', $vegetableMigration);
+        static::assertStringContainsString('$table->id();', $vegetableMigration);
     }
 
     public function test_pivot_model_has_custom_primary_id()
@@ -384,11 +384,11 @@ class MorphedByManyTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_vegetables_table.php')
         );
 
-        $this->assertStringContainsString("protected \$primaryKey = 'thing';", $vegetableModel);
-        $this->assertStringNotContainsString('public $incrementing = false;', $vegetableModel);
-        $this->assertStringContainsString("protected \$keyType = 'string';", $vegetableModel);
+        static::assertStringContainsString("protected \$primaryKey = 'thing';", $vegetableModel);
+        static::assertStringNotContainsString('public $incrementing = false;', $vegetableModel);
+        static::assertStringContainsString("protected \$keyType = 'string';", $vegetableModel);
 
-        $this->assertStringContainsString("\$table->uuid('thing');", $vegetableMigration);
+        static::assertStringContainsString("\$table->uuid('thing');", $vegetableMigration);
     }
 
     public function test_error_when_using_model_doesnt_exists()

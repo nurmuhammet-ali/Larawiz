@@ -2,9 +2,10 @@
 
 namespace Tests;
 
-use LogicException;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class MigrationTest extends TestCase
@@ -36,9 +37,9 @@ class MigrationTest extends TestCase
             $file = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_foos_table.php')
         );
 
-        $this->assertStringContainsString('class CreateFoosTable extends Migration', $this->filesystem->get($file));
-        $this->assertStringContainsString("Schema::create('foos'", $this->filesystem->get($file));
-        $this->assertStringContainsString("Schema::dropIfExists('foos');", $this->filesystem->get($file));
+        static::assertStringContainsString('class CreateFoosTable extends Migration', $this->filesystem->get($file));
+        static::assertStringContainsString("Schema::create('foos'", $this->filesystem->get($file));
+        static::assertStringContainsString("Schema::dropIfExists('foos');", $this->filesystem->get($file));
     }
 
     public function test_migration_receives_column_declarations()
@@ -64,7 +65,7 @@ class MigrationTest extends TestCase
             $file = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_foos_table.php')
         );
 
-        $this->assertStringContainsString("\$table->bar('foo', 'quz');", $this->filesystem->get($file));
+        static::assertStringContainsString("\$table->bar('foo', 'quz');", $this->filesystem->get($file));
     }
 
     public function test_migration_does_not_receives_relations()
@@ -137,10 +138,10 @@ class MigrationTest extends TestCase
             $file = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_post_tag_table.php')
         );
 
-        $this->assertStringContainsString('class CreatePostTagTable extends Migration', $this->filesystem->get($file));
-        $this->assertStringContainsString("\$table->bar('foo');", $this->filesystem->get($file));
-        $this->assertStringNotContainsString("\$table->unsignedBigInteger('post_id');", $this->filesystem->get($file));
-        $this->assertStringNotContainsString("\$table->unsignedBigInteger('tag_id');", $this->filesystem->get($file));
+        static::assertStringContainsString('class CreatePostTagTable extends Migration', $this->filesystem->get($file));
+        static::assertStringContainsString("\$table->bar('foo');", $this->filesystem->get($file));
+        static::assertStringNotContainsString("\$table->unsignedBigInteger('post_id');", $this->filesystem->get($file));
+        static::assertStringNotContainsString("\$table->unsignedBigInteger('tag_id');", $this->filesystem->get($file));
     }
 
     protected function tearDown() : void

@@ -46,20 +46,20 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $classroom', $studentModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read null|\App\Models\Classroom $classroom', $studentModel);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $studentModel);
-        $this->assertStringContainsString('public function classroom()', $studentModel);
-        $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
+        static::assertStringContainsString('public function classroom()', $studentModel);
+        static::assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $classroom', $teacherModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read null|\App\Models\Classroom $classroom', $teacherModel);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $teacherModel);
-        $this->assertStringContainsString('public function classroom()', $teacherModel);
-        $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
+        static::assertStringContainsString('public function classroom()', $teacherModel);
+        static::assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
 
-        $this->assertStringNotContainsString("'assistable'", $studentMigration);
-        $this->assertStringNotContainsString("'assistable'", $teacherMigration);
+        static::assertStringNotContainsString("'assistable'", $studentMigration);
+        static::assertStringNotContainsString("'assistable'", $teacherMigration);
     }
 
     public function test_issued_target_model_with_unique_morph_to_and_different_relation_name()
@@ -91,20 +91,20 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $foo', $studentModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read null|\App\Models\Classroom $foo', $studentModel);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $studentModel);
-        $this->assertStringContainsString('public function foo()', $studentModel);
-        $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
+        static::assertStringContainsString('public function foo()', $studentModel);
+        static::assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $bar', $teacherModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read null|\App\Models\Classroom $bar', $teacherModel);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $teacherModel);
-        $this->assertStringContainsString('public function bar()', $teacherModel);
-        $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
+        static::assertStringContainsString('public function bar()', $teacherModel);
+        static::assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
 
-        $this->assertStringNotContainsString("'assistable'", $studentMigration);
-        $this->assertStringNotContainsString("'assistable'", $teacherMigration);
+        static::assertStringNotContainsString("'assistable'", $studentMigration);
+        static::assertStringNotContainsString("'assistable'", $teacherMigration);
     }
 
     public function test_error_when_guessed_model_does_not_exists()
@@ -248,20 +248,20 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $foo', $studentModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read null|\App\Models\Classroom $foo', $studentModel);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $studentModel);
-        $this->assertStringContainsString('public function foo()', $studentModel);
-        $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
+        static::assertStringContainsString('public function foo()', $studentModel);
+        static::assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $studentModel);
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $bar', $teacherModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read null|\App\Models\Classroom $bar', $teacherModel);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $teacherModel);
-        $this->assertStringContainsString('public function bar()', $teacherModel);
-        $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
+        static::assertStringContainsString('public function bar()', $teacherModel);
+        static::assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
 
-        $this->assertStringNotContainsString("'assistable'", $studentMigration);
-        $this->assertStringNotContainsString("'assistable'", $teacherMigration);
+        static::assertStringNotContainsString("'assistable'", $studentMigration);
+        static::assertStringNotContainsString("'assistable'", $teacherMigration);
     }
 
     public function test_error_when_morph_name_relation_does_not_exists_in_target_model()
@@ -338,21 +338,21 @@ class MorphOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_teachers_table.php')
         );
 
-        $this->assertStringContainsString('@property-read \App\Models\Classroom $classroom', $studentModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read \App\Models\Classroom $classroom', $studentModel);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $studentModel);
-        $this->assertStringContainsString('public function classroom()', $studentModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('public function classroom()', $studentModel);
+        static::assertStringContainsString(
             "return \$this->morphOne(Classroom::class, 'assistable')->withDefault();", $studentModel);
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Classroom $classroom', $teacherModel);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read null|\App\Models\Classroom $classroom', $teacherModel);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\MorphOne|\App\Models\Classroom', $teacherModel);
-        $this->assertStringContainsString('public function classroom()', $teacherModel);
-        $this->assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
+        static::assertStringContainsString('public function classroom()', $teacherModel);
+        static::assertStringContainsString("return \$this->morphOne(Classroom::class, 'assistable');", $teacherModel);
 
-        $this->assertStringNotContainsString("'assistable'", $studentMigration);
-        $this->assertStringNotContainsString("'assistable'", $teacherMigration);
+        static::assertStringNotContainsString("'assistable'", $studentMigration);
+        static::assertStringNotContainsString("'assistable'", $teacherMigration);
     }
 
     protected function tearDown() : void

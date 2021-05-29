@@ -45,14 +45,14 @@ class HasManyThroughTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_countries_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $userPosts', $model);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\HasManyThrough|\App\Models\Post', $model);
-        $this->assertStringContainsString('public function userPosts()', $model);
-        $this->assertStringContainsString('return $this->hasManyThrough(Post::class, User::class);', $model);
+        static::assertStringContainsString('public function userPosts()', $model);
+        static::assertStringContainsString('return $this->hasManyThrough(Post::class, User::class);', $model);
 
-        $this->assertStringNotContainsString("'userPosts'", $migration);
+        static::assertStringNotContainsString("'userPosts'", $migration);
     }
 
     public function test_error_when_guessed_target_model_name_doesnt_exists()
@@ -158,14 +158,14 @@ class HasManyThroughTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_countries_table.php')
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts', $model);
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\HasManyThrough|\App\Models\Post', $model);
-        $this->assertStringContainsString('public function posts()', $model);
-        $this->assertStringContainsString('return $this->hasManyThrough(Post::class, User::class);', $model);
+        static::assertStringContainsString('public function posts()', $model);
+        static::assertStringContainsString('return $this->hasManyThrough(Post::class, User::class);', $model);
 
-        $this->assertStringNotContainsString("'posts'", $migration);
+        static::assertStringNotContainsString("'posts'", $migration);
     }
 
     public function test_error_when_target_model_has_no_belongs_to_through_model()

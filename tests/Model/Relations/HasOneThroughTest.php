@@ -45,13 +45,13 @@ class HasOneThroughTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_mechanics_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Owner $carOwner', $model);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read null|\App\Models\Owner $carOwner', $model);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\HasOneThrough|\App\Models\Owner', $model);
-        $this->assertStringContainsString('public function carOwner()', $model);
-        $this->assertStringContainsString('return $this->hasOneThrough(Owner::class, Car::class);', $model);
+        static::assertStringContainsString('public function carOwner()', $model);
+        static::assertStringContainsString('return $this->hasOneThrough(Owner::class, Car::class);', $model);
 
-        $this->assertStringNotContainsString("'owner'", $migration);
+        static::assertStringNotContainsString("'owner'", $migration);
     }
 
     public function test_error_when_guessed_target_model_name_doesnt_exists()
@@ -157,13 +157,13 @@ class HasOneThroughTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_mechanics_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Owner $owner', $model);
-        $this->assertStringContainsString(
+        static::assertStringContainsString('@property-read null|\App\Models\Owner $owner', $model);
+        static::assertStringContainsString(
             '@return \Illuminate\Database\Eloquent\Relations\HasOneThrough|\App\Models\Owner', $model);
-        $this->assertStringContainsString('public function owner()', $model);
-        $this->assertStringContainsString('return $this->hasOneThrough(Owner::class, Car::class);', $model);
+        static::assertStringContainsString('public function owner()', $model);
+        static::assertStringContainsString('return $this->hasOneThrough(Owner::class, Car::class);', $model);
 
-        $this->assertStringNotContainsString("'owner'", $migration);
+        static::assertStringNotContainsString("'owner'", $migration);
     }
 
     public function test_error_when_target_model_has_no_belongs_to_through_model()
@@ -235,7 +235,7 @@ class HasOneThroughTest extends TestCase
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Mechanic.php'));
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'return $this->hasOneThrough(Owner::class, Car::class)->withDefault();', $model);
     }
 

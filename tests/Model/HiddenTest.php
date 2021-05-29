@@ -44,7 +44,7 @@ class HiddenTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString("protected \$hidden = [
+        static::assertStringContainsString("protected \$hidden = [
         'password',
         'password_foo',
         'private',
@@ -56,17 +56,17 @@ class HiddenTest extends TestCase
         'secret_foo',
     ];", $model);
 
-        $this->assertStringContainsString("\$table->string('foo');", $migration);
-        $this->assertStringContainsString("\$table->boolean('bar');", $migration);
-        $this->assertStringContainsString("\$table->string('password');", $migration);
-        $this->assertStringContainsString("\$table->string('password_foo');", $migration);
-        $this->assertStringContainsString("\$table->string('private');", $migration);
-        $this->assertStringContainsString("\$table->string('private_foo');", $migration);
-        $this->assertStringContainsString("\$table->rememberToken();", $migration);
-        $this->assertStringContainsString("\$table->string('hidden');", $migration);
-        $this->assertStringContainsString("\$table->string('foo_hidden');", $migration);
-        $this->assertStringContainsString("\$table->string('secret');", $migration);
-        $this->assertStringContainsString("\$table->string('secret_foo');", $migration);
+        static::assertStringContainsString("\$table->string('foo');", $migration);
+        static::assertStringContainsString("\$table->boolean('bar');", $migration);
+        static::assertStringContainsString("\$table->string('password');", $migration);
+        static::assertStringContainsString("\$table->string('password_foo');", $migration);
+        static::assertStringContainsString("\$table->string('private');", $migration);
+        static::assertStringContainsString("\$table->string('private_foo');", $migration);
+        static::assertStringContainsString("\$table->rememberToken();", $migration);
+        static::assertStringContainsString("\$table->string('hidden');", $migration);
+        static::assertStringContainsString("\$table->string('foo_hidden');", $migration);
+        static::assertStringContainsString("\$table->string('secret');", $migration);
+        static::assertStringContainsString("\$table->string('secret_foo');", $migration);
     }
 
     public function test_custom_model_adds_sensible_columns_automatically()
@@ -99,7 +99,7 @@ class HiddenTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString("protected \$hidden = [
+        static::assertStringContainsString("protected \$hidden = [
         'password',
         'password_foo',
         'private',
@@ -111,17 +111,17 @@ class HiddenTest extends TestCase
         'secret_foo',
     ];", $model);
 
-        $this->assertStringContainsString("\$table->string('foo');", $migration);
-        $this->assertStringContainsString("\$table->boolean('bar');", $migration);
-        $this->assertStringContainsString("\$table->string('password');", $migration);
-        $this->assertStringContainsString("\$table->string('password_foo');", $migration);
-        $this->assertStringContainsString("\$table->string('private');", $migration);
-        $this->assertStringContainsString("\$table->string('private_foo');", $migration);
-        $this->assertStringContainsString("\$table->rememberToken();", $migration);
-        $this->assertStringContainsString("\$table->string('hidden');", $migration);
-        $this->assertStringContainsString("\$table->string('foo_hidden');", $migration);
-        $this->assertStringContainsString("\$table->string('secret');", $migration);
-        $this->assertStringContainsString("\$table->string('secret_foo');", $migration);
+        static::assertStringContainsString("\$table->string('foo');", $migration);
+        static::assertStringContainsString("\$table->boolean('bar');", $migration);
+        static::assertStringContainsString("\$table->string('password');", $migration);
+        static::assertStringContainsString("\$table->string('password_foo');", $migration);
+        static::assertStringContainsString("\$table->string('private');", $migration);
+        static::assertStringContainsString("\$table->string('private_foo');", $migration);
+        static::assertStringContainsString("\$table->rememberToken();", $migration);
+        static::assertStringContainsString("\$table->string('hidden');", $migration);
+        static::assertStringContainsString("\$table->string('foo_hidden');", $migration);
+        static::assertStringContainsString("\$table->string('secret');", $migration);
+        static::assertStringContainsString("\$table->string('secret_foo');", $migration);
     }
 
     public function test_custom_model_doesnt_adds_hidden()
@@ -155,19 +155,19 @@ class HiddenTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString("protected \$hidden", $model);
+        static::assertStringNotContainsString("protected \$hidden", $model);
 
-        $this->assertStringContainsString("\$table->string('foo');", $migration);
-        $this->assertStringContainsString("\$table->boolean('bar');", $migration);
-        $this->assertStringContainsString("\$table->string('password');", $migration);
-        $this->assertStringContainsString("\$table->string('password_foo');", $migration);
-        $this->assertStringContainsString("\$table->string('private');", $migration);
-        $this->assertStringContainsString("\$table->string('private_foo');", $migration);
-        $this->assertStringContainsString("\$table->rememberToken();", $migration);
-        $this->assertStringContainsString("\$table->string('hidden');", $migration);
-        $this->assertStringContainsString("\$table->string('foo_hidden');", $migration);
-        $this->assertStringContainsString("\$table->string('secret');", $migration);
-        $this->assertStringContainsString("\$table->string('secret_foo');", $migration);
+        static::assertStringContainsString("\$table->string('foo');", $migration);
+        static::assertStringContainsString("\$table->boolean('bar');", $migration);
+        static::assertStringContainsString("\$table->string('password');", $migration);
+        static::assertStringContainsString("\$table->string('password_foo');", $migration);
+        static::assertStringContainsString("\$table->string('private');", $migration);
+        static::assertStringContainsString("\$table->string('private_foo');", $migration);
+        static::assertStringContainsString("\$table->rememberToken();", $migration);
+        static::assertStringContainsString("\$table->string('hidden');", $migration);
+        static::assertStringContainsString("\$table->string('foo_hidden');", $migration);
+        static::assertStringContainsString("\$table->string('secret');", $migration);
+        static::assertStringContainsString("\$table->string('secret_foo');", $migration);
     }
 
     public function test_custom_model_add_custom_hidden()
@@ -195,11 +195,11 @@ class HiddenTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString("protected \$hidden = ['bar', 'quz', 'quuz'];", $model);
+        static::assertStringContainsString("protected \$hidden = ['bar', 'quz', 'quuz'];", $model);
 
-        $this->assertStringContainsString("\$table->string('foo');", $migration);
-        $this->assertStringContainsString("\$table->string('bar');", $migration);
-        $this->assertStringContainsString("\$table->string('quz');", $migration);
+        static::assertStringContainsString("\$table->string('foo');", $migration);
+        static::assertStringContainsString("\$table->string('bar');", $migration);
+        static::assertStringContainsString("\$table->string('quz');", $migration);
     }
 
     protected function tearDown() : void

@@ -39,9 +39,9 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString('protected $primaryKey', $model);
-        $this->assertStringContainsString('@property int $id', $model);
-        $this->assertStringContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('protected $primaryKey', $model);
+        static::assertStringContainsString('@property int $id', $model);
+        static::assertStringContainsString('$table->id();', $migration);
     }
 
     public function test_quick_model_changes_primary_id_name()
@@ -63,9 +63,9 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('@property int $foo', $model);
-        $this->assertStringContainsString("protected \$primaryKey = 'foo';", $model);
-        $this->assertStringContainsString("\$table->id('foo');", $migration);
+        static::assertStringContainsString('@property int $foo', $model);
+        static::assertStringContainsString("protected \$primaryKey = 'foo';", $model);
+        static::assertStringContainsString("\$table->id('foo');", $migration);
     }
 
     public function test_quick_model_changes_primary_to_uuid()
@@ -88,12 +88,12 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('@property string $uuid', $model);
-        $this->assertStringContainsString("protected \$primaryKey = 'uuid';", $model);
+        static::assertStringContainsString('@property string $uuid', $model);
+        static::assertStringContainsString("protected \$primaryKey = 'uuid';", $model);
 
-        $this->assertStringContainsString("\$table->uuid('uuid');", $migration);
-        $this->assertStringContainsString("\$table->primary('uuid');", $migration);
-        $this->assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringContainsString("\$table->uuid('uuid');", $migration);
+        static::assertStringContainsString("\$table->primary('uuid');", $migration);
+        static::assertStringNotContainsString('$table->id();', $migration);
     }
 
     public function test_quick_model_changes_primary_to_uuid_with_name()
@@ -116,10 +116,10 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('@property string $quz', $model);
-        $this->assertStringContainsString("protected \$primaryKey = 'quz';", $model);
-        $this->assertStringContainsString("\$table->uuid('quz');", $migration);
-        $this->assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringContainsString('@property string $quz', $model);
+        static::assertStringContainsString("protected \$primaryKey = 'quz';", $model);
+        static::assertStringContainsString("\$table->uuid('quz');", $migration);
+        static::assertStringNotContainsString('$table->id();', $migration);
     }
 
     public function test_accepts_uuid_named_as_id()
@@ -142,10 +142,10 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('@property string $id', $model);
-        $this->assertStringNotContainsString("protected \$primaryKey = 'id';", $model);
-        $this->assertStringContainsString("\$table->uuid('id');", $migration);
-        $this->assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringContainsString('@property string $id', $model);
+        static::assertStringNotContainsString("protected \$primaryKey = 'id';", $model);
+        static::assertStringContainsString("\$table->uuid('id');", $migration);
+        static::assertStringNotContainsString('$table->id();', $migration);
     }
 
     public function test_error_when_quick_model_has_more_than_one_incrementing_key()
@@ -191,10 +191,10 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString('@property int $id', $model);
-        $this->assertStringContainsString('protected $primaryKey = null;', $model);
-        $this->assertStringContainsString('public $incrementing = false;', $model);
-        $this->assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('@property int $id', $model);
+        static::assertStringContainsString('protected $primaryKey = null;', $model);
+        static::assertStringContainsString('public $incrementing = false;', $model);
+        static::assertStringNotContainsString('$table->id();', $migration);
     }
 
     public function test_model_receives_primary_id()
@@ -218,8 +218,8 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('@property int $id', $model);
-        $this->assertStringContainsString('$table->id();', $migration);
+        static::assertStringContainsString('@property int $id', $model);
+        static::assertStringContainsString('$table->id();', $migration);
     }
 
     public function test_model_receives_primary_id_with_name()
@@ -243,9 +243,9 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('@property int $foo', $model);
-        $this->assertStringContainsString("protected \$primaryKey = 'foo';", $model);
-        $this->assertStringContainsString("\$table->id('foo');", $migration);
+        static::assertStringContainsString('@property int $foo', $model);
+        static::assertStringContainsString("protected \$primaryKey = 'foo';", $model);
+        static::assertStringContainsString("\$table->id('foo');", $migration);
     }
 
     public function test_model_doesnt_receives_uuid_as_primary()
@@ -270,8 +270,8 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('@property int $id', $model);
-        $this->assertStringContainsString('$table->id();', $migration);
+        static::assertStringContainsString('@property int $id', $model);
+        static::assertStringContainsString('$table->id();', $migration);
     }
 
     public function test_model_primary_set_to_string_column()
@@ -296,11 +296,11 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString('@property int $id', $model);
-        $this->assertStringContainsString("protected \$primaryKey = 'name';", $model);
-        $this->assertStringContainsString('public $incrementing = false;', $model);
-        $this->assertStringContainsString("protected \$keyType = 'string';", $model);
-        $this->assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('@property int $id', $model);
+        static::assertStringContainsString("protected \$primaryKey = 'name';", $model);
+        static::assertStringContainsString('public $incrementing = false;', $model);
+        static::assertStringContainsString("protected \$keyType = 'string';", $model);
+        static::assertStringNotContainsString('$table->id();', $migration);
     }
 
     public function test_model_primary_set_to_integer_column()
@@ -325,11 +325,11 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString('@property int $id', $model);
-        $this->assertStringContainsString("protected \$primaryKey = 'name';", $model);
-        $this->assertStringContainsString('public $incrementing = false;', $model);
-        $this->assertStringNotContainsString("protected \$keyType = 'int';", $model);
-        $this->assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('@property int $id', $model);
+        static::assertStringContainsString("protected \$primaryKey = 'name';", $model);
+        static::assertStringContainsString('public $incrementing = false;', $model);
+        static::assertStringNotContainsString("protected \$keyType = 'int';", $model);
+        static::assertStringNotContainsString('$table->id();', $migration);
     }
 
     public function test_model_primary_set_to_timestamp_column()
@@ -354,11 +354,11 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString('@property int $id', $model);
-        $this->assertStringContainsString("protected \$primaryKey = 'name';", $model);
-        $this->assertStringContainsString('public $incrementing = false;', $model);
-        $this->assertStringContainsString("protected \$keyType = 'datetime';", $model);
-        $this->assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('@property int $id', $model);
+        static::assertStringContainsString("protected \$primaryKey = 'name';", $model);
+        static::assertStringContainsString('public $incrementing = false;', $model);
+        static::assertStringContainsString("protected \$keyType = 'datetime';", $model);
+        static::assertStringNotContainsString('$table->id();', $migration);
     }
 
     public function test_model_primary_set_to_custom_properties_casts_to_string()
@@ -383,12 +383,12 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringNotContainsString('@property int $id', $model);
-        $this->assertStringContainsString('@property string $foo', $model);
-        $this->assertStringContainsString("protected \$primaryKey = 'foo';", $model);
-        $this->assertStringContainsString('public $incrementing = false;', $model);
-        $this->assertStringContainsString("protected \$keyType = 'string';", $model);
-        $this->assertStringNotContainsString('$table->id();', $migration);
+        static::assertStringNotContainsString('@property int $id', $model);
+        static::assertStringContainsString('@property string $foo', $model);
+        static::assertStringContainsString("protected \$primaryKey = 'foo';", $model);
+        static::assertStringContainsString('public $incrementing = false;', $model);
+        static::assertStringContainsString("protected \$keyType = 'string';", $model);
+        static::assertStringNotContainsString('$table->id();', $migration);
     }
 
     public function test_can_have_incrementing_key_and_set_different_primary()
@@ -414,12 +414,12 @@ class ColumnPrimaryTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString('@property int $id', $model);
-        $this->assertStringContainsString('@property string $foo', $model);
-        $this->assertStringContainsString("protected \$primaryKey = 'foo';", $model);
-        $this->assertStringContainsString('public $incrementing = false;', $model);
-        $this->assertStringContainsString("protected \$keyType = 'string';", $model);
-        $this->assertStringContainsString('$table->id();', $migration);
+        static::assertStringContainsString('@property int $id', $model);
+        static::assertStringContainsString('@property string $foo', $model);
+        static::assertStringContainsString("protected \$primaryKey = 'foo';", $model);
+        static::assertStringContainsString('public $incrementing = false;', $model);
+        static::assertStringContainsString("protected \$keyType = 'string';", $model);
+        static::assertStringContainsString('$table->id();', $migration);
     }
 
     public function test_error_if_primary_column_set_does_not_exists()
@@ -464,19 +464,19 @@ class ColumnPrimaryTest extends TestCase
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'HasUuidPrimaryKey.php'));
 
-        $this->assertStringContainsString('namespace App\Models;',
+        static::assertStringContainsString('namespace App\Models;',
                                           $this->filesystem->get($this->app->path('Models' . DS . 'HasUuidPrimaryKey.php'))
         );
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Thing' . DS .'User.php'));
 
-        $this->assertStringContainsString("use App\Models\HasUuidPrimaryKey;", $model);
-        $this->assertStringContainsString("    use HasUuidPrimaryKey;", $model);
+        static::assertStringContainsString("use App\Models\HasUuidPrimaryKey;", $model);
+        static::assertStringContainsString("    use HasUuidPrimaryKey;", $model);
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Bar.php'));
 
-        $this->assertStringNotContainsString("use App\Models\HasUuidPrimaryKey;", $model);
-        $this->assertStringContainsString("    use HasUuidPrimaryKey;", $model);
+        static::assertStringNotContainsString("use App\Models\HasUuidPrimaryKey;", $model);
+        static::assertStringContainsString("    use HasUuidPrimaryKey;", $model);
     }
 
     public function test_no_free_traits_doesnt_adds_uuid_free_trait()
@@ -504,12 +504,12 @@ class ColumnPrimaryTest extends TestCase
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Thing' . DS .'User.php'));
 
-        $this->assertStringNotContainsString("use App\Models\HasUuidPrimaryKey;", $model);
-        $this->assertStringNotContainsString("    use HasUuidPrimaryKey;", $model);
+        static::assertStringNotContainsString("use App\Models\HasUuidPrimaryKey;", $model);
+        static::assertStringNotContainsString("    use HasUuidPrimaryKey;", $model);
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'Bar.php'));
 
-        $this->assertStringNotContainsString("    use HasUuidPrimaryKey;", $model);
+        static::assertStringNotContainsString("    use HasUuidPrimaryKey;", $model);
     }
 
     protected function tearDown() : void

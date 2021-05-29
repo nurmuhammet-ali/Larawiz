@@ -29,7 +29,7 @@ class UserTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'User.php'));
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'class User extends Model',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
@@ -49,7 +49,7 @@ class UserTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'User.php'));
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'class User extends Authenticatable',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
@@ -69,7 +69,7 @@ class UserTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'User.php'));
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'class User extends Authenticatable',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
@@ -90,7 +90,7 @@ class UserTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'User.php'));
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'class User extends Authenticatable',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
@@ -112,7 +112,7 @@ class UserTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'User.php'));
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'class User extends Authenticatable',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
@@ -133,15 +133,15 @@ class UserTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'User.php'));
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Illuminate\Contracts\Auth\MustVerifyEmail;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Illuminate\Foundation\Auth\User as Authenticatable;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Illuminate\Notifications\Notifiable;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
@@ -162,7 +162,7 @@ class UserTest extends TestCase
         $this->artisan('larawiz:scaffold');
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'User.php'));
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             "public function setPasswordAttribute(\$password)
     {
         \$this->attributes['password'] = app('hash')->make(\$password);

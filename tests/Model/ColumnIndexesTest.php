@@ -2,12 +2,13 @@
 
 namespace Tests\Model;
 
-use LogicException;
-use Tests\RegistersPackage;
-use Tests\MocksDatabaseFile;
 use Illuminate\Support\Carbon;
+use LogicException;
 use Orchestra\Testbench\TestCase;
 use Tests\CleansProjectFromScaffoldData;
+use Tests\MocksDatabaseFile;
+use Tests\RegistersPackage;
+
 use const DIRECTORY_SEPARATOR as DS;
 
 class ColumnIndexesTest extends TestCase
@@ -33,7 +34,7 @@ class ColumnIndexesTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString("\$table->bar('foo')->index();", $migration);
+        static::assertStringContainsString("\$table->bar('foo')->index();", $migration);
     }
 
     public function test_creates_column_with_unique()
@@ -53,7 +54,7 @@ class ColumnIndexesTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString("\$table->bar('foo')->unique();", $migration);
+        static::assertStringContainsString("\$table->bar('foo')->unique();", $migration);
     }
 
     public function test_error_when_mixing_index_with_unique()
@@ -102,10 +103,10 @@ class ColumnIndexesTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        $this->assertStringContainsString("\$table->index(['foo']);", $migration);
-        $this->assertStringContainsString("\$table->index(['bar', 'quz']);", $migration);
-        $this->assertStringContainsString("\$table->index(['qux', 'quuz'], 'custom_index_name');", $migration);
-        $this->assertStringContainsString("\$table->unique(['quuz', 'quux']);", $migration);
+        static::assertStringContainsString("\$table->index(['foo']);", $migration);
+        static::assertStringContainsString("\$table->index(['bar', 'quz']);", $migration);
+        static::assertStringContainsString("\$table->index(['qux', 'quuz'], 'custom_index_name');", $migration);
+        static::assertStringContainsString("\$table->unique(['quuz', 'quux']);", $migration);
     }
 
     public function test_error_when_index_list_contains_non_existent_columns()

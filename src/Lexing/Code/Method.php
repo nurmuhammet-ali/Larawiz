@@ -2,9 +2,9 @@
 
 namespace Larawiz\Larawiz\Lexing\Code;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Fluent;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
+use Illuminate\Support\Str;
 
 /**
  * Class Method
@@ -55,9 +55,7 @@ class Method extends Fluent
     {
         // If the method has no arguments, we will just create an instance with empty arguments.
         if (! Str::contains($method, ':')) {
-            return new static([
-                'name' => $method
-            ]);
+            return new static(['name' => $method]);
         }
 
         $arguments = explode(',', Str::after($method, ':'));

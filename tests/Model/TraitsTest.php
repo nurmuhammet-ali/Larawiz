@@ -41,38 +41,38 @@ class TraitsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Foo;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Quz;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Bar;',
             $this->filesystem->get($this->app->path('Models' . DS . 'Post.php'))
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Qux;',
             $this->filesystem->get($this->app->path('Models' . DS . 'Post.php'))
         );
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Foo.php'));
-        $this->assertStringContainsString('trait Foo',
+        static::assertStringContainsString('trait Foo',
             $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php')));
-        $this->assertStringContainsString('initializeFoo',
+        static::assertStringContainsString('initializeFoo',
             $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php')));
-        $this->assertStringContainsString('bootFoo',
+        static::assertStringContainsString('bootFoo',
             $this->filesystem->get($this->app->path('Models' . DS . 'Foo.php')));
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php'));
-        $this->assertStringContainsString('trait Quz',
+        static::assertStringContainsString('trait Quz',
             $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
-        $this->assertStringContainsString('initializeQuz',
+        static::assertStringContainsString('initializeQuz',
             $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
-        $this->assertStringContainsString('bootQuz',
+        static::assertStringContainsString('bootQuz',
             $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
     }
 
@@ -105,37 +105,37 @@ class TraitsTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use App\Models\Bar\Quz;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Quz;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use App\Models\Bar\Quz;',
             $this->filesystem->get($this->app->path('Models' . DS . 'Post.php'))
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Quz;',
             $this->filesystem->get($this->app->path('Models' . DS . 'Post.php'))
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use App\Models\Bar\Quz;',
             $this->filesystem->get($this->app->path('Models' . DS . 'Comment.php'))
         );
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Quz;',
             $this->filesystem->get($this->app->path('Models' . DS . 'Comment.php'))
         );
 
         $this->assertFileExistsInFilesystem($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php'));
-        $this->assertStringContainsString('trait Quz',
+        static::assertStringContainsString('trait Quz',
             $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
-        $this->assertStringContainsString('initializeQuz',
+        static::assertStringContainsString('initializeQuz',
             $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
-        $this->assertStringContainsString('bootQuz',
+        static::assertStringContainsString('bootQuz',
             $this->filesystem->get($this->app->path('Models' . DS . 'Bar' . DS . 'Quz.php')));
     }
 
@@ -206,12 +206,12 @@ class TraitsTest extends TestCase
             'Models' . DS . 'Illuminate' . DS . 'Foundation' . DS . 'Validation' . DS . 'ValidatesRequests.php'
         ));
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use Illuminate\Foundation\Validation\ValidatesRequests;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
 
-        $this->assertStringContainsString(
+        static::assertStringContainsString(
             'use ValidatesRequests;',
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );

@@ -37,12 +37,12 @@ class TableNameTest extends TestCase
         $this->assertFileExistsInFilesystem($migration);
         $this->assertFileExistsInFilesystem($model);
 
-        $this->assertStringContainsString('class CreateUsersTable extends Migration',
+        static::assertStringContainsString('class CreateUsersTable extends Migration',
             $this->filesystem->get($migration));
-        $this->assertStringContainsString("Schema::create('users',",
+        static::assertStringContainsString("Schema::create('users',",
             $this->filesystem->get($migration));
 
-        $this->assertStringNotContainsString("protected \$table = 'users';",
+        static::assertStringNotContainsString("protected \$table = 'users';",
             $this->filesystem->get($model));
     }
 
@@ -67,12 +67,12 @@ class TableNameTest extends TestCase
             $file = $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString('class CreateUsersTable extends Migration',
+        static::assertStringContainsString('class CreateUsersTable extends Migration',
             $this->filesystem->get($migration));
-        $this->assertStringContainsString("Schema::create('users',",
+        static::assertStringContainsString("Schema::create('users',",
             $this->filesystem->get($migration));
 
-        $this->assertStringNotContainsString("protected \$table = 'users';",
+        static::assertStringNotContainsString("protected \$table = 'users';",
             $this->filesystem->get($model));
 
     }
@@ -99,12 +99,12 @@ class TableNameTest extends TestCase
         $this->assertFileExistsInFilesystem($migration);
         $this->assertFileExistsInFilesystem($model);
 
-        $this->assertStringContainsString('class CreateUsersTable extends Migration',
+        static::assertStringContainsString('class CreateUsersTable extends Migration',
             $this->filesystem->get($migration));
-        $this->assertStringContainsString("Schema::create('users',",
+        static::assertStringContainsString("Schema::create('users',",
             $this->filesystem->get($migration));
 
-        $this->assertStringNotContainsString("protected \$table = 'users';",
+        static::assertStringNotContainsString("protected \$table = 'users';",
             $this->filesystem->get($model));
     }
 
@@ -131,12 +131,12 @@ class TableNameTest extends TestCase
         $this->assertFileExistsInFilesystem($migration);
         $this->assertFileExistsInFilesystem($model);
 
-        $this->assertStringContainsString('class CreateAppUsersTable extends Migration',
+        static::assertStringContainsString('class CreateAppUsersTable extends Migration',
             $this->filesystem->get($migration));
-        $this->assertStringContainsString("Schema::create('app_users',",
+        static::assertStringContainsString("Schema::create('app_users',",
             $this->filesystem->get($migration));
 
-        $this->assertStringContainsString("protected \$table = 'app_users';",
+        static::assertStringContainsString("protected \$table = 'app_users';",
             $this->filesystem->get($model));
     }
 

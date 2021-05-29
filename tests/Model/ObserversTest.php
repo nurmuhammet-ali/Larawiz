@@ -65,9 +65,9 @@ class ObserversTest extends TestCase
 
         $this->assertFileExistsInFilesystem($observer);
 
-        $this->assertStringContainsString('namespace App\Observers;', $this->filesystem->get($observer));
-        $this->assertStringContainsString('use App\Models\User;', $this->filesystem->get($observer));
-        $this->assertStringContainsString('class UserObserver', $this->filesystem->get($observer));
+        static::assertStringContainsString('namespace App\Observers;', $this->filesystem->get($observer));
+        static::assertStringContainsString('use App\Models\User;', $this->filesystem->get($observer));
+        static::assertStringContainsString('class UserObserver', $this->filesystem->get($observer));
     }
 
     protected function tearDown() : void

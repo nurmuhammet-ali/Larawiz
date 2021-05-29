@@ -84,12 +84,12 @@ class HasOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Post $post', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Models\Post', $model);
-        $this->assertStringContainsString('public function post()', $model);
-        $this->assertStringContainsString('return $this->hasOne(Post::class);', $model);
+        static::assertStringContainsString('@property-read null|\App\Models\Post $post', $model);
+        static::assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Models\Post', $model);
+        static::assertStringContainsString('public function post()', $model);
+        static::assertStringContainsString('return $this->hasOne(Post::class);', $model);
 
-        $this->assertStringNotContainsString("'posts'", $migration);
+        static::assertStringNotContainsString("'posts'", $migration);
     }
 
     public function test_error_when_cannot_guess_model()
@@ -137,12 +137,12 @@ class HasOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Post $publication', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Models\Post', $model);
-        $this->assertStringContainsString('public function publication()', $model);
-        $this->assertStringContainsString('return $this->hasOne(Post::class);', $model);
+        static::assertStringContainsString('@property-read null|\App\Models\Post $publication', $model);
+        static::assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Models\Post', $model);
+        static::assertStringContainsString('public function publication()', $model);
+        static::assertStringContainsString('return $this->hasOne(Post::class);', $model);
 
-        $this->assertStringNotContainsString("'posts'", $migration);
+        static::assertStringNotContainsString("'posts'", $migration);
     }
 
     public function test_error_when_model_does_not_exists()
@@ -190,12 +190,12 @@ class HasOneTest extends TestCase
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php')
         );
 
-        $this->assertStringContainsString('@property-read null|\App\Models\Post $publication', $model);
-        $this->assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Models\Post', $model);
-        $this->assertStringContainsString('public function publication()', $model);
-        $this->assertStringContainsString("return \$this->hasOne(Post::class, 'title', 'name');", $model);
+        static::assertStringContainsString('@property-read null|\App\Models\Post $publication', $model);
+        static::assertStringContainsString('@return \Illuminate\Database\Eloquent\Relations\HasOne|\App\Models\Post', $model);
+        static::assertStringContainsString('public function publication()', $model);
+        static::assertStringContainsString("return \$this->hasOne(Post::class, 'title', 'name');", $model);
 
-        $this->assertStringNotContainsString("'posts'", $migration);
+        static::assertStringNotContainsString("'posts'", $migration);
     }
 
     public function test_accepts_with_default()
@@ -219,7 +219,7 @@ class HasOneTest extends TestCase
 
         $model = $this->filesystem->get($this->app->path('Models' . DS . 'User.php'));
 
-        $this->assertStringContainsString('return $this->hasOne(Post::class)->withDefault();', $model);
+        static::assertStringContainsString('return $this->hasOne(Post::class)->withDefault();', $model);
     }
 
     protected function tearDown() : void

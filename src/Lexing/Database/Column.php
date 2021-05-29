@@ -659,15 +659,14 @@ class Column extends Fluent
         }
 
         $calls = explode(' ', $line);
+
         // If the first call is "~" or "null", then we will replace it for the name itself.
         if (in_array($calls[0], ['~', 'null'])) {
             $calls[0] = $name;
         }
         // If the first call has something with arguments, we will inject the name as first argument.
         elseif (Str::contains($calls[0], ':')) {
-            $replace = Str::contains($calls[0], ',') ? $name . ',' : $name;
-
-            $calls[0] = Str::of($calls[0])->replace(':', ':' . $replace)->__toString();
+            $calls[0] = Str::of($calls[0])->replace(':', ':' . $name . ',')->__toString();
         }
         // If it doesn't, we will add it as first argument.
         else {
