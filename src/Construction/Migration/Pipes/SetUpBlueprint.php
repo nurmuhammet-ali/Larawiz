@@ -34,16 +34,22 @@ class SetUpBlueprint
      */
     protected function manageUpMethod(MigrationLexing $migration)
     {
-        $start = '        Schema::create(\'' . $migration->table . '\', function (Blueprint $table) {';
+        $create = '        Schema::create(\'' . $migration->table . '\', function (Blueprint $table) {';
 
         if ($migration->comment) {
-            $start = '        // ' . $migration->comment . "\n" . trim($start);
+            $create = '        // ' . $migration->comment . "\n" . trim($create);
         }
 
-        return $start .
-            $this->createColumns($migration) .
-            $this->createIndexes($migration) .
-            "\n});";
+        $create .= $this->createColumns($migration) . "\n});";
+
+        if ($migration->indexes->isNotEmpty()) {
+            $create .= "\n\n"
+                . 'Schema::table(\'' . $migration->table . '\', function (Blueprint $table) {' . "\n"
+                . $this->createIndexes($migration)
+                . "\n});";
+        }
+
+        return $create;
     }
 
     /**
@@ -75,15 +81,13 @@ class SetUpBlueprint
      */
     protected function createIndexes(MigrationLexing $migration)
     {
-        if ($migration->indexes->isNotEmpty()) {
-            $string = "\n\n";
+        $string = [];
 
-            foreach ($migration->indexes as $index) {
-                $string .= "    {$index}\n";
-            }
+        foreach ($migration->indexes as $index) {
+            $string[] = "    {$index}";
         }
 
-        return $string ?? '';
+        return implode("\n", $string);
     }
 
 }

@@ -103,10 +103,15 @@ class ColumnIndexesTest extends TestCase
         $migration = $this->filesystem->get(
             $this->app->databasePath('migrations' . DS . '2020_01_01_163000_create_users_table.php'));
 
-        static::assertStringContainsString("\$table->index(['foo']);", $migration);
-        static::assertStringContainsString("\$table->index(['bar', 'quz']);", $migration);
-        static::assertStringContainsString("\$table->index(['qux', 'quuz'], 'custom_index_name');", $migration);
-        static::assertStringContainsString("\$table->unique(['quuz', 'quux']);", $migration);
+        static::assertStringContainsString(<<<'CONTENT'
+        Schema::table('users', function (Blueprint $table) {
+            $table->index(['foo']);
+            $table->index(['bar', 'quz']);
+            $table->index(['qux', 'quuz'], 'custom_index_name');
+            $table->unique(['quuz', 'quux']);
+        });
+CONTENT
+        , $migration);
     }
 
     public function test_error_when_index_list_contains_non_existent_columns()
