@@ -42,7 +42,7 @@ class SetSoftDeleteState
             ->setPublic()
             ->addComment("Define the deleted state.")
             ->addComment('')
-            ->addComment('@return array')
+            ->addComment('@return \Illuminate\Database\Eloquent\Factories\Factory')
             ->addBody(
                 "\nreturn \$this->state(function (array \$attributes) {" .
                 "\n    return [" .
