@@ -15,6 +15,7 @@ class WriterPipeline extends Pipeline
         Pipes\WriteModels::class,
         Pipes\WriteMigrations::class,
         Pipes\WriteModelFactories::class,
+        Pipes\WriteDatabaseSeeders::class,
 
 //        Pipes\WriteHttpMiddleware::class,
 //        Pipes\WriteHttpControllers::class,

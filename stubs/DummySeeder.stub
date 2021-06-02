@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use {DummyModelNamespace};
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use LogicException;
 
 class {DummySeeder} extends Seeder
 {

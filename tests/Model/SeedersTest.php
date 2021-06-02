@@ -81,7 +81,7 @@ class SeedersTest extends TestCase
 
         $content = $this->filesystem->get($this->app->databasePath('seeders' . DS . 'UserSeeder.php'));
 
-        $this->assertEquals(<<<'CONTENT'
+        static::assertEquals(<<<'CONTENT'
 <?php
 
 namespace Database\Seeders;
@@ -89,6 +89,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use LogicException;
 
 class UserSeeder extends Seeder
 {
@@ -190,6 +191,104 @@ class UserSeeder extends Seeder
 
 CONTENT
         ,$content);
+    }
+
+    public function test_creates_main_database_seeder()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'name' => 'string',
+                ],
+                'Admin' => [
+                    'name' => 'string',
+                ]
+            ],
+        ]);
+
+        $this->shouldMockSeederFile(false);
+
+        $this->artisan('larawiz:scaffold');
+
+        $content = $this->filesystem->get($this->app->databasePath('seeders' . DS . 'DatabaseSeeder.php'));
+
+        static::assertEquals(<<<'CONTENT'
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        // TODO: Uncomment and reorder the seeders.
+        // $this->call(UserSeeder::class);
+        // $this->call(AdminSeeder::class);
+    }
+}
+
+CONTENT
+            ,$content);
+    }
+
+    public function test_creates_main_database_seeder_without_unseedable_models()
+    {
+        $this->mockDatabaseFile([
+            'models' => [
+                'User' => [
+                    'name' => 'string',
+                ],
+                'Admin' => [
+                    'columns' => [
+                        'name' => 'string',
+                    ],
+                    'seeder' => false,
+                ],
+                'Post' => [
+                    'columns' => [
+                        'title' => 'string',
+                    ],
+                ]
+            ],
+        ]);
+
+        $this->shouldMockSeederFile(false);
+
+        $this->artisan('larawiz:scaffold');
+
+        $content = $this->filesystem->get($this->app->databasePath('seeders' . DS . 'DatabaseSeeder.php'));
+
+        static::assertEquals(<<<'CONTENT'
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        // TODO: Uncomment and reorder the seeders.
+        // $this->call(UserSeeder::class);
+        // $this->call(PostSeeder::class);
+    }
+}
+
+CONTENT
+            ,$content);
     }
 
     protected function tearDown() : void
