@@ -31,16 +31,18 @@ class RouteBindingTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        static::assertStringNotContainsString(
-            '    /**\n
-     * Get the route key for the model.\n
-     *\n
-     * @return string\n
-     */\n
-    public function getRouteKeyName()\n
-    {\n
-        return $this->name;\n
-    }\n',
+        static::assertStringNotContainsString(<<<'CONTENT'
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'name';
+    }
+CONTENT
+            ,
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
     }
@@ -60,16 +62,18 @@ class RouteBindingTest extends TestCase
 
         $this->artisan('larawiz:scaffold');
 
-        static::assertStringNotContainsString(
-            '    /**\n
-     * Get the route key for the model.\n
-     *\n
-     * @return string\n
-     */\n
-    public function getRouteKeyName()\n
-    {\n
-        return $this->name;\n
-    }\n',
+        static::assertStringContainsString(<<<'CONTENT'
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'name';
+    }
+CONTENT
+            ,
             $this->filesystem->get($this->app->path('Models' . DS . 'User.php'))
         );
     }
