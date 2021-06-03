@@ -18,7 +18,7 @@ class SetRouteBinding
     {
         if ($construction->model->routeBinding) {
             $construction->class->addMethod('getRouteKeyName')
-                ->addBody("return \$this->{$construction->model->routeBinding};")
+                ->addBody("return '{$construction->model->routeBinding}';")
                 ->addComment('Get the route key for the model.')
                 ->addComment('')
                 ->addComment('@return string');
