@@ -22,6 +22,12 @@ class SetsFactoryTrait
         if ($construction->model->useFactory) {
             Arr::first($construction->file->getNamespaces())->addUse(HasFactory::class);
             $construction->class->addTrait(HasFactory::class);
+            // Add a PHPDoc to override the Factory class for the model factory.
+            $construction->class->addComment(
+                "@method static \Database\Factories\{$construction->model->class}Factory factory(int|array ...\$parameters)"
+            );
+
+            $construction->class->addComment('');
         }
 
         return $next($construction);

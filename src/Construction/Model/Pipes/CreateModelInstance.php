@@ -7,7 +7,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notifiable;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
-use Larawiz\Larawiz\Lexing\Database\Model;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 
@@ -38,7 +37,7 @@ class CreateModelInstance
             $construction->namespace->addUse($construction->model->modelType);
         }
 
-        $this->setBuilderPhpDocs($construction->class, $construction->model);
+        $this->setBuilderPhpDocs($construction->class);
 
         return $next($construction);
     }
@@ -47,13 +46,15 @@ class CreateModelInstance
      * Set the Eloquent Builder methods to document the return of the model.
      *
      * @param  \Nette\PhpGenerator\ClassType  $class
-     * @param  \Larawiz\Larawiz\Lexing\Database\Model  $model
      */
-    protected function setBuilderPhpDocs(ClassType $class, Model $model)
+    protected function setBuilderPhpDocs(ClassType $class)
     {
         $class->addComment('@mixin \Illuminate\Database\Eloquent\Builder');
 
         $class->addComment('');
+
+        $class->addComment('@method static \Illuminate\Database\Eloquent\Builder|static query()');
+        $class->addComment('@method \Illuminate\Database\Eloquent\Builder|static newQuery()');
 
         $methods = [
             'make(array $attributes = [])',
@@ -69,17 +70,19 @@ class CreateModelInstance
             'findOrNew($id, $columns = [\'*\'])',
         ];
 
+
+
         foreach ($methods as $method) {
-            $class->addComment("@method {$model->fullRootNamespace()} {$method}");
+            $class->addComment("@method static {$method}");
         }
 
         $methods = [
             'first($columns = [\'*\'])',
-            'find($id, $columns = [\'*\'])'
+            'find($id, $columns = [\'*\'])',
         ];
 
         foreach ($methods as $method) {
-            $class->addComment("@method null|{$model->fullRootNamespace()} {$method}");
+            $class->addComment("@method null|static {$method}");
         }
 
         $class->addComment('');

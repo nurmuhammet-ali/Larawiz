@@ -20,7 +20,7 @@ class SetsLocalScopes
     {
         $scopes = $construction->model->localScopes;
 
-        if (null !== $scopes && !empty($scopes)) {
+        if (!empty($scopes)) {
             $construction->class->addComment('');
 
             $construction->namespace->addUse(Builder::class);
@@ -31,9 +31,9 @@ class SetsLocalScopes
                 $construction->class
                     ->addMethod($scope)
                     ->setProtected()
-                    ->addComment('Query scope for ' . Str::of($name)->snake(' ') . '.')
+                    ->addComment('Query scope for "' . Str::of($name)->snake(' ') . '".')
                     ->addComment('')
-                    ->addComment('@param  \Illuminate\Database\Eloquent\Builder  $query')
+                    ->addComment('@param  \Illuminate\Database\Eloquent\Builder|static  $query')
                     ->addComment('@return void')
                     ->addBody("// TODO: Filter the query by the '$name' scope.")
                     ->addParameter('query')
@@ -41,7 +41,7 @@ class SetsLocalScopes
 
                 $construction->class
                     ->addComment(
-                        "@method \Illuminate\Database\Eloquent\Builder $name()"
+                        "@method \Illuminate\Database\Eloquent\Builder|static $name()"
                     );
             }
         }

@@ -5,7 +5,7 @@ namespace DummyModelNamespace;
 trait DummyTrait
 {
     /**
-     * Boot the DummyTrait for the current model.
+     * Boot the DummyTrait for the model.
      *
      * @return void
      */
@@ -15,7 +15,7 @@ trait DummyTrait
     }
 
     /**
-     * Initialize the DummyTrait trait for the current model instance.
+     * Initialize the DummyTrait trait for the model instance.
      *
      * @return void
      */

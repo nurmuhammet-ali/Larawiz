@@ -42,11 +42,11 @@ class SetSoftDeleteState
             ->setPublic()
             ->addComment("Define the deleted state.")
             ->addComment('')
-            ->addComment('@return \Illuminate\Database\Eloquent\Factories\Factory')
+            ->addComment('@return $this')
             ->addBody(
                 "\nreturn \$this->state(function (array \$attributes) {" .
                 "\n    return [" .
-                "\n        (new {$model->class})->getDeletedAtColumn() => \$this->faker->dateTime," .
+                "\n        (new {$model->class})->getDeletedAtColumn() => \$this->faker->dateTime()," .
                 "\n    ];" .
                 "\n});"
             );

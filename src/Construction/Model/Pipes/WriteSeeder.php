@@ -5,7 +5,6 @@ namespace Larawiz\Larawiz\Construction\Model\Pipes;
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 use Larawiz\Larawiz\Construction\Model\ModelConstruction;
 use Larawiz\Larawiz\Larawiz;
 use Larawiz\Larawiz\Lexing\Database\Model;
@@ -95,12 +94,10 @@ class WriteSeeder
 
         return str_replace([
             '{DummyModel}',
-            '{dummyModel}',
             '{DummySeeder}',
             '{DummyModelNamespace}',
         ], [
             $model->class,
-            Str::camel($model->class),
             $model->class . 'Seeder',
             $model->fullNamespace(),
         ], $contents);

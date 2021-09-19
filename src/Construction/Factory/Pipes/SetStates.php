@@ -37,9 +37,9 @@ class SetStates
     {
         $class->addMethod($state)
             ->setPublic()
-            ->addComment("Define the $state state.")
+            ->addComment("Define the \"$state\" state.")
             ->addComment('')
-            ->addComment('@return \Illuminate\Database\Eloquent\Factories\Factory')
+            ->addComment('@return $this')
             ->addBody(
                 "\nreturn \$this->state(function (array \$attributes) {" .
                 "\n    return [" .

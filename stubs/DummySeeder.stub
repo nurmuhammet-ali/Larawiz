@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class {DummySeeder} extends Seeder
 {
     /**
-     * Run the database seeder for {DummySeeder}.
+     * Run the database seeder for {DummyModel}.
      *
      * @return void
      */
@@ -28,7 +28,7 @@ class {DummySeeder} extends Seeder
     }
 
     /**
-     * Populate the table with records from the default factory definition.
+     * Create records using the default factory definition.
      *
      * @return void
      */
@@ -39,7 +39,7 @@ class {DummySeeder} extends Seeder
     }
 
     /**
-     * Creates records with custom model states.
+     * Creates records using custom model states.
      *
      * @return void
      */
@@ -50,7 +50,7 @@ class {DummySeeder} extends Seeder
     }
 
     /**
-     * Creates additional records to populate the database.
+     * Creates additional custom records.
      *
      * @return void
      */
