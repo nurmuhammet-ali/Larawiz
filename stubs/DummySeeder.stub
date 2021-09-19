@@ -3,104 +3,60 @@
 namespace Database\Seeders;
 
 use {DummyModelNamespace};
+use Closure;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use LogicException;
+use Illuminate\Support\Facades\DB;
 
 class {DummySeeder} extends Seeder
 {
-    /**
-     * Creates a new {DummySeeder} instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        // Bail out if we can't resolve the factory name, as it may not exist.
-        if (! class_exists($name = Factory::resolveFactoryName({DummyModel}::class))) {
-            throw new LogicException("The [{DummyModel}] model has no factory: $name.");
-        }
-    }
-
     /**
      * Run the database seeder for {DummySeeder}.
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        // If you are using SQLite file instead of in-memory database, you may
-        // want to wrap this run into a database transaction. It's known that
-        // SQLite is very slow when each database statement runs one by one.
+        // To avoid slowing down SQLite when inserting records using a database
+        // file, we will wrap each method call into a single transaction. This
+        // shouldn't slow other engines, but you can unwrap them if you want.
         //
         // @link https://laravel.com/docs/database#database-transactions
 
-        $this->createRecords(static::factory(), $this->amount());
-
-        $this->createStates(static::factory());
-
-        $this->createAdditionalRecords(static::factory());
+        foreach (['defaults', 'states', 'additional'] as $call) {
+            DB::transaction(Closure::fromCallable([$this, $call]));
+        }
     }
 
     /**
-     * Returns a useful number of records to create.
-     *
-     * @return int
-     */
-    protected function amount()
-    {
-        // We will conveniently create to two and a half pages of {DummyModel}.
-        return (int) ((new {DummyModel})->getPerPage() * 2.5);
-    }
-
-    /**
-     * Populate the model records using the factory definition.
-     *
-     * @param  \Illuminate\Database\Eloquent\Factories\Factory  $factory
-     * @param  int  $amount
+     * Populate the table with records from the default factory definition.
      *
      * @return void
      */
-    protected function createRecords(Factory $factory, int $amount)
+    protected function defaults()
     {
-        $factory->times($amount)->create();
+        // We will create two and a half pages of records.
+        {DummyModel}::factory((new {DummyModel})->getPerPage() * 2.5)->create();
+    }
+
+    /**
+     * Creates records with custom model states.
+     *
+     * @return void
+     */
+    protected function states()
+    {
+        // Add here any states created in your model factory.
+        // {DummyModel}::factory()->deleted()->create();
     }
 
     /**
      * Creates additional records to populate the database.
      *
-     * @param  \Illuminate\Database\Eloquent\Factories\Factory  $factory
-     *
      * @return void
      */
-    protected function createAdditionalRecords(Factory $factory)
+    protected function additional()
     {
-        // This method is a convenient way to add personalized records.
-        //
-        // $factory->create(['name' => 'John Doe']);
-    }
-
-    /**
-     * Creates additional records by using states.
-     *
-     * @param  \Illuminate\Database\Eloquent\Factories\Factory  $factory
-     *
-     * @return void
-     */
-    protected function createStates(Factory $factory)
-    {
-        // Add here any states you want to make.
-        //
-        // $factory->times(10)->myAwesomeState()->create();
-    }
-
-    /**
-     * Returns the factory for the given model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    protected static function factory()
-    {
-        return Factory::factoryForModel({DummyModel}::class);
+        // Here you can create some custom personalized records.
+        // {DummyModel}::factory(['name' => 'John Doe'])->create();
     }
 }
