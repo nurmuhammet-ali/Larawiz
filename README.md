@@ -60,7 +60,7 @@ models:
     author: belongsTo
 ```
 
-...but if want more customization, go ahead to the documentation since it explains everything: table names, fillable properties, pivot models, primary keys, timestamps, soft-deletes, factories, etc.
+...but if you want more customization, go ahead to the documentation since it explains everything: table names, fillable properties, pivot models, primary keys, timestamps, soft-deletes, factories, etc.
 
 ## License
 
