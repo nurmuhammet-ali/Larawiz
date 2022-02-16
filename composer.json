@@ -18,16 +18,16 @@
         }
     ],
     "require": {
-        "php": ">=7.3",
+        "php": ">=8.0.2",
         "fakerphp/faker": "^1.14",
-        "illuminate/support": "^8.0",
-        "nette/php-generator": "^3.5.3",
-        "symfony/finder": "^5.2",
-        "symfony/yaml": "^5.2"
+        "illuminate/support": "^9.0",
+        "nette/php-generator": "^3.6",
+        "symfony/finder": "6.0.3",
+        "symfony/yaml": "^6.0.3"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0",
-        "orchestra/canvas": "^6.0",
+        "orchestra/testbench": "^7.0.2",
+        "orchestra/canvas": "^7.0.0",
         "phpunit/phpunit": "^9.5"
     },
     "autoload": {
